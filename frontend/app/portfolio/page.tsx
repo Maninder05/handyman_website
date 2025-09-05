@@ -1,21 +1,24 @@
-// app/portfolio/page.tsx (Next.js 13+ with App Router)
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Bell, Home, MessageCircle, Settings, Users } from "lucide-react";
+import SideMenu from "../components/SideMenu"; 
 
 export default function PortfolioPage() {
-  const router = useRouter();
   const [isBuyer, setIsBuyer] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen w-full flex flex-col bg-gray-100 ">
-        <div>
+    <div className="min-h-screen w-full flex flex-col bg-gray-100">
       {/* Header */}
       <div className="bg-teal-500 p-6 relative mb-2">
         {/* Menu Button */}
-        <button className="absolute right-4 top-6 text-white text-3xl">☰</button>
+        <button
+          onClick={() => setIsMenuOpen(true)}
+          className="absolute right-4 top-6 text-white text-3xl"
+        >
+          ☰
+        </button>
 
         {/* Profile Info */}
         <div className="flex flex-col items-center mt-6">
@@ -44,31 +47,28 @@ export default function PortfolioPage() {
           </div>
         </div>
       </div>
-      </div>
 
       {/* Switch to Buyer */}
-<div className="px-20 mb-2 ">
-  <div className="bg-white flex justify-between items-center px-5 py-4 rounded-xl shadow-md">
-    <p className="font-medium">Switch To Buyer</p>
-    <label className="inline-flex items-center cursor-pointer">
-      <input
-        type="checkbox"
-        checked={isBuyer}
-        onChange={() => setIsBuyer(!isBuyer)}
-        className="sr-only"
-      />
-      <div className="w-12 h-6 bg-gray-300 rounded-full p-1 flex items-center">
-        <div
-          className={`w-5 h-5 rounded-full bg-teal-500 transition-transform ${
-            isBuyer ? "translate-x-6" : ""
-          }`}
-        />
+      <div className="px-20 mb-2">
+        <div className="bg-white flex justify-between items-center px-5 py-4 rounded-xl shadow-md">
+          <p className="font-medium">Switch To Buyer</p>
+          <label className="inline-flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              checked={isBuyer}
+              onChange={() => setIsBuyer(!isBuyer)}
+              className="sr-only"
+            />
+            <div className="w-12 h-6 bg-gray-300 rounded-full p-1 flex items-center">
+              <div
+                className={`w-5 h-5 rounded-full bg-teal-500 transition-transform ${
+                  isBuyer ? "translate-x-6" : ""
+                }`}
+              />
+            </div>
+          </label>
+        </div>
       </div>
-    </label>
-  </div>
-</div>
-      
-
       
 
 
@@ -128,6 +128,11 @@ export default function PortfolioPage() {
           <Settings className="w-7 h-7 text-white" />
         </button>
       </div>
+
+      {/* Side Menu */}
+      <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+
+      
     </div>
   );
 }
