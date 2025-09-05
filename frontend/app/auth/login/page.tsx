@@ -93,7 +93,9 @@ export default function SignInPage() {
         </div>
 
         {/* Sign Up Button */}
-        <button className="w-full py-3 bg-gray-200 text-teal-600 font-semibold rounded-full hover:bg-teal-500 hover:text-white transition">
+        <button 
+              onClick={() => router.push("/portfolio")}
+        className="w-full py-3 bg-gray-200 text-teal-600 font-semibold rounded-full hover:bg-teal-500 hover:text-white transition">
           Sign In
         </button>
 
