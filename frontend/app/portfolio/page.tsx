@@ -5,7 +5,7 @@ import { Bell, Home, MessageCircle, Settings, Users } from "lucide-react";
 import SideMenu from "../components/SideMenu"; 
 
 export default function PortfolioPage() {
-  const [isBuyer, setIsBuyer] = useState(false);
+  const [isHandyman, setIsHandyman] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
@@ -48,21 +48,21 @@ export default function PortfolioPage() {
         </div>
       </div>
 
-      {/* Switch to Buyer */}
+      {/* Switch to Handyman */}
       <div className="px-20 mb-2">
         <div className="bg-white flex justify-between items-center px-5 py-4 rounded-xl shadow-md">
-          <p className="font-medium">Switch To Buyer</p>
+          <p className="font-medium">Switch To Handyman</p>
           <label className="inline-flex items-center cursor-pointer">
             <input
               type="checkbox"
-              checked={isBuyer}
-              onChange={() => setIsBuyer(!isBuyer)}
+              checked={isHandyman}
+              onChange={() => setIsHandyman(!isHandyman)}
               className="sr-only"
             />
             <div className="w-12 h-6 bg-gray-300 rounded-full p-1 flex items-center">
               <div
                 className={`w-5 h-5 rounded-full bg-teal-500 transition-transform ${
-                  isBuyer ? "translate-x-6" : ""
+                  isHandyman ? "translate-x-6" : ""
                 }`}
               />
             </div>

@@ -33,18 +33,18 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
             <h2 className="text-lg font-bold mb-6">Menu</h2>
             <ul className="space-y-4">
               <li>
-                <Link href="/services" onClick={onClose}>
-                  Add Services
+                <Link href="/view-services" onClick={onClose}>
+                  View Services
                 </Link>
               </li>
               <li>
                 <Link href="/orders" onClick={onClose}>
-                  Track Orders
+                  Book Services
                 </Link>
               </li>
               <li>
                 <Link href="/account" onClick={onClose}>
-                  My Account
+                  Track Orders
                 </Link>
               </li>
               <li>
