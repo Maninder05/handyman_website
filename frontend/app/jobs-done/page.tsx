@@ -9,7 +9,7 @@ export default function ProjectsPage() {
       {/* Header with Back Arrow */}
       <div className="bg-cyan-500 p-4 relative shadow-md flex items-center justify-center">
         {/* path to home page after clicking on arrow */}
-        <Link href="/dashboard">
+        <Link href="/h-portfolio">
           <button className="text-2xl absolute left-4 top-3 text-black">
             ←
           </button>
@@ -87,7 +87,7 @@ export default function ProjectsPage() {
        {/* Footer Nav */}
        <footer className="bg-cyan-500 py-4 mt-auto">
         <div className="flex justify-around items-center text-neutral-900 text-sm font-medium">
-          <Link href="/" className="flex flex-col items-center gap-1">
+          <Link href="/h-portfolio" className="flex flex-col items-center gap-1">
             <FiHome size={20} /> Home
           </Link>
           <Link href="/messages" className="flex flex-col items-center gap-1">

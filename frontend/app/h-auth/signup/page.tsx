@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,25 +8,28 @@ import { useRouter } from "next/navigation";
 export default function SigninPage() {
   const router = useRouter();
 
+  // form fields
   const [role, setRole] = useState("Handyman");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  // errors
   const [usernameError, setUsernameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    // Reset errors
+    // reset errors before checking again
     setUsernameError("");
     setEmailError("");
     setPasswordError("");
 
     let hasError = false;
 
-    // Username validation
+    // username must exist and only letters/numbers
     if (!username) {
       setUsernameError("This field is required.");
       hasError = true;
@@ -34,7 +38,7 @@ export default function SigninPage() {
       hasError = true;
     }
 
-    // Email validation
+    // email must exist and end with @gmail.com
     if (!email) {
       setEmailError("This field is required.");
       hasError = true;
@@ -43,7 +47,7 @@ export default function SigninPage() {
       hasError = true;
     }
 
-    // Password validation
+    // password must be at least 8 characters
     if (!password) {
       setPasswordError("This field is required.");
       hasError = true;
@@ -52,43 +56,42 @@ export default function SigninPage() {
       hasError = true;
     }
 
-    // Only redirect if no errors
-    {/* path to dashboard after sign up */}
+    // if all good then go to dashboard
     if (!hasError) {
-      router.push("/dashboard");
+      router.push("/h-portfolio");
     }
-  };
+  }
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md bg-white rounded-xl shadow-xl overflow-hidden transform transition duration-700 ease-out opacity-0 animate-fadeSlideIn">
-        {/* Header */}
-        <div className="bg-teal-600 p-6 text-center">
+      <div className="w-full max-w-md bg-white rounded-xl shadow-xl overflow-hidden">
+        {/* top logo and text */}
+        <div className="bg-cyan-600 p-6 text-center">
           <Image
             src="/images/handymenlogo.jpg"
-            alt="Handyman"
+            alt="Handyman Logo"
             width={80}
             height={80}
             className="mx-auto"
           />
           <h2 className="text-lg mt-2 text-white font-semibold">
-            We will get everything fixed for you !
+            Sign In to access handyman services
           </h2>
         </div>
 
         <div className="p-6">
-          {/* Toggle */}
+          {/* role toggle */}
           <div className="flex justify-center mb-6">
             <div className="relative flex bg-gray-200 rounded-full p-1 w-64">
               <span
-                className={`absolute top-1 bottom-1 w-1/2 rounded-full bg-teal-500 transition-transform duration-300 ${
+                className={`absolute top-1 bottom-1 w-1/2 rounded-full bg-cyan-500 transition-transform ${
                   role === "Handyman" ? "translate-x-0" : "translate-x-full"
                 }`}
               />
               <button
                 type="button"
                 onClick={() => setRole("Handyman")}
-                className={`relative flex-1 z-10 py-2 rounded-full font-medium transition ${
+                className={`relative flex-1 z-10 py-2 rounded-full font-medium ${
                   role === "Handyman" ? "text-white" : "text-gray-600"
                 }`}
               >
@@ -97,7 +100,7 @@ export default function SigninPage() {
               <button
                 type="button"
                 onClick={() => setRole("Client")}
-                className={`relative flex-1 z-10 py-2 rounded-full font-medium transition ${
+                className={`relative flex-1 z-10 py-2 rounded-full font-medium ${
                   role === "Client" ? "text-white" : "text-gray-600"
                 }`}
               >
@@ -106,157 +109,89 @@ export default function SigninPage() {
             </div>
           </div>
 
-          {/* Form */}
+          {/* form inputs */}
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Username */}
             <div>
-              <label className="block text-gray-600 text-sm mb-1">
-                Username
-              </label>
+              <label className="block text-gray-600 text-sm mb-1">Username</label>
               <input
                 type="text"
+                placeholder="username123"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-teal-500 focus:outline-none text-black transition transform focus:scale-[1.02]"
-                placeholder="username123"
+                className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-cyan-500 focus:outline-none text-black"
               />
-              {usernameError && (
-                <p className="text-red-500 text-sm mt-1 animate-fadeIn">
-                  {usernameError}
-                </p>
-              )}
+              {usernameError && <p className="text-red-500 text-sm mt-1">{usernameError}</p>}
             </div>
 
-            {/* Email */}
             <div>
               <label className="block text-gray-600 text-sm mb-1">Email</label>
               <input
                 type="email"
+                placeholder="xyz@gmail.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-teal-500 focus:outline-none text-black transition transform focus:scale-[1.02]"
-                placeholder="xyz@gmail.com"
+                className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-cyan-500 focus:outline-none text-black"
               />
-              {emailError && (
-                <p className="text-red-500 text-sm mt-1 animate-fadeIn">
-                  {emailError}
-                </p>
-              )}
+              {emailError && <p className="text-red-500 text-sm mt-1">{emailError}</p>}
             </div>
 
-            {/* Password */}
             <div>
-              <label className="block text-gray-600 text-sm mb-1">
-                Password
-              </label>
+              <label className="block text-gray-600 text-sm mb-1">Password</label>
               <input
                 type="password"
+                placeholder="********"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-teal-500 focus:outline-none text-black transition transform focus:scale-[1.02]"
-                placeholder="********"
+                className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-cyan-500 focus:outline-none text-black"
               />
-              {passwordError && (
-                <p className="text-red-500 text-sm mt-1 animate-fadeIn">
-                  {passwordError}
-                </p>
-              )}
+              {passwordError && <p className="text-red-500 text-sm mt-1">{passwordError}</p>}
             </div>
 
-            {/* Forgot Password */}
-            {/* path to forgot password page */}
             <div className="text-right">
-              <a href="#" className="text-sm text-teal-600 hover:underline">
+              <a href="#" className="text-sm text-cyan-600 hover:underline">
                 Forgot Password? Reset
               </a>
             </div>
 
-            {/* Submit Button */}
             <button
               type="submit"
-              className="block w-full bg-teal-600 text-white text-center py-2 rounded-lg transition transform hover:scale-105 hover:shadow-lg"
+              className="block w-full bg-cyan-600 text-white text-center py-2 rounded-lg hover:shadow-lg"
             >
-              Sign Up
+              Sign In
             </button>
           </form>
 
-          {/* Divider */}
-          {/* path to sign up page */}
+          {/* bottom links */}
           <div className="mt-4 text-center">
             <p className="text-sm text-black">
-              Don’t have an account?{" "}
-              <Link
-                href="/signup"
-                className="text-teal-600 font-medium hover:underline"
-              >
+              Already have an account?{" "}
+              <Link href="/h-auth/login" className="text-cyan-600 font-medium hover:underline">
                 Sign In
               </Link>
             </p>
           </div>
 
-          {/* Social Sign In */}
+          {/* social sign in */}
           <div className="flex justify-center gap-6 mt-6">
-            {/* Google */}
-            {/* path to google login */}
             <a
               href="https://www.google.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-12 h-12 bg-white border rounded-lg flex items-center justify-center transition transform hover:scale-110 hover:shadow-lg"
+              className="w-12 h-12 bg-white border rounded-lg flex items-center justify-center hover:shadow-lg"
             >
-              <Image
-                src="/images/googleicon.png"
-                alt="Google"
-                width={24}
-                height={24}
-              />
+              <Image src="/images/googleicon.png" alt="Google" width={24} height={24} />
             </a>
-            {/* GitHub */}
-            {/* path to github login */}
             <a
               href="https://github.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-12 h-12 bg-white border rounded-lg flex items-center justify-center transition transform hover:scale-110 hover:shadow-lg"
+              className="w-12 h-12 bg-white border rounded-lg flex items-center justify-center hover:shadow-lg"
             >
-              <Image
-                src="/images/githublogo.png"
-                alt="GitHub"
-                width={24}
-                height={24}
-              />
+              <Image src="/images/githublogo.png" alt="GitHub" width={24} height={24} />
             </a>
           </div>
         </div>
       </div>
-
-      {/* Animations */}
-      <style jsx global>{`
-        @keyframes fadeSlideIn {
-          0% {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          100% {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .animate-fadeSlideIn {
-          animation: fadeSlideIn 0.8s ease-out forwards;
-        }
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
-        }
-        .animate-fadeIn {
-          animation: fadeIn 0.3s ease-in-out;
-        }
-      `}</style>
     </div>
   );
 }

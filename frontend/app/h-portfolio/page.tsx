@@ -55,7 +55,7 @@ export default function PortfolioPage() {
         {showMenu && (
           <div className="absolute right-6 top-16 bg-white shadow-lg rounded-lg w-56 text-black text-sm z-50">
             <ul className="divide-y">
-              <li><Link href="/add-service" className="block px-4 py-3 hover:bg-gray-50">Add Service</Link></li>
+              <li><Link href="/create-service" className="block px-4 py-3 hover:bg-gray-50">Add Service</Link></li>
               <li><Link href="/track-order" className="block px-4 py-3 hover:bg-gray-50">Track Order</Link></li>
               <li><Link href="/wishlist" className="block px-4 py-3 hover:bg-gray-50">My Wishlist</Link></li>
               <li><Link href="/membership" className="block px-4 py-3 hover:bg-gray-50">Membership Plan</Link></li>
@@ -84,13 +84,13 @@ export default function PortfolioPage() {
 
         {/* numbers for jobs done, etc */}
         <div className="flex justify-around mt-6">
-          <Link href="/jobs">
+          <Link href="/jobs-done">
             <div className=" text-black px-4 py-3 rounded-lg text-center cursor-pointer">
               <p className="text-lg font-bold text-black">15</p>
               <p className="text-m font-semibold">Job Done</p>
             </div>
           </Link>
-          <Link href="/progress">
+          <Link href="/jobs-done">
             <div className=" text-black px-4 py-3 rounded-lg text-center cursor-pointer">
               <p className="text-lg font-bold text-black">3</p>
               <p className="text-m font-semibold">Job In Progress</p>
@@ -145,7 +145,7 @@ export default function PortfolioPage() {
       {/* bottom nav bar */}
       <footer className="bg-cyan-500 py-4 mt-auto">
         <div className="flex justify-around items-center text-neutral-900 text-sm font-medium">
-          <Link href="/" className="flex flex-col items-center gap-1">
+          <Link href="/h-portfolio" className="flex flex-col items-center gap-1">
             <FiHome size={20} /> Home
           </Link>
           <Link href="/messages" className="flex flex-col items-center gap-1">
