@@ -23,7 +23,7 @@ export default function BookServicesPage() {
   return (
     <div className="min-h-screen w-full flex flex-col bg-gray-200">
       {/* Header */}
-      <div className="bg-teal-500 flex items-center justify-between p-4 relative">
+      <div className="bg-cyan-500 flex items-center justify-between p-4 relative">
         {/* Back Button */}
         <button
           onClick={() => router.back()}
@@ -65,7 +65,7 @@ export default function BookServicesPage() {
       </div>
 
       {/* Bottom Navigation */}
-      <div className="bg-teal-500 flex justify-around items-center py-3">
+      <div className="bg-cyan-500 flex justify-around items-center py-3">
         <button>
           <Home className="w-7 h-7 text-black" />
         </button>

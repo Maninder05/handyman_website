@@ -11,7 +11,7 @@ export default function SignUpPage() {
   return (
     <div className="min-h-screen w-full bg-gray-100">
       {/* Header */}
-      <div className="relative bg-teal-500 text-center p-6">
+      <div className="relative bg-cyan-500 text-center p-6">
         {/* Back Button */}
         <button
           onClick={() => router.push("/")}

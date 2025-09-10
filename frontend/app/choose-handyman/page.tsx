@@ -5,7 +5,7 @@ import { Bell, Home, MessageCircle, Settings, Users } from "lucide-react";
 
 export default function ChooseHandymanPage() {
   const searchParams = useSearchParams();
-  const service = searchParams.get("service"); // ← read ?service=Plumbing
+  const service = searchParams.get("service"); // service = Plumbing
 
   const handymen = [
     { name: "Kenji Teneka", rating: 5.0, reviews: 13, price: 55, image: "/images/kenji.jpg" },
@@ -16,7 +16,7 @@ export default function ChooseHandymanPage() {
   return (
     <div className="min-h-screen w-full flex flex-col bg-gray-200">
       {/* Header */}
-      <div className="bg-teal-500 p-4 text-center">
+      <div className="bg-cyan-500 p-4 text-center">
         <h1 className="text-xl font-bold text-white">
           {service ? `Choose Handyman for ${service}` : "Choose Handyman"}
         </h1>
@@ -40,7 +40,7 @@ export default function ChooseHandymanPage() {
               </div>
               <p className="mt-1 text-gray-700 font-medium">💵 {person.price} CAD/hr</p>
             </div>
-            <button className="bg-teal-500 text-white px-4 py-2 rounded-full font-semibold hover:bg-teal-600">
+            <button className="bg-cyan-500 text-white px-4 py-2 rounded-full font-semibold hover:bg-teal-600">
               Choose
             </button>
           </div>
@@ -48,7 +48,7 @@ export default function ChooseHandymanPage() {
       </div>
 
       {/* Bottom Navigation */}
-      <div className="bg-teal-500 flex justify-around items-center py-3">
+      <div className="bg-cyan-500 flex justify-around items-center py-3">
         <button><Home className="w-7 h-7 text-black" /></button>
         <button><MessageCircle className="w-7 h-7 text-black" /></button>
         <button><Users className="w-7 h-7 text-black" /></button>

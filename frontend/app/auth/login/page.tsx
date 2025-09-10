@@ -1,17 +1,17 @@
-// app/signin/page.tsx (Next.js 13+ with App Router)
+// app/signin/page.tsx 
 "use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function SignInPage() {
-  const [role, setRole] = useState<"handyman" | "client">("client");  /**sign in as client or handyman */
+  const [role, setRole] = useState<"handyman" | "client">("client");  /** sign in as client or handyman */
   const router = useRouter();
 
   return (
     <div className="min-h-screen w-full bg-gray-100">
       {/* Header */}
-      <div className="relative bg-teal-500 text-center p-6">
+      <div className="relative bg-cyan-500 text-center p-6">
         {/* Back Button */}
         <button
           onClick={() => router.push("/")} //* Navigate to home page

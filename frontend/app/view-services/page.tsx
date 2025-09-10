@@ -31,7 +31,7 @@ export default function ServicesPage() {
       </div>
 
       {/* Search Bar */}
-      <div className="p-4 bg-teal-500">
+      <div className="p-4 bg-cyan-500">
         <input
           type="text"
           placeholder="Search Handyman"
@@ -40,7 +40,7 @@ export default function ServicesPage() {
       </div>
 
       {/* Promo Banner */}
-      <div className="p-4 bg-teal-500">
+      <div className="p-4 bg-cyan-500">
         <div className="bg-white rounded-xl shadow flex items-center justify-between p-4">
           <div>
             <h2 className="text-sm font-bold text-purple-600">
@@ -62,7 +62,7 @@ export default function ServicesPage() {
       </div>
 
       {/* Categories */}
-      <div className="bg-teal-500 px-4 py-6">
+      <div className="bg-cyan-500 px-4 py-6">
         <div className="flex justify-between items-center mb-3">
           <h3 className="font-semibold">Category</h3>
           <a href="#" className="text-sm text-purple-600 hover:underline">

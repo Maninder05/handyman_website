@@ -11,7 +11,7 @@ export default function PortfolioPage() {
   return (
     <div className="min-h-screen w-full flex flex-col bg-gray-100">
       {/* Header */}
-      <div className="bg-teal-500 p-6 relative mb-2">
+      <div className="bg-cyan-500 p-6 relative mb-2">
         {/* Menu Button */}
         <button
           onClick={() => setIsMenuOpen(true)}
@@ -61,7 +61,7 @@ export default function PortfolioPage() {
             />
             <div className="w-12 h-6 bg-gray-300 rounded-full p-1 flex items-center">
               <div
-                className={`w-5 h-5 rounded-full bg-teal-500 transition-transform ${
+                className={`w-5 h-5 rounded-full bg-cyan-500 transition-transform ${
                   isHandyman ? "translate-x-6" : ""
                 }`}
               />
