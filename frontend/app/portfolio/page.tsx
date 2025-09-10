@@ -110,7 +110,7 @@ export default function PortfolioPage() {
       </div>
 
       {/* Bottom Navigation */}
-      <div className="mt-auto bg-teal-500 flex justify-around items-center py-3">
+      <div className="mt-auto bg-cyan-500 flex justify-around items-center py-3">
         <button>
           <Home className="w-7 h-7 text-white" />
         </button>
