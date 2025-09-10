@@ -1,68 +1,120 @@
 "use client";
 
+import { useState, memo } from "react";
+import { CheckCircle2 } from "lucide-react";
+
+function cn(...cls: Array<string | false | undefined>) {
+  return cls.filter(Boolean).join(" ");
+}
+
 type Plan = {
   name: string;
-  price: string;
-  note: string;
+  blurb: string;
+  monthly: number;
+  yearly: number;
   badge?: string;
-  cta: string;
+  features: string[];
 };
 
-const plans: Plan[] = [
-  { name: "Basic",    price: "$10/month", note: "For individuals starting out.",     cta: "SUBSCRIBE" },
-  { name: "Seasonal", price: "$10/month", note: "For professionals needing more.",   badge: "POPULAR", cta: "SUBSCRIBE" },
-  { name: "Pro",      price: "$15/month", note: "For large organizations.",          cta: "SUBSCRIBE" },
+const PLANS: Plan[] = [
+  {
+    name: "Basic",
+    blurb: "Great for individuals starting out.",
+    monthly: 10,
+    yearly: 96,
+    features: ["Create a profile", "Browse & request jobs", "In‑app messaging", "Email support"],
+  },
+  {
+    name: "Seasonal",
+    blurb: "For weekend warriors & seasonal pros.",
+    monthly: 12,
+    yearly: 108,
+    badge: "Popular",
+    features: ["Everything in Basic", "5 featured listings / mo", "Priority placement in search", "Standard support"],
+  },
+  {
+    name: "Pro",
+    blurb: "For full‑time contractors who want more.",
+    monthly: 15,
+    yearly: 144,
+    features: ["Everything in Seasonal", "Unlimited featured listings", "Verified badge", "Priority support"],
+  },
 ];
 
-export default function MembershipPage() {
+const BillingToggle = memo(function BillingToggle({ value, onChange }: { value: "monthly" | "yearly"; onChange: () => void }) {
   return (
-    <div className="min-h-screen bg-white text-black">
-      <div className="mx-auto max-w-6xl px-4 py-10">
-        <h1 className="mb-8 text-4xl font-extrabold">
-          Choose a plan to kick start your needs.
-        </h1>
-
-        {/* Ensure all cards stretch to same height */}
-        <section className="grid items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {plans.map((p) => (
-            <article
-              key={p.name}
-              className="h-full rounded-2xl border border-gray-200 bg-white p-6 shadow-sm"
-            >
-              <div className="flex h-full flex-col">
-                {/* Reserve space for a badge so title lines up across cards */}
-                <div className="mb-3 h-6">
-                  {p.badge && (
-                    <span className="inline-block rounded-md bg-red-700 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-white">
-                      {p.badge}
-                    </span>
-                  )}
-                </div>
-
-                <h2 className="text-3xl font-extrabold">{p.name}</h2>
-
-                {/* Reserve consistent space for price + note so the divider aligns */}
-                <div className="mt-4 min-h-[72px]">
-                  <div className="text-2xl font-extrabold tabular-nums">{p.price}</div>
-                  <div className="text-sm text-gray-600">{p.note}</div>
-                </div>
-
-                <hr className="mt-4 border-gray-200" />
-
-                {/* Push button to the bottom so all buttons align */}
-                <div className="mt-auto pt-6">
-                  <button
-                    className="w-full rounded-full bg-red-700 px-6 py-3 text-base font-semibold text-white transition hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-red-400"
-                    // onClick={() => alert(`Subscribe: ${p.name}`)}
-                  >
-                    {p.cta}
-                  </button>
-                </div>
-              </div>
-            </article>
-          ))}
-        </section>
-      </div>
+    <div className="flex items-center gap-3 text-sm">
+      <span className={cn("px-3 py-1 rounded-full border", value === "monthly" ? "border-neutral-900" : "border-transparent text-neutral-500")}>Monthly</span>
+      <button aria-label="Toggle billing period" onClick={onChange} className="relative inline-flex h-8 w-14 items-center rounded-full border border-neutral-300">
+        <span className={cn("inline-block h-6 w-6 transform rounded-full bg-neutral-900 transition", value === "yearly" ? "translate-x-7" : "translate-x-1")} />
+      </button>
+      <span className={cn("px-3 py-1 rounded-full border", value === "yearly" ? "border-neutral-900" : "border-transparent text-neutral-500")}>Yearly <span className="ml-1 text-xs text-green-600">(Save ~20%)</span></span>
     </div>
+  );
+});
+
+const PlanCard = memo(function PlanCard({ plan, billing }: { plan: Plan; billing: "monthly" | "yearly" }) {
+  const price = billing === "monthly" ? plan.monthly : plan.yearly;
+  const cycle = billing === "monthly" ? "/month" : "/year";
+
+  return (
+    <article className="relative rounded-2xl border border-neutral-200 shadow-sm hover:shadow-md transition-shadow p-6 sm:p-8 flex flex-col min-h-[440px]">
+      {plan.badge && (
+        <span className="absolute -top-3 right-6 rounded-full border border-neutral-200 bg-white px-3 py-1 text-xs font-medium shadow-sm">{plan.badge}</span>
+      )}
+
+      <div>
+        <h2 className="text-xl font-semibold tracking-tight">{plan.name}</h2>
+        <p className="mt-1 text-neutral-600">{plan.blurb}</p>
+        <div className="mt-5 flex items-end gap-2">
+          <span className="text-4xl font-bold leading-none">${price}</span>
+          <span className="mb-1 text-neutral-600">{cycle}</span>
+        </div>
+      </div>
+
+      <ul className="mt-6 space-y-3 text-sm">
+        {plan.features.map((f) => (
+          <li key={f} className="flex items-start gap-3">
+            <CheckCircle2 className="h-5 w-5 mt-0.5" aria-hidden />
+            <span>{f}</span>
+          </li>
+        ))}
+      </ul>
+
+      <div className="mt-auto pt-8">
+        <button className="w-full rounded-xl border border-neutral-300 bg-neutral-900 text-white px-4 py-3 font-medium hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-neutral-400" onClick={() => alert(`${plan.name} selected (${billing}).`)}>
+          Choose {plan.name}
+        </button>
+        <p className="mt-3 text-center text-xs text-neutral-500">{billing === "yearly" ? "Billed annually." : "Billed monthly. Cancel anytime."}</p>
+      </div>
+    </article>
+  );
+});
+
+export default function MembershipPage() {
+  const [billing, setBilling] = useState<"monthly" | "yearly">("monthly");
+
+  return (
+    <main className="min-h-screen bg-white text-neutral-900">
+      <header className="w-full sticky top-0 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/70 border-b border-neutral-100">
+        <div className="mx-auto max-w-[1100px] px-6 py-4 flex items-center justify-between">
+          <div className="text-xl font-semibold tracking-tight">Membership</div>
+          <nav className="flex items-center gap-2 sm:gap-3">
+            <BillingToggle value={billing} onChange={() => setBilling(billing === "monthly" ? "yearly" : "monthly")} />
+          </nav>
+        </div>
+      </header>
+
+      <section className="mx-auto max-w-[1100px] px-6 py-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+          {PLANS.map((p) => (
+            <PlanCard key={p.name} plan={p} billing={billing} />
+          ))}
+        </div>
+        <p className="mt-10 text-xs text-neutral-500 text-center">Prices are in CAD. Taxes may apply. Changing plans prorates automatically.</p>
+      </section>
+
+      <footer className="h-24" />
+    </main>
   );
 }
