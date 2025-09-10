@@ -2,13 +2,13 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Bell, Home, MessageCircle, Settings, Users } from "lucide-react";
+import { Bell, Home, MessageCircle, Settings, Users } from "lucide-react";// Icons from lucide-react
 import SideMenu from "../components/SideMenu"; 
 
 export default function BookServicesPage() {
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+// List of services with icons
   const services = [
     { name: "Plumbing", icon: "🚰" },
     { name: "Technician", icon: "⚡" },
@@ -55,6 +55,7 @@ export default function BookServicesPage() {
         {services.map((service, idx) => (
           <div
             key={idx}
+            onClick={() => router.push(`/choose-handyman?service=${service.name}`)}
             className="bg-white rounded-xl shadow flex flex-col items-center justify-center p-6 hover:bg-gray-100 cursor-pointer"
           >
             <span className="text-4xl">{service.icon}</span>
@@ -85,7 +86,10 @@ export default function BookServicesPage() {
 
       {/* Next Button */}
       <div className="bg-gray-200 p-4 flex justify-end">
-        <button className="bg-gray-300 text-black px-6 py-2 rounded-lg font-semibold flex items-center gap-2 hover:bg-gray-400">
+        <button
+          onClick={() => router.push("/choose-handyman")}
+          className="bg-gray-300 text-black px-6 py-2 rounded-lg font-semibold flex items-center gap-2 hover:bg-gray-400"
+        >
           Next →
         </button>
       </div>

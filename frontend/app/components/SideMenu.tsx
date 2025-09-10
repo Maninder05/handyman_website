@@ -4,7 +4,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface SideMenuProps {
-  isOpen: boolean;
+  isOpen: boolean; //control if the menu is visible
   onClose: () => void;
 }
 
@@ -22,7 +22,7 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
             exit={{ opacity: 0 }}
           />
 
-          {/* Drawer */}
+          {/* Drawer ss*/}
           <motion.div
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
@@ -38,7 +38,7 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
                 </Link>
               </li>
               <li>
-                <Link href="/orders" onClick={onClose}>
+                <Link href="/book-services" onClick={onClose}>
                   Book Services
                 </Link>
               </li>

@@ -1,8 +1,12 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import { Bell, Home, MessageCircle, Settings, Users } from "lucide-react";
 
 export default function ChooseHandymanPage() {
+  const searchParams = useSearchParams();
+  const service = searchParams.get("service"); // ← read ?service=Plumbing
+
   const handymen = [
     { name: "Kenji Teneka", rating: 5.0, reviews: 13, price: 55, image: "/images/kenji.jpg" },
     { name: "Luke Moretti", rating: 4.7, reviews: 11, price: 40, image: "/images/luke.jpg" },
@@ -13,7 +17,9 @@ export default function ChooseHandymanPage() {
     <div className="min-h-screen w-full flex flex-col bg-gray-200">
       {/* Header */}
       <div className="bg-teal-500 p-4 text-center">
-        <h1 className="text-xl font-bold text-white">Choose Handyman</h1>
+        <h1 className="text-xl font-bold text-white">
+          {service ? `Choose Handyman for ${service}` : "Choose Handyman"}
+        </h1>
         <p className="text-sm text-white mt-1">
           Compare and choose the right handyman for your job <br />
           — fast, trusted, and nearby.

@@ -1,11 +1,11 @@
-// app/signup/page.tsx (Next.js 13+ with App Router)
+// app/signup/page.tsx 
 "use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function SignUpPage() {
-  const [role, setRole] = useState<"handyman" | "client">("client");
+  const [role, setRole] = useState<"handyman" | "client">("client");// sign up as client or handyman
   const router = useRouter();
 
   return (

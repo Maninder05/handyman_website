@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function SignInPage() {
-  const [role, setRole] = useState<"handyman" | "client">("client");
+  const [role, setRole] = useState<"handyman" | "client">("client");  /**sign in as client or handyman */
   const router = useRouter();
 
   return (
@@ -14,7 +14,7 @@ export default function SignInPage() {
       <div className="relative bg-teal-500 text-center p-6">
         {/* Back Button */}
         <button
-          onClick={() => router.push("/")}
+          onClick={() => router.push("/")} //* Navigate to home page
           className="absolute left-4 top-4 text-white text-2xl font-bold hover:text-gray-200"
         >
           ←
@@ -33,7 +33,7 @@ export default function SignInPage() {
           </div>
         </div>
 
-        {/* Role Switch */}
+        {/* Role Switch either handyman or client */}
         <div className="flex justify-center gap-6 mt-6">
           <button
             onClick={() => setRole("handyman")}

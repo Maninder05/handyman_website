@@ -31,7 +31,7 @@ export default function PortfolioPage() {
           <p className="text-sm text-black">kenjiteneka@gmail.com</p>
         </div>
 
-        {/* Stats */}
+        {/* Stats for Jobs done, Jobs in progress, Rating */}
         <div className="flex justify-around text-center mt-6 mb-1 text-black font-semibold">
           <div>
             <p className="text-xl">15</p>
