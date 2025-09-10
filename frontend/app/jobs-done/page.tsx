@@ -1,39 +1,29 @@
 "use client";
-import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import {FiHome, FiMessageCircle, FiHelpCircle, FiBell, FiSettings } from "react-icons/fi";
 
 export default function ProjectsPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100">
+    <div className="min-h-screen flex flex-col bg-neutral-100">
       {/* Header with Back Arrow */}
-      <div className="bg-teal-500 p-4 relative shadow-md flex items-center justify-center">
+      <div className="bg-cyan-500 p-4 relative shadow-md flex items-center justify-center">
+        {/* path to home page after clicking on arrow */}
         <Link href="/dashboard">
-          <button className="absolute left-4 top-4 text-black">
-            <ArrowLeft size={24} />
+          <button className="text-2xl absolute left-4 top-3 text-black">
+            ←
           </button>
         </Link>
-        <h1 className="text-xl font-bold text-black">Projects</h1>
+        <h1 className="text-2xl font-bold text-black">Projects</h1>
       </div>
 
       {/* Content */}
-      <motion.div 
-        initial={{ opacity: 0 }} 
-        animate={{ opacity: 1 }} 
-        transition={{ duration: 0.8 }}
-        className="flex-1 p-4 space-y-6"
-      > 
         {/* In Progress */}
-        <div>
-          <h2 className="text-lg font-semibold mb-2 text-black">In Progress</h2>
-          <motion.div
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="bg-white rounded-2xl p-4 shadow-md flex items-center space-x-4 cursor-pointer"
+        <div className="mb-6">
+          <h2 className="text-3xl font-bold text-black mb-4 mt-6 text-center">In Progress</h2>
+          <div
+            className="bg-white flex-1 max-w-3xl mx-auto w-fullmb-8 rounded-2xl px-4 py-6 "
+
           >
             <Image
               src="/images/profilelogo.jpg"
@@ -43,43 +33,20 @@ export default function ProjectsPage() {
               className="w-16 h-16 rounded-xl object-cover"
             />
             <div className="flex flex-col">
-              <span className="font-bold text-black">VOLTAGE MAINTENANCE</span>
-              <span className="text-gray-600 text-sm">Client: Chris Matthem</span>
-              <span className="text-blue-500 text-sm font-medium">In Progress ⏳</span>
-              <span className="text-black font-semibold">$45/hr</span>
+              <p className="font-bold text-black">VOLTAGE MAINTENANCE</p>
+              <p className="text-gray-600 text-sm">Client: Chris Matthem</p>
+              <p className="text-blue-500 text-sm font-medium">In Progress ⏳</p>
+              <p className="text-black font-semibold">$45/hr</p>
             </div>
-          </motion.div>
+          </div>
         </div>
 
         {/* Completed */}
-        <div>
-          <h2 className="text-lg font-semibold mb-2 text-black">Completed</h2>
-          <motion.div
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="bg-white rounded-2xl p-4 shadow-md flex items-center space-x-4 mb-4 cursor-pointer"
-          >
-            <div className="w-16 h-16 flex items-center justify-center rounded-xl bg-gray-200">
-              <span className="text-3xl">👷</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="font-bold text-black">RESIDENTIAL WIRING REPAIR</span>
-              <span className="text-gray-600 text-sm">Client: Mariene Bonelyn</span>
-              <span className="text-yellow-500 text-sm">⭐⭐⭐⭐⭐ 5</span>
-              <span className="text-black font-semibold">$55/hr</span>
-            </div>
-          </motion.div>
+        <div className="mb-6">
+          <h2 className="text-3xl font-bold text-black mb-4 mt-6 text-center">Completed</h2>
+          <div
+            className="bg-white flex-1 max-w-3xl mx-auto w-full rounded-2xl px-4 py-6 mb-4"
 
-          <motion.div
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="bg-white rounded-2xl p-4 shadow-md flex items-center space-x-4 cursor-pointer"
           >
             <Image
               src="/images/profilelogo.jpg"
@@ -89,48 +56,54 @@ export default function ProjectsPage() {
               className="w-16 h-16 rounded-xl object-cover"
             />
             <div className="flex flex-col">
-              <span className="font-bold text-black">POWER OUTLET/LOAD REPAIR</span>
-              <span className="text-gray-600 text-sm">Client: Asha Sharma</span>
-              <span className="text-yellow-500 text-sm">⭐⭐⭐⭐ 4.9</span>
-              <span className="text-black font-semibold">$40/hr</span>
+              <p className="font-bold text-black">RESIDENTIAL WIRING REPAIR</p>
+              <p className="text-gray-600 text-sm">Client: Mariene Bonelyn</p>
+              <p className="text-yellow-500 text-sm">⭐⭐⭐⭐⭐ 5</p>
+              <p className="text-black font-semibold">$55/hr</p>
             </div>
-          </motion.div>
+            </div>
+
+          <div
+            className="bg-white flex-1 max-w-3xl mx-auto w-full rounded-2xl px-4 py-6 mb-4"
+
+          >
+            <Image
+              src="/images/profilelogo.jpg"
+              alt="Power Outlet Repair"
+              width={90}
+              height={90}
+              className="w-16 h-16 rounded-xl object-cover"
+            />
+            <div className="flex flex-col">
+              <p className="font-bold text-black">POWER OUTLET/LOAD REPAIR</p>
+              <p className="text-gray-600 text-sm">Client: Asha Sharma</p>
+              <p className="text-yellow-500 text-sm">⭐⭐⭐⭐ 4.9</p>
+              <p className="text-black font-semibold">$40/hr</p>
+            </div>
+          </div>
         </div>
-      </motion.div>
+      
 
        {/* Footer Nav */}
-      <div className="mt-auto flex justify-around bg-white border-t py-3 shadow-inner">
-        <Link href="/">
-          <button className="flex flex-col items-center text-gray-700">
-            <span className="text-lg">🏠</span>
-            <span className="text-xs">Home</span>
-          </button>
-        </Link>
-        <Link href="/chat">
-          <button className="flex flex-col items-center text-gray-700">
-            <span className="text-lg">💬</span>
-            <span className="text-xs">Chat</span>
-          </button>
-        </Link>
-        <Link href="/explore">
-          <button className="flex flex-col items-center text-gray-700">
-            <span className="text-lg">🔍</span>
-            <span className="text-xs">Explore</span>
-          </button>
-        </Link>
-        <Link href="/faq">
-          <button className="flex flex-col items-center text-gray-700">
-            <span className="text-lg">❓</span>
-            <span className="text-xs">FAQ</span>
-          </button>
-        </Link>
-        <Link href="/settings">
-          <button className="flex flex-col items-center text-gray-700">
-            <span className="text-lg">⚙️</span>
-            <span className="text-xs">Settings</span>
-          </button>
-        </Link>
-      </div>
+       <footer className="bg-cyan-500 py-4 mt-auto">
+        <div className="flex justify-around items-center text-neutral-900 text-sm font-medium">
+          <Link href="/" className="flex flex-col items-center gap-1">
+            <FiHome size={20} /> Home
+          </Link>
+          <Link href="/messages" className="flex flex-col items-center gap-1">
+            <FiMessageCircle size={20} /> Messages
+          </Link>
+          <Link href="/help" className="flex flex-col items-center gap-1">
+            <FiHelpCircle size={20} /> Help
+          </Link>
+          <Link href="/notifications" className="flex flex-col items-center gap-1">
+            <FiBell size={20} /> Notifications
+          </Link>
+          <Link href="/settings" className="flex flex-col items-center gap-1">
+            <FiSettings size={20} /> Settings
+          </Link>
+        </div>
+      </footer>
     </div>
   );
 }
