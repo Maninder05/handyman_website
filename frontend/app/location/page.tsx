@@ -416,7 +416,7 @@ export default function HandymanLocator() {
               <input
                 type="text"
                 placeholder="Search Location or Handyman"
-                className="w-full pl-10 pr-4 py-3 border-2 border-teal-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-white"
+                className="w-full pl-10 pr-4 py-3 border-2 border-teal-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent text-black  placeholder:text-black bg-white"
                 value={searchQuery}
                 onChange={handleSearch}
               />
