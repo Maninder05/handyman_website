@@ -3,7 +3,6 @@
 export default function NotificationsPage() {
   return (
     <div className="min-h-screen bg-white text-neutral-900">
-      {/* HEADER with background color */}
       <header
         className="w-full sticky top-0 border-b border-neutral-200" style={{ backgroundColor: "#59b6bd" }}
       >
@@ -19,7 +18,6 @@ export default function NotificationsPage() {
         </div>
       </header>
 
-      {/* BODY */}
       <div className="mx-auto max-w-[1100px] px-6 py-16">
         <div className="flex flex-col items-center justify-center text-center">
           <p className="text-lg font-medium text-neutral-700">

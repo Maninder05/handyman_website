@@ -2,6 +2,7 @@
 
 import { useState, memo } from "react";
 import { CheckCircle2 } from "lucide-react";
+import Link from "next/link";
 
 function cn(...cls: Array<string | false | undefined>) {
   return cls.filter(Boolean).join(" ");
@@ -16,7 +17,7 @@ type Plan = {
   features: string[];
 };
 
-const PLANS: Plan[] = [
+const PLANS: Plan[] = [  /** Static plan data used to render the cards */
   {
     name: "Basic",
     blurb: "Great for individuals starting out.",
@@ -29,7 +30,7 @@ const PLANS: Plan[] = [
     blurb: "For weekend warriors & seasonal pros.",
     monthly: 12,
     yearly: 108,
-    badge: "Popular",
+    badge: "Popular", //Highlighted badge 
     features: ["Everything in Basic", "5 featured listings / mo", "Priority placement in search", "Standard support"],
   },
   {
@@ -82,9 +83,12 @@ const PlanCard = memo(function PlanCard({ plan, billing }: { plan: Plan; billing
       </ul>
 
       <div className="mt-auto pt-8">
-        <button className="w-full rounded-xl border border-neutral-300 bg-neutral-900 text-white px-4 py-3 font-medium hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-neutral-400" onClick={() => alert(`${plan.name} selected (${billing}).`)}>
-          Choose {plan.name}
-        </button>
+        <Link
+        href="/payment"
+        className="block w-full rounded-xl border border-neutral-300 bg-neutral-900 text-white px-4 py-3 text-center font-medium hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-neutral-400"
+        >
+        Choose {plan.name}
+        </Link>
         <p className="mt-3 text-center text-xs text-neutral-500">{billing === "yearly" ? "Billed annually." : "Billed monthly. Cancel anytime."}</p>
       </div>
     </article>
