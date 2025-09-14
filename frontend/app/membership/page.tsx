@@ -103,9 +103,7 @@ export default function MembershipPage() {
       <header className="w-full sticky top-0 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/70 border-b border-neutral-100">
         <div className="mx-auto max-w-[1100px] px-6 py-4 flex items-center justify-between">
           <div className="text-xl font-semibold tracking-tight">Membership</div>
-          <nav className="flex items-center gap-2 sm:gap-3">
-            <BillingToggle value={billing} onChange={() => setBilling(billing === "monthly" ? "yearly" : "monthly")} />
-          </nav>
+          <nav className="flex items-center gap-2 sm:gap-3" />
         </div>
       </header>
 
@@ -115,6 +113,12 @@ export default function MembershipPage() {
             <PlanCard key={p.name} plan={p} billing={billing} />
           ))}
         </div>
+        <div className="mt-8 flex justify-center md:justify-end">
+          <BillingToggle value={billing} onChange={() => setBilling(billing === "monthly" ? "yearly" : "monthly")} />
+        </div>
+      </section>
+      
+      <section className="mx-auto max-w-[1100px] px-6">
         <p className="mt-10 text-xs text-neutral-500 text-center">Prices are in CAD. Taxes may apply. Changing plans prorates automatically.</p>
       </section>
 
