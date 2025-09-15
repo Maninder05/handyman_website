@@ -3,11 +3,9 @@
 import { useState, memo } from "react";
 import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
-<<<<<<< Updated upstream
 import Link from "next/link";
-=======
 import {FiHome, FiMessageCircle, FiHelpCircle, FiBell, FiSettings } from "react-icons/fi";
->>>>>>> Stashed changes
+import {FiHome, FiMessageCircle, FiHelpCircle, FiBell, FiSettings } from "react-icons/fi";
 
 function cn(...cls: Array<string | false | undefined>) {
   return cls.filter(Boolean).join(" ");
