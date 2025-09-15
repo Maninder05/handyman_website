@@ -102,108 +102,44 @@ export default function HelpCentrePage() {
         </section>
 
         <section className="mt-10 max-w-5xl mx-auto px-6">
-          <h2 className="text-2xl font-semibold mb-6">Frequently Asked Questions</h2>
+          <h2 className="mb-8 text-center text-4xl sm::text-5xl font-extrabold uppercase tracking-tight">Frequently Asked Questions</h2>
 
-          <div className="space-y-3">
-            <details className="group rounded-lg border border-neutral-200 px-5 py-4">
-              <summary className="cursor-pointer font-medium list-none">
-                How do I book a handyman?
-              </summary>
-              <div className="mt-2 text-sm text-neutral-700">
-                Search for a service, pick a time that works, and confirm your booking. 
-                You’ll get a confirmation email with the details.
-              </div>
-            </details>
-
-            <details className="group rounded-lg border border-neutral-200 px-5 py-4">
-              <summary className="cursor-pointer font-medium list-none">
-                What are the payment options?
-              </summary>
-              <div className="mt-2 text-sm text-neutral-700">
-                We accept credit/debit cards and major digital wallets. Payments are held 
-                securely and released after the job is completed.
-              </div>
-            </details>
-
-            <details className="group rounded-lg border border-neutral-200 px-5 py-4">
-              <summary className="cursor-pointer font-medium list-none">
-                Can I cancel or reschedule?
-              </summary>
-              <div className="mt-2 text-sm text-neutral-700">
-                Yes. You can cancel or reschedule from your bookings page. Fees may apply 
-                for late cancellations depending on the provider’s policy.
-              </div>
-            </details>
-
-            <details className="group rounded-lg border border-neutral-200 px-5 py-4">
-              <summary className="cursor-pointer font-medium list-none">
-                Are handymen verified?
-              </summary>
-              <div className="mt-2 text-sm text-neutral-700">
-                All pros complete ID verification and profile checks. Check ratings and 
-                reviews on each profile before booking.
-              </div>
-            </details>
-
-            <details className="group rounded-lg border border-neutral-200 px-5 py-4">
-              <summary className="cursor-pointer font-medium list-none">
-                How are prices determined?
-              </summary>
-              <div className="mt-2 text-sm text-neutral-700">
-                Pricing is set by each provider based on task type, duration, and materials. 
-                You’ll see an estimate before confirming.
-              </div>
-            </details>
-
-            <details className="group rounded-lg border border-neutral-200 px-5 py-4">
-              <summary className="cursor-pointer font-medium list-none">
-                Do I need to provide tools or materials?
-              </summary>
-              <div className="mt-2 text-sm text-neutral-700">
-                Most handymen bring their own basic tools. If special materials are required, 
-                you’ll discuss this with your provider before the job.
-              </div>
-            </details>
-
-            <details className="group rounded-lg border border-neutral-200 px-5 py-4">
-              <summary className="cursor-pointer font-medium list-none">
-                Is my payment secure?
-              </summary>
-              <div className="mt-2 text-sm text-neutral-700">
-                Yes. All payments go through our secure system. Providers are paid only 
-                after the work is confirmed as complete.
-              </div>
-            </details>
-
-            <details className="group rounded-lg border border-neutral-200 px-5 py-4">
-              <summary className="cursor-pointer font-medium list-none">
-                What if I’m not satisfied with the work?
-              </summary>
-              <div className="mt-2 text-sm text-neutral-700">
-                You can report issues directly in the app. Our support team will step in 
-                to resolve disputes and ensure fair outcomes.
-              </div>
-            </details>
-
-            <details className="group rounded-lg border border-neutral-200 px-5 py-4">
-              <summary className="cursor-pointer font-medium list-none">
-                Do you offer insurance or protection?
-              </summary>
-              <div className="mt-2 text-sm text-neutral-700">
-                Yes, jobs booked through our platform are covered by HandyCover for customers, 
-                giving you peace of mind in case of accidents or damages.
-              </div>
-            </details>
-
-            <details className="group rounded-lg border border-neutral-200 px-5 py-4">
-              <summary className="cursor-pointer font-medium list-none">
-                How do I become a handyman on the platform?
-              </summary>
-              <div className="mt-2 text-sm text-neutral-700">
-                Sign up, complete verification, and list your services. Once approved, 
-                you’ll start receiving customer requests in your area.
-              </div>
-            </details>
+          <div className="space-y-4">
+            {[
+              {q: "How do I book a handyman?", a: "Search for a service, pick a time that works, and confirm your booking. You’ll get a confirmation email with the details."},
+              {q: "What are the payment options?", a: "We accept credit/debit cards and major digital wallets. Payments are held securely and released after the job is completed."},
+              {q: "Can I cancel or reschedule?", a: "Yes. You can cancel or reschedule from your bookings page. Fees may apply for late cancellations depending on the provider’s policy."},
+              {q: "Are handymen verified?", a: "All pros complete ID verification and profile checks. Check ratings and reviews on each profile before booking."},
+              {q: "How are prices determined?", a: "Pricing is set by each provider based on task type, duration, and materials. You’ll see an estimate before confirming."},
+              {q: "Do I need to provide tools or materials?", a: "Most handymen bring their own basic tools. If special materials are required, you’ll discuss this with your provider before the job."},
+              {q: "Is my payment secure?", a: "Yes. All payments go through our secure system. Providers are paid only after the work is confirmed as complete."},
+              {q: "What if I’m not satisfied with the work?", a: "You can report issues directly in the app. Our support team will step in to resolve disputes and ensure fair outcomes."},
+              {q: "Do you offer insurance or protection?", a: "Yes, jobs booked through our platform are covered by HandyCover for customers, giving you peace of mind in case of accidents or damages."},
+              {q: "How do I become a handyman on the platform?", a: "Sign up, complete verification, and list your services. Once approved, you’ll start receiving customer requests in your area."},
+            ].map(({q, a}, i) => (
+              <details key={i} className="group rounded-2xl bg-neutral-100/80 px-5 sm:px-6 py-4 sm:py-5 shadow-sm hover:bg-neutral-100 transition">
+                <summary className="list-none cursor-pointer">
+                  <div className="flex items-center gap-4">
+                    <div className="flex-1 text-base sm:text-lg font-medium ">{q}</div>
+                    <span className="grid h-10 w-10 place-items-center rounded-full bg-neutral-200 transition-colors group-open:bg-[#008080]">
+                      <svg 
+                        viewBox="0 0 24 24"
+                        className="h-5 w-5 transition-transform group-open:rotate-180"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true">
+                          <path d="m6 9 6 6 6 -6" /> 
+                      </svg>
+                    </span>
+                  </div>
+                </summary>
+                <div className="pt-3 sm:pt-4 text-sm sm:text-[15px] leading-relaxed text-neutral-700">{a}</div>
+              </details>
+            ))}
+            
           </div>
         </section>
 
