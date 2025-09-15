@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 export default function SignUpPage() {
@@ -98,7 +99,38 @@ export default function SignUpPage() {
     >
       Sign Up
     </button>
-
+     <div className="flex justify-center gap-6 mt-6">
+        {/* Google */}
+        {/* path to google login */}
+        <a
+          href="https://www.google.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-12 h-12 bg-white border rounded-lg flex items-center justify-center transition transform hover:scale-110 hover:shadow-lg"
+        >
+          <Image
+            src="/images/googleicon.png"
+            alt="Google"
+            width={24}
+            height={24}
+          />
+        </a>
+        {/* GitHub */}
+        {/* path to github login */}
+        <a
+          href="https://github.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-12 h-12 bg-white border rounded-lg flex items-center justify-center transition transform hover:scale-110 hover:shadow-lg"
+        >
+          <Image
+            src="/images/githublogo.png"
+            alt="GitHub"
+            width={24}
+            height={24}
+          />
+        </a>
+      </div>
         {/* Footer */}
         <p className="text-center text-sm text-gray-600 mt-4">
           New to Handyman App?{" "}

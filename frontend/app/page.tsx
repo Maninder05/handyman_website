@@ -35,13 +35,13 @@ export default function LandingPage() {
               Contact
             </a>
             <a
-              href="/h-auth/signup"
+              href="/auth/signup"
               className="ml-6 px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-neutral-900 rounded-lg shadow transition"
             >
               Sign Up
             </a>
             <a
-              href="/h-auth/login"
+              href="/auth/login"
               className="px-4 py-2 border border-yellow-400 text-yellow-400 rounded-lg hover:bg-neutral-800 transition"
             >
               Login
@@ -68,7 +68,7 @@ export default function LandingPage() {
             quality, trust, and efficiency every time.
           </p>
           <a
-            href="/h-auth/signup"
+            href="/auth/signup"
             className="px-8 py-3 bg-cyan-500 hover:bg-cyan-600 text-neutral-900 rounded-xl text-lg font-medium shadow-lg transition"
           >
           Get Started Now
@@ -151,7 +151,7 @@ export default function LandingPage() {
             stress-free.
           </p>
           <a
-            href="/h-auth/signup"
+            href="/auth/signup"
             className="px-8 py-3 bg-neutral-900 hover:bg-neutral-800 text-cyan-400 rounded-xl text-lg font-medium shadow-lg transition"
           >
             Sign Up Now

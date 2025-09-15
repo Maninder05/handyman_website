@@ -19,7 +19,7 @@ export default function OrderDetailsPage() {
       {/* Header with Back Arrow */}
       <div className="bg-cyan-500 p-4 relative shadow-md flex items-center justify-center">
         {/* path to home page after clicking on arrow */}
-        <Link href="/dashboard">
+        <Link href="/portfolio">
           <button className="text-2xl absolute left-4 top-3 text-black">←</button>
         </Link>
         <h1 className="text-2xl font-bold text-black">Order Details</h1>
