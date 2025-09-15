@@ -5,16 +5,16 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function SignInPage() {
-  const [role, setRole] = useState<"handyman" | "client">("client");  /** sign in as client or handyman */
+  const [role, setRole] = useState<"handyman" | "client">("client");
   const router = useRouter();
 
   return (
     <div className="min-h-screen w-full bg-gray-100">
       {/* Header */}
-      <div className="relative bg-cyan-500 text-center p-6">
+      <div className="relative bg-teal-500 text-center p-6">
         {/* Back Button */}
         <button
-          onClick={() => router.push("/")} //* Navigate to home page
+          onClick={() => router.push("/")}
           className="absolute left-4 top-4 text-white text-2xl font-bold hover:text-gray-200"
         >
           ←
@@ -33,7 +33,7 @@ export default function SignInPage() {
           </div>
         </div>
 
-        {/* Role Switch either handyman or client */}
+        {/* Role Switch */}
         <div className="flex justify-center gap-6 mt-6">
           <button
             onClick={() => setRole("handyman")}
