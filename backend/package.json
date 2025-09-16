@@ -1,6 +1,7 @@
 {
   "name": "backend",
   "version": "1.0.0",
+<<<<<<< Updated upstream
   "description": "",
   "license": "ISC",
   "author": "Navi",
@@ -12,6 +13,19 @@
   "dependencies": {
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
+=======
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.21.2",
+    "mongodb": "^6.19.0",
+>>>>>>> Stashed changes
     "mongoose": "^8.18.1"
   },
   "devDependencies": {
