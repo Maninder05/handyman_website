@@ -3,8 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion } from "framer-motion";
-import { ArrowLeft } from "lucide-react";
+import {FiHome, FiMessageCircle, FiHelpCircle, FiBell, FiSettings } from "react-icons/fi";
 
 export default function OrderDetailsPage() {
   // track popup state (accepted / declined / null)
@@ -16,31 +15,20 @@ export default function OrderDetailsPage() {
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen flex flex-col">
-      {/* top header */}
-      <div className="bg-teal-500 p-4 shadow-md relative flex items-center justify-center">
+    <div className="min-h-screen flex flex-col bg-neutral-100">
+      {/* Header with Back Arrow */}
+      <div className="bg-cyan-500 p-4 relative shadow-md flex items-center justify-center">
         {/* path to home page after clicking on arrow */}
-        <Link href="/dashboard">
-          <button className="absolute left-3 top-3 text-black">
-            <ArrowLeft size={22} />
-          </button>
+        <Link href="/portfolio">
+          <button className="text-2xl absolute left-4 top-3 text-black">←</button>
         </Link>
-        <h1 className="font-bold text-lg text-black">Order Details</h1>
+        <h1 className="text-2xl font-bold text-black">Order Details</h1>
       </div>
 
       {/* main content */}
-      <motion.div
-        className="flex-1 p-4 space-y-6"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6 }}
-      >
+      <div className="flex-1 p-4 space-y-6">
         {/* booking card */}
-        <motion.div
-          className="bg-white p-4 rounded-xl shadow-sm"
-          initial={{ y: 15, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-        >
+        <div className="bg-white p-4 rounded-xl shadow-sm my-4 max-w-md mx-auto">
           <p className="text-sm text-gray-600">Booking ID: xx53@#!</p>
           <div className="flex items-center mt-3 gap-3">
             <div className="w-14 h-14 flex items-center justify-center bg-gray-200 rounded-lg">
@@ -58,15 +46,10 @@ export default function OrderDetailsPage() {
               </p>
             </div>
           </div>
-        </motion.div>
+        </div>
 
         {/* buyer card */}
-        <motion.div
-          className="bg-white p-4 rounded-xl shadow-sm"
-          initial={{ y: 15, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.15 }}
-        >
+        <div className="bg-white p-4 rounded-xl shadow-sm my-4 max-w-md mx-auto">
           <h2 className="font-semibold mb-2 text-teal-600">Buyer Info</h2>
           <div className="flex gap-4 items-center">
             <Image
@@ -95,15 +78,10 @@ export default function OrderDetailsPage() {
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
 
         {/* price card */}
-        <motion.div
-          className="bg-white p-4 rounded-xl shadow-sm"
-          initial={{ y: 15, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.25 }}
-        >
+        <div className="bg-white p-4 rounded-xl shadow-sm my-4 max-w-md mx-auto">
           <h2 className="font-semibold mb-2 text-teal-600">Price Details</h2>
           <div className="text-sm text-black flex justify-between">
             <span>Price</span>
@@ -117,30 +95,26 @@ export default function OrderDetailsPage() {
             <span>Total</span>
             <span>$60.00</span>
           </div>
-        </motion.div>
-      </motion.div>
+        </div>
 
-      {/* bottom buttons */}
-      <div className="flex justify-around border-t py-4 bg-gray-100">
-        <motion.button
-          onClick={() => setPopup("accepted")}
-          className="bg-teal-500 text-white px-6 py-2 rounded-full shadow"
-          whileHover={{ scale: 1.04 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          Accept Order
-        </motion.button>
-        <motion.button
-          onClick={() => setPopup("declined")}
-          className="bg-red-500 text-white px-6 py-2 rounded-full shadow"
-          whileHover={{ scale: 1.04 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          Decline Order
-        </motion.button>
+        {/* accept / decline buttons */}
+        <div className="flex justify-center gap-4 my-6 max-w-md mx-auto w-full">
+          <button
+            onClick={() => setPopup("accepted")}
+            className="bg-teal-500 text-white px-6 py-2 rounded-full shadow"
+          >
+            Accept Order
+          </button>
+          <button
+            onClick={() => setPopup("declined")}
+            className="bg-red-500 text-white px-6 py-2 rounded-full shadow"
+          >
+            Decline Order
+          </button>
+        </div>
       </div>
 
-      {/* modal */}
+      {/* popup modal */}
       {popup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
           <div className="bg-white p-5 rounded-xl shadow-md text-center w-72">
@@ -161,6 +135,26 @@ export default function OrderDetailsPage() {
           </div>
         </div>
       )}
+      {/* Footer Nav */}
+       <footer className="bg-cyan-500 py-4 mt-auto">
+        <div className="flex justify-around items-center text-neutral-900 text-sm font-medium">
+          <Link href="/" className="flex flex-col items-center gap-1">
+            <FiHome size={20} /> Home
+          </Link>
+          <Link href="/messages" className="flex flex-col items-center gap-1">
+            <FiMessageCircle size={20} /> Messages
+          </Link>
+          <Link href="/help" className="flex flex-col items-center gap-1">
+            <FiHelpCircle size={20} /> Help
+          </Link>
+          <Link href="/notifications" className="flex flex-col items-center gap-1">
+            <FiBell size={20} /> Notifications
+          </Link>
+          <Link href="/settings" className="flex flex-col items-center gap-1">
+            <FiSettings size={20} /> Settings
+          </Link>
+        </div>
+      </footer>
     </div>
   );
 }
