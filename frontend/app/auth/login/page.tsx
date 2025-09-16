@@ -1,7 +1,7 @@
-// app/signin/page.tsx (Next.js 13+ with App Router)
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 export default function SignInPage() {
@@ -11,7 +11,7 @@ export default function SignInPage() {
   return (
     <div className="min-h-screen w-full bg-gray-100">
       {/* Header */}
-      <div className="relative bg-teal-500 text-center p-6">
+      <div className="relative bg-cyan-400 text-center p-6">
         {/* Back Button */}
         <button
           onClick={() => router.push("/")}
@@ -39,8 +39,8 @@ export default function SignInPage() {
             onClick={() => setRole("handyman")}
             className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium ${
               role === "handyman"
-                ? "bg-white text-teal-600"
-                : "text-white hover:bg-teal-400"
+                ? "bg-white text-cyan-400"
+                : "text-white hover:bg-cyan-400"
             }`}
           >
             🧑‍🔧 Handyman
@@ -49,8 +49,8 @@ export default function SignInPage() {
             onClick={() => setRole("client")}
             className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium ${
               role === "client"
-                ? "bg-white text-teal-600"
-                : "text-white hover:bg-teal-400"
+                ? "bg-white text-cyan-400"
+                : "text-white hover:bg-cyan-400"
             }`}
           >
             👩 Client
@@ -67,7 +67,7 @@ export default function SignInPage() {
           <input
             type="email"
             placeholder="xyz@gmail.com"
-            className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+            className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
           />
         </div>
 
@@ -78,7 +78,7 @@ export default function SignInPage() {
           <input
             type="password"
             placeholder="**********"
-            className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+            className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
           />
         </div>
 
@@ -94,15 +94,46 @@ export default function SignInPage() {
 
         {/* Sign Up Button */}
         <button 
-              onClick={() => router.push("/portfolio")}
-        className="w-full py-3 bg-gray-200 text-teal-600 font-semibold rounded-full hover:bg-teal-500 hover:text-white transition">
+              onClick={() => router.push("/h-portfolio")}
+        className="w-full py-3 bg-gray-200 text-cyan-600 font-semibold rounded-full hover:bg-cyan-500 hover:text-white transition">
           Sign In
         </button>
-
+         <div className="flex justify-center gap-6 mt-6">
+                {/* Google */}
+                {/* path to google login */}
+                <a
+                  href="https://www.google.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-12 h-12 bg-white border rounded-lg flex items-center justify-center transition transform hover:scale-110 hover:shadow-lg"
+                >
+                  <Image
+                    src="/images/googleicon.png"
+                    alt="Google"
+                    width={24}
+                    height={24}
+                  />
+                </a>
+                {/* GitHub */}
+                {/* path to github login */}
+                <a
+                  href="https://github.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-12 h-12 bg-white border rounded-lg flex items-center justify-center transition transform hover:scale-110 hover:shadow-lg"
+                >
+                  <Image
+                    src="/images/githublogo.png"
+                    alt="GitHub"
+                    width={24}
+                    height={24}
+                  />
+                </a>
+              </div>
         {/* Footer */}
         <p className="text-center text-sm text-gray-600 mt-4">
           New to Handyman App?{" "}
-          <a href="/auth/signup" className="text-teal-600 font-semibold hover:underline">
+          <a href="/auth/signup" className="text-cyan-600 font-semibold hover:underline">
             Sign Up
           </a>
         </p>

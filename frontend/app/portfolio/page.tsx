@@ -1,4 +1,4 @@
-// app/portfolio/page.tsx (Next.js 13+ with App Router)
+
 "use client";
 
 import { useRouter } from "next/navigation";
@@ -20,7 +20,7 @@ export default function PortfolioPage() {
         {/* Profile Info */}
         <div className="flex flex-col items-center mt-6">
           <img
-            src="/images/profile.jpg"
+            src="/images/client1.jpg"
             alt="Profile"
             className="w-20 h-20 rounded-full border-4 border-white shadow-md"
           />

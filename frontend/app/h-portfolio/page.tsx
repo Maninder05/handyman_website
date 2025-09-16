@@ -26,7 +26,7 @@ export default function PortfolioPage() {
     setBuyerMode(!buyerMode);
     if (!buyerMode) {
       // go to buyer page
-      router.push("/buyer");
+      router.push("../portfolio");
     }
   };
 
@@ -34,19 +34,19 @@ export default function PortfolioPage() {
     <div className="min-h-screen flex flex-col bg-neutral-100">
 
       {/* top header bar */}
-      <div className="bg-cyan-500 p-4 relative shadow-md flex items-center justify-center">
+      <div className="bg-neutal-100 p-4 relative shadow-md flex items-center justify-center">
         
         {/* back arrow button */}
-        <Link href="/dashboard">
+        <Link href="/auth/login">
           <button className="text-2xl absolute left-4 top-3 text-black">←</button>
         </Link>
 
-        <h1 className="text-2xl font-bold text-black">Projects</h1>
+        <h1 className="text-2xl font-bold text-black">Profile</h1>
 
         {/* menu button (hamburger or X) */}
         <button
           onClick={() => setShowMenu(!showMenu)}
-          className="hover:opacity-80 absolute right-4 top-3"
+          className="hover:opacity-80 absolute  text-black right-4 top-3"
         >
           {showMenu ? <X size={26} /> : <Menu size={26} />}
         </button>
@@ -56,8 +56,8 @@ export default function PortfolioPage() {
           <div className="absolute right-6 top-16 bg-white shadow-lg rounded-lg w-56 text-black text-sm z-50">
             <ul className="divide-y">
               <li><Link href="/create-service" className="block px-4 py-3 hover:bg-gray-50">Add Service</Link></li>
-              <li><Link href="/track-order" className="block px-4 py-3 hover:bg-gray-50">Track Order</Link></li>
-              <li><Link href="/wishlist" className="block px-4 py-3 hover:bg-gray-50">My Wishlist</Link></li>
+               <li><Link href="/account" className="block px-4 py-3 hover:bg-gray-50">My Account</Link></li>
+              <li><Link href="/order" className="block px-4 py-3 hover:bg-gray-50">Track Order</Link></li>
               <li><Link href="/membership" className="block px-4 py-3 hover:bg-gray-50">Membership Plan</Link></li>
               <li><Link href="/faq" className="block px-4 py-3 hover:bg-gray-50">FAQ</Link></li>
               <li><Link href="/settings" className="block px-4 py-3 hover:bg-gray-50">Account Settings</Link></li>
@@ -70,7 +70,7 @@ export default function PortfolioPage() {
       <div className="bg-cyan-500 text-white px-6 pb-8 pt-6">
         <div className="flex items-center space-x-4">
           <Image
-            src="/images/profilelogo.jpg"
+            src="/images/profile.jpg"
             alt="profile"
             width={90}
             height={90}
