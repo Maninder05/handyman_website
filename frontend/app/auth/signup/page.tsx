@@ -1,13 +1,13 @@
-// app/signup/page.tsx (Next.js 13+ with App Router)
 "use client";
-
+ 
 import { useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-
+ 
 export default function SignUpPage() {
   const [role, setRole] = useState<"handyman" | "client">("client");
   const router = useRouter();
-
+ 
   return (
     <div className="min-h-screen w-full bg-gray-100">
       {/* Header */}
@@ -19,20 +19,20 @@ export default function SignUpPage() {
         >
           ←
         </button>
-
+ 
         <div>
           <p className="text-white mt-4 font-medium">
             Sign Up to book trusted handyman.
           </p>
         </div>
-
+ 
         {/* User Icon */}
         <div className="flex flex-col items-center">
           <div className="w-32 h-24 flex items-center justify-center">
             <img src="/images/usersignup.png" alt="User Signup" />
           </div>
         </div>
-
+ 
         {/* Role Switch */}
         <div className="flex justify-center gap-6 mt-6">
           <button
@@ -57,7 +57,7 @@ export default function SignUpPage() {
           </button>
         </div>
       </div>
-
+ 
       {/* Form */}
       <div className="p-6 space-y-4 max-w-lg mx-auto">
         <div>
@@ -67,10 +67,10 @@ export default function SignUpPage() {
           <input
             type="email"
             placeholder="xyz@gmail.com"
-            className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+            className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
           />
         </div>
-
+ 
         <div>
           <label className="block text-xs font-bold text-gray-600">
             PASSWORD
@@ -78,10 +78,10 @@ export default function SignUpPage() {
           <input
             type="password"
             placeholder="**********"
-            className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+            className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
           />
         </div>
-
+ 
         {/* Forgot Password */}
         <div className="text-sm text-center">
           <a href="#" className="text-red-500 hover:underline">
@@ -91,7 +91,7 @@ export default function SignUpPage() {
             Reset
           </a>
         </div>
-
+ 
         {/* Sign Up Button */}
         <button
       onClick={() => router.push("/auth/login")}
@@ -99,11 +99,42 @@ export default function SignUpPage() {
     >
       Sign Up
     </button>
-
+     <div className="flex justify-center gap-6 mt-6">
+        {/* Google */}
+        {/* path to google login */}
+        <a
+          href="https://www.google.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-12 h-12 bg-white border rounded-lg flex items-center justify-center transition transform hover:scale-110 hover:shadow-lg"
+        >
+          <Image
+            src="/images/googleicon.png"
+            alt="Google"
+            width={24}
+            height={24}
+          />
+        </a>
+        {/* GitHub */}
+        {/* path to github login */}
+        <a
+          href="https://github.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-12 h-12 bg-white border rounded-lg flex items-center justify-center transition transform hover:scale-110 hover:shadow-lg"
+        >
+          <Image
+            src="/images/githublogo.png"
+            alt="GitHub"
+            width={24}
+            height={24}
+          />
+        </a>
+      </div>
         {/* Footer */}
         <p className="text-center text-sm text-gray-600 mt-4">
           New to Handyman App?{" "}
-          <a href="/auth/login" className="text-teal-600 font-semibold hover:underline">
+          <a href="/auth/login" className="text-cyan-600 font-semibold hover:underline">
             Sign In
           </a>
         </p>
@@ -111,3 +142,4 @@ export default function SignUpPage() {
     </div>
   );
 }
+ 

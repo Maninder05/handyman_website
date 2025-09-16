@@ -63,7 +63,7 @@ export default function SigninPage() {
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md bg-white rounded-xl shadow-xl overflow-hidden transform transition duration-700 ease-out opacity-0 animate-fadeSlideIn">
         {/* Header */}
-        <div className="bg-teal-600 p-6 text-center">
+        <div className="bg-cyan-400 p-6 text-center">
           <Image
             src="/images/handymenlogo.jpg"
             alt="Handyman"
@@ -79,9 +79,9 @@ export default function SigninPage() {
         <div className="p-6">
           {/* Toggle */}
           <div className="flex justify-center mb-6">
-            <div className="relative flex bg-gray-200 rounded-full p-1 w-64">
+            <div className="relative flex bg-neutral-100 rounded-full p-1 w-64">
               <span
-                className={`absolute top-1 bottom-1 w-1/2 rounded-full bg-teal-500 transition-transform duration-300 ${
+                className={`absolute top-1 bottom-1 w-1/2 rounded-full bg-cyan-400 transition-transform duration-300 ${
                   role === "Handyman" ? "translate-x-0" : "translate-x-full"
                 }`}
               />
@@ -117,7 +117,7 @@ export default function SigninPage() {
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-teal-500 focus:outline-none text-black transition transform focus:scale-[1.02]"
+                className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-cyan-400 focus:outline-none text-black transition transform focus:scale-[1.02]"
                 placeholder="username123"
               />
               {usernameError && (
@@ -153,7 +153,7 @@ export default function SigninPage() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-teal-500 focus:outline-none text-black transition transform focus:scale-[1.02]"
+                className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-cyan-400 focus:outline-none text-black transition transform focus:scale-[1.02]"
                 placeholder="********"
               />
               {passwordError && (
@@ -166,7 +166,7 @@ export default function SigninPage() {
             {/* Forgot Password */}
             {/* path to forgot password page */}
             <div className="text-right">
-              <a href="#" className="text-sm text-teal-600 hover:underline">
+              <a href="#" className="text-sm text-red-400 hover:underline">
                 Forgot Password? Reset
               </a>
             </div>
@@ -174,7 +174,7 @@ export default function SigninPage() {
             {/* Submit Button */}
             <button
               type="submit"
-              className="block w-full bg-teal-600 text-white text-center py-2 rounded-lg transition transform hover:scale-105 hover:shadow-lg"
+              className="block w-full bg-cyan-400 text-white text-center py-2 rounded-lg transition transform hover:scale-105 hover:shadow-lg"
             >
               Sign Up
             </button>
@@ -184,10 +184,10 @@ export default function SigninPage() {
           {/* path to sign up page */}
           <div className="mt-4 text-center">
             <p className="text-sm text-black">
-              Don’t have an account?{" "}
+              Already have an account?{" "}
               <Link
-                href="/signup"
-                className="text-teal-600 font-medium hover:underline"
+                href="/h-auth/login"
+                className="text-cyan-400 font-medium hover:underline"
               >
                 Sign In
               </Link>

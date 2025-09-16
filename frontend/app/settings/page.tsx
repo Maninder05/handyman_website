@@ -37,7 +37,6 @@ export default function SettingsPage() {
 
   return (
     <div className="min-h-screen bg-white text-neutral-900">
-      {/* HEADER */}
       <header className="w-full sticky top-0 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/70 border-b border-[#59b6bd]/25">
         <div className="mx-auto max-w-[1100px] px-6 py-4 flex items-center justify-between">
           <div className="text-xl font-semibold tracking-tight text-[#0b4e54]">Settings</div>
@@ -52,10 +51,8 @@ export default function SettingsPage() {
         </div>
       </header>
 
-      {/* BODY */}
       <div className="mx-auto max-w-[1100px] px-6 py-8">
         <div className="grid grid-cols-[240px_1fr] gap-10">
-          {/* SIDEBAR */}
           <aside className="pr-8">
             <nav aria-label="Account settings" className="space-y-1">
               {navItems.map((item) => {
@@ -73,7 +70,6 @@ export default function SettingsPage() {
                         : "text-neutral-700 hover:bg-[#59b6bd]/10 hover:text-[#0b4e54]"
                     ].join(" ")}
                   >
-                    {/* active left bar */}
                     <span
                       className={[
                         "absolute left-0 top-1/2 -translate-y-1/2 h-6 w-1 rounded-r",
@@ -87,7 +83,6 @@ export default function SettingsPage() {
             </nav>
           </aside>
 
-          {/* MAIN */}
           <main className="min-w-0">
             <h1 className="text-3xl font-bold mb-6 text-[#0b4e54]">{active}</h1>
 
@@ -202,7 +197,6 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      {/* keep if you're using animate-[fadeIn_.2s_ease] */}
       <style jsx global>{`
         @keyframes fadeIn {
           from { opacity: 0; }

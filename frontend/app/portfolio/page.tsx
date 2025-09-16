@@ -1,14 +1,14 @@
-// app/portfolio/page.tsx (Next.js 13+ with App Router)
+ 
 "use client";
-
+ 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Bell, Home, MessageCircle, Settings, Users } from "lucide-react";
-
+ 
 export default function PortfolioPage() {
   const router = useRouter();
   const [isBuyer, setIsBuyer] = useState(false);
-
+ 
   return (
     <div className="min-h-screen w-full flex flex-col bg-gray-100 ">
         <div>
@@ -16,18 +16,18 @@ export default function PortfolioPage() {
       <div className="bg-teal-500 p-6 relative mb-2">
         {/* Menu Button */}
         <button className="absolute right-4 top-6 text-white text-3xl">☰</button>
-
+ 
         {/* Profile Info */}
         <div className="flex flex-col items-center mt-6">
           <img
-            src="/images/profile.jpg"
+            src="/images/client1.jpg"
             alt="Profile"
             className="w-20 h-20 rounded-full border-4 border-white shadow-md"
           />
           <h2 className="text-lg font-bold text-black mt-3">Kenji Teneka</h2>
           <p className="text-sm text-black">kenjiteneka@gmail.com</p>
         </div>
-
+ 
         {/* Stats */}
         <div className="flex justify-around text-center mt-6 mb-1 text-black font-semibold">
           <div>
@@ -45,7 +45,7 @@ export default function PortfolioPage() {
         </div>
       </div>
       </div>
-
+ 
       {/* Switch to Buyer */}
 <div className="px-20 mb-2 ">
   <div className="bg-white flex justify-between items-center px-5 py-4 rounded-xl shadow-md">
@@ -67,11 +67,11 @@ export default function PortfolioPage() {
     </label>
   </div>
 </div>
-      
-
-      
-
-
+     
+ 
+     
+ 
+ 
       {/* Earnings */}
       <div className="p-6 bg-gray-200">
         <div className="flex justify-between items-center">
@@ -80,7 +80,7 @@ export default function PortfolioPage() {
             View All
           </a>
         </div>
-
+ 
         <div className="grid grid-cols-2 gap-4 mt-4">
           <div className="bg-purple-100 p-4 rounded-xl text-center">
             <p className="text-2xl font-bold">$800</p>
@@ -92,7 +92,7 @@ export default function PortfolioPage() {
           </div>
         </div>
       </div>
-
+ 
       {/* Recent Orders */}
       <div className="p-6 bg-gray-200">
         <h3 className="font-semibold mb-3">Recent Orders</h3>
@@ -108,7 +108,7 @@ export default function PortfolioPage() {
           </div>
         </div>
       </div>
-
+ 
       {/* Bottom Navigation */}
       <div className="mt-auto bg-teal-500 flex justify-around items-center py-3">
         <button>
@@ -131,3 +131,5 @@ export default function PortfolioPage() {
     </div>
   );
 }
+ 
+ 

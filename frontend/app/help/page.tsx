@@ -5,8 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function HelpCentrePage() {
-  const router = useRouter();
-  const [q, setQ] = useState("");
+  const router = useRouter();  // Navigator
+  const [q, setQ] = useState(""); // Search query state
 
   function onSearch(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -17,7 +17,6 @@ export default function HelpCentrePage() {
 
   return (
     <div className="min-h-screen bg-white text-neutral-900">
-      {/* Header (text-only) */}
       <header className="w-full sticky top-0 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/70 border-b border-neutral-100">
         <div className="mx-auto max-w-[1100px] px-6 py-4 flex items-center justify-between">
           <div className="text-xl font-semibold tracking-tight">Help Centre</div>
