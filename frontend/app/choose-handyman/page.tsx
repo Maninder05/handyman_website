@@ -72,7 +72,7 @@ export default function ChooseHandymanPage() {
         <button onClick={() => router.push("/messages")} className="cursor-pointer hover:text-white transition">
           <MessageCircle className="w-6 h-6 text-black" />
         </button>
-        <button onClick={() => router.push("/portofolio")} className="cursor-pointer hover:text-white transition">
+        <button onClick={() => router.push("/portfolio")} className="cursor-pointer hover:text-white transition">
           <Users className="w-6 h-6 text-black" />
         </button>
         <button onClick={() => router.push("/notifications")} className="relative cursor-pointer hover:text-white transition">
