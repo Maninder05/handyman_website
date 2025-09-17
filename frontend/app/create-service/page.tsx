@@ -96,7 +96,7 @@ export default function CreateService() {
           {errors.category && <p className="text-red-500 text-sm">{errors.category}</p>}
         </div>
 
-        {/* Image */}
+        {/* Image upload field */}
         <div>
           <label className="block mb-2 font-semibold text-neutral-800">
             Image
