@@ -4,25 +4,31 @@ import {useState} from 'react';
 import { signIn } from "next-auth/react"; // for Google/Facebook OAuth
 
 export default function LandingPage() {
-  const [showSignup, setShowSignup] = useState(false);
+   const [showSignup, setShowSignup] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
 
-  // form fields
+  //==========signup================
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [userType, setUserType] = useState("");
 
+ //==========login==================
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+
   // validation messages
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-  const validateForm = () => {
+  // ----------------- SIGNUP VALIDATION -----------------
+  const validateSignupForm = () => {
     const newErrors: { [key: string]: string } = {};
 
     if (!username.trim()) {
       newErrors.username = "Username cannot be empty";
     }
 
-    // simple regex for emails
+    // regex for email validation
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email.match(emailPattern)) {
       newErrors.email = "Enter a valid email address";
@@ -44,8 +50,33 @@ export default function LandingPage() {
 
   const handleSignup = (e: React.FormEvent) => {
     e.preventDefault();
-    if (validateForm()) {
-      alert("Form is valid ✅ (Here you’d connect with your backend API)");
+    if (validateSignupForm()) {
+      alert("✅ Signup successful! (Here you’d call backend API)");
+    }
+  };
+
+  // ----------------- LOGIN VALIDATION -----------------
+  const validateLoginForm = () => {
+    const newErrors: { [key: string]: string } = {};
+
+    // simple regex for emails
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!loginEmail.match(emailPattern)) {
+      newErrors.loginEmail = "Enter a valid email address";
+    }
+
+    if (loginPassword.length < 6) {
+      newErrors.loginPassword = "Password must be at least 6 characters long";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (validateLoginForm()) {
+      alert("✅ Login successful! (Here you’d call backend API)");
     }
   };
 
@@ -88,8 +119,8 @@ export default function LandingPage() {
               Sign Up
             </button>
             <a
-              href="/auth/login"
-              className="px-4 py-2 border border-yellow-400 text-yellow-400 rounded-lg hover:bg-neutral-800 transition"
+              onClick={() => setShowLogin(true)}
+              className="px-4 py-2 border border-teal-400 text-teal-400 rounded-lg hover:bg-neutral-800 transition"
             >
               Login
             </a>
@@ -115,7 +146,7 @@ export default function LandingPage() {
             quality, trust, and efficiency every time.
           </p>
           <a
-            href="/auth/signup"
+            onClick={() => setShowSignup(true)}
             className="px-8 py-3 bg-blue-400 hover:bg-blue-500 text-neutral-900 rounded-xl text-lg font-medium shadow-lg transition"
           >
           Get Started Now
@@ -198,7 +229,7 @@ export default function LandingPage() {
             stress-free.
           </p>
           <a
-            href="/auth/signup"
+            onClick={() => setShowSignup(true)}
             className="px-8 py-3 bg-neutral-900 hover:bg-neutral-800 text-blue-400 rounded-xl text-lg font-medium shadow-lg transition"
           >
             Sign Up Now
@@ -402,7 +433,10 @@ export default function LandingPage() {
             {/* Already have an account */}
             <p className="text-sm text-neutral-400 mt-4 text-center">
               Already have an account?{" "}
-              <a href="/auth/login" className="text-blue-400 hover:underline">
+              <a  onClick={() => {
+                setShowSignup(false);
+                setShowLogin(true);
+                }}className="text-blue-400 hover:underline">
                 Login
               </a>
             </p>
@@ -414,7 +448,116 @@ export default function LandingPage() {
           </div>
         </div>
       )}
-    </main>
+
+      {/* ******************LOGIN MODAL************************* */}
+      {showLogin && (
+      <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+        <div className="relative bg-neutral-900 border border-neutral-700 rounded-2xl shadow-2xl w-full max-w-md p-8 scale-95 hover:scale-100 transition-transform">
+        {/* Close Button */}
+        <button
+          onClick={() => setShowLogin(false)}
+          className="absolute top-3 right-3 text-neutral-400 hover:text-white"
+        >
+        ✕
+        </button>
+
+        {/* Title + tagline */}
+        <h2 className="text-2xl font-bold text-teal-400 mb-2 text-center">
+          Welcome Back
+        </h2>
+        <p className="text-sm text-neutral-400 mb-6 text-center">
+          Login to continue managing your home services.
+        </p>
+
+        {/* Form */}
+        <form onSubmit={handleLogin} className="space-y-4">
+          {/* Email */}
+          <div>
+            <input
+              type="email"
+              placeholder="Email"
+              value={loginEmail}
+              onChange={(e) => setLoginEmail(e.target.value)}
+              className="w-full px-4 py-2 rounded-lg bg-neutral-800 border border-neutral-700 focus:border-teal-400 outline-none"
+              required
+            />
+            {errors.email && (
+              <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+            )}
+          </div>
+
+          {/* Password */}
+          <div>
+            <input
+              type="password"
+              placeholder="Password"
+              value={loginPassword}
+              onChange={(e) => setLoginPassword(e.target.value)}
+              className="w-full px-4 py-2 rounded-lg bg-neutral-800 border border-neutral-700 focus:border-teal-400 outline-none"
+              required
+            />
+            {errors.password && (
+              <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+            )}
+          </div>
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            className="w-full bg-teal-400 hover:bg-teal-500 text-black py-2 rounded-lg transition font-semibold"
+          >
+            Login
+          </button>
+        </form>
+
+        {/* Divider */}
+        <div className="flex items-center my-6">
+          <div className="flex-1 h-px bg-neutral-700"></div>
+          <span className="px-2 text-neutral-500 text-xs">OR</span>
+          <div className="flex-1 h-px bg-neutral-700"></div>
+        </div>
+
+        {/* Social Login */}
+        <div className="flex flex-col gap-3">
+          <button
+            onClick={() => signIn("google")}
+            className="flex items-center gap-2 justify-center px-4 py-2 rounded-lg bg-neutral-800 border border-neutral-700 text-sm cursor-pointer hover:border-teal-400 transition"
+          >
+            <Image src="/images/google-icon.png" alt="Google" width={30} height={30} />
+            <span>Login with Google</span>
+          </button>
+          <button
+            onClick={() => signIn("facebook")}
+            className="flex items-center gap-2 justify-center px-4 py-2 rounded-lg bg-neutral-800 border border-neutral-700 text-sm cursor-pointer hover:border-teal-400 transition"
+          >
+            <Image src="/images/facebook-icon.png" alt="Facebook" width={30} height={30} />
+            <span>Login with Facebook</span>
+          </button>
+        </div>
+
+        {/* No Account Yet */}
+        <p className="text-sm text-neutral-400 mt-4 text-center">
+          Don’t have an account?{" "}
+          <a
+            href="#"
+            onClick={() => {
+              setShowLogin(false);
+              setShowSignup(true);
+            }}
+            className="text-teal-400 hover:underline"
+          >
+            Sign Up
+          </a>
+        </p>
+
+        {/* Forgot Password */}
+        <p className="text-sm text-teal-400 mt-2 cursor-pointer hover:underline text-center">
+          Forgot Password?
+        </p>
+        </div>
+      </div>
+    )}
+  </main>
   );
 }
 
