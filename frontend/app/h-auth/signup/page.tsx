@@ -1,72 +1,70 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function SigninPage() {
-  const router = useRouter();
 
-  // form fields
-  const [role, setRole] = useState("Handyman");
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault(); // stop page refresh
 
-  // errors
-  const [usernameError, setUsernameError] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
+    const form = e.currentTarget;
+    const formData = new FormData(form);
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+    const username = formData.get("username")?.toString().trim();
+    const email = formData.get("email")?.toString().trim();
+    const password = formData.get("password")?.toString();
 
-    // reset errors before checking again
-    setUsernameError("");
-    setEmailError("");
-    setPasswordError("");
+    const userErr = document.getElementById("usernameError");
+    const emailErr = document.getElementById("emailError");
+    const passErr = document.getElementById("passwordError");
+    const goLink = document.getElementById("goDashboard") as HTMLAnchorElement | null;
+
+    if (!userErr || !emailErr || !passErr || !goLink) return;
+
+    // clear old errors
+    userErr.textContent = "";
+    emailErr.textContent = "";
+    passErr.textContent = "";
 
     let hasError = false;
 
-    // username must exist and only letters/numbers
     if (!username) {
-      setUsernameError("This field is required.");
+      userErr.textContent = "This field is required.";
       hasError = true;
     } else if (!/^[a-zA-Z0-9]+$/.test(username)) {
-      setUsernameError("Username must only contain letters and numbers.");
+      userErr.textContent = "Username must only have letters and numbers.";
       hasError = true;
     }
 
-    // email must exist and end with @gmail.com
     if (!email) {
-      setEmailError("This field is required.");
+      emailErr.textContent = "This field is required.";
       hasError = true;
     } else if (!/^[a-zA-Z0-9._%+-]+@gmail\.com$/.test(email)) {
-      setEmailError("Email must end with @gmail.com.");
+      emailErr.textContent = "Email must end with @gmail.com.";
       hasError = true;
     }
 
-    // password must be at least 8 characters
     if (!password) {
-      setPasswordError("This field is required.");
+      passErr.textContent = "This field is required.";
       hasError = true;
     } else if (password.length < 8) {
-      setPasswordError("Password must be at least 8 characters long.");
+      passErr.textContent = "Password must be at least 8 characters.";
       hasError = true;
     }
 
-    // if all good then go to dashboard
+    // if no errors, just click the hidden link to go to dashboard
     if (!hasError) {
-      router.push("/h-portfolio");
+      goLink.click();   // 👈 triggers the normal link
     }
   }
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md bg-white rounded-xl shadow-xl overflow-hidden transform transition duration-700 ease-out opacity-0 animate-fadeSlideIn">
-        {/* Header */}
-        <div className="bg-cyan-400 p-6 text-center">
+      <div className="w-full max-w-md bg-white rounded-xl shadow-xl overflow-hidden">
+
+        {/* top logo and heading */}
+        <div className="bg-cyan-600 p-6 text-center">
           <Image
             src="/images/handymenlogo.jpg"
             alt="Handyman Logo"
@@ -75,100 +73,65 @@ export default function SigninPage() {
             className="mx-auto"
           />
           <h2 className="text-lg mt-2 text-white font-semibold">
-            Sign In to access handyman services
+            Sign Up to access handyman services
           </h2>
         </div>
 
+        {/* form area */}
         <div className="p-6">
-          {/* role toggle */}
-          <div className="flex justify-center mb-6">
-            <div className="relative flex bg-neutral-100 rounded-full p-1 w-64">
-              <span
-                className={`absolute top-1 bottom-1 w-1/2 rounded-full bg-cyan-400 transition-transform duration-300 ${
-                  role === "Handyman" ? "translate-x-0" : "translate-x-full"
-                }`}
-              />
-              <button
-                type="button"
-                onClick={() => setRole("Handyman")}
-                className={`relative flex-1 z-10 py-2 rounded-full font-medium ${
-                  role === "Handyman" ? "text-white" : "text-gray-600"
-                }`}
-              >
-                Handyman
-              </button>
-              <button
-                type="button"
-                onClick={() => setRole("Client")}
-                className={`relative flex-1 z-10 py-2 rounded-full font-medium ${
-                  role === "Client" ? "text-white" : "text-gray-600"
-                }`}
-              >
-                Client
-              </button>
-            </div>
-          </div>
+          <form onSubmit={handleFormSubmit} className="space-y-4">
 
-          {/* form inputs */}
-          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-gray-600 text-sm mb-1">Username</label>
               <input
+                name="username"
                 type="text"
                 placeholder="username123"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-cyan-400 focus:outline-none text-black transition transform focus:scale-[1.02]"
+                className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-cyan-500 focus:outline-none text-black"
               />
-              {usernameError && <p className="text-red-500 text-sm mt-1">{usernameError}</p>}
+              <p id="usernameError" className="text-red-500 text-sm mt-1"></p>
             </div>
 
             <div>
               <label className="block text-gray-600 text-sm mb-1">Email</label>
               <input
+                name="email"
                 type="email"
                 placeholder="xyz@gmail.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-cyan-500 focus:outline-none text-black"
               />
-              {emailError && <p className="text-red-500 text-sm mt-1">{emailError}</p>}
+              <p id="emailError" className="text-red-500 text-sm mt-1"></p>
             </div>
 
             <div>
               <label className="block text-gray-600 text-sm mb-1">Password</label>
               <input
+                name="password"
                 type="password"
                 placeholder="********"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-cyan-400 focus:outline-none text-black transition transform focus:scale-[1.02]"
+                className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-cyan-500 focus:outline-none text-black"
               />
-              {passwordError && <p className="text-red-500 text-sm mt-1">{passwordError}</p>}
-            </div>
-
-            <div className="text-right">
-              <a href="#" className="text-sm text-red-400 hover:underline">
-                Forgot Password? Reset
-              </a>
+              <p id="passwordError" className="text-red-500 text-sm mt-1"></p>
             </div>
 
             <button
               type="submit"
-              className="block w-full bg-cyan-400 text-white text-center py-2 rounded-lg transition transform hover:scale-105 hover:shadow-lg"
+              className="block w-full bg-cyan-600 text-white text-center py-2 rounded-lg hover:shadow-lg"
             >
-              Sign In
+              Sign Up
             </button>
           </form>
+
+          {/* hidden link to go to dashboard after successful login */}
+          <Link id="goDashboard" href="/h-portfolio" className="hidden">
+            Go
+          </Link>
 
           {/* bottom links */}
           <div className="mt-4 text-center">
             <p className="text-sm text-black">
               Already have an account?{" "}
-              <Link
-                href="/h-auth/login"
-                className="text-cyan-400 font-medium hover:underline"
-              >
+              <Link href="/h-auth/signup" className="text-cyan-600 font-medium hover:underline">
                 Sign In
               </Link>
             </p>

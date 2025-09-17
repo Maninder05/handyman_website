@@ -1,7 +1,6 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import {FiHome, FiMessageCircle, FiHelpCircle, FiBell, FiSettings } from "react-icons/fi";
 
 export default function ProjectsPage() {
   return (
@@ -84,26 +83,26 @@ export default function ProjectsPage() {
         </div>
       
 
-       {/* Footer Nav */}
-       <footer className="bg-cyan-500 py-4 mt-auto">
+{/* ---------- footer nav ---------- */}
+      <footer className="bg-cyan-500 py-4 mt-auto">
         <div className="flex justify-around items-center text-neutral-900 text-sm font-medium">
           <Link href="/h-portfolio" className="flex flex-col items-center gap-1">
-            <FiHome size={20} /> Home
+            <span>🏠</span> Home
           </Link>
           <Link href="/messages" className="flex flex-col items-center gap-1">
-            <FiMessageCircle size={20} /> Messages
+            <span>💬</span> Messages
           </Link>
           <Link href="/help" className="flex flex-col items-center gap-1">
-            <FiHelpCircle size={20} /> Help
+            <span>❓</span> Help
           </Link>
           <Link href="/notifications" className="flex flex-col items-center gap-1">
-            <FiBell size={20} /> Notifications
+            <span>🔔</span> Notifications
           </Link>
           <Link href="/settings" className="flex flex-col items-center gap-1">
-            <FiSettings size={20} /> Settings
+            <span>⚙️</span> Settings
           </Link>
         </div>
-      </footer>
+      </footer>
     </div>
   );
 }

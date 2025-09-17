@@ -1,176 +1,167 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function CreateService() {
-  // form data
-  const [title, setTitle] = useState("");
-  const [category, setCategory] = useState("");
-  const [priceType, setPriceType] = useState("Hourly");
-  const [price, setPrice] = useState("");
-  const [image, setImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  // errors and popup
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const [popup, setPopup] = useState<string | null>(null);
+  // when we click the Submit button
+  function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault(); // stop the page from reloading
 
-  // upload image
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    // grab the form and all the values inside it
+    const form = e.currentTarget;
+    const formData = new FormData(form);
 
-    if (!["image/jpeg", "image/jpg", "image/png"].includes(file.type)) {
-      setErrors({ image: "Only JPG, JPEG and PNG are allowed" });
-      return;
-    }
+    const title = formData.get("title")?.toString().trim();
+    const category = formData.get("category")?.toString();
+    const price = formData.get("price")?.toString().trim();
+    const image = formData.get("image");
 
-    if (file.size > 35 * 1024 * 1024) {
-      setErrors({ image: "Image must be less than 35MB" });
-      return;
-    }
+    // find the message area
+    const msgBox = document.getElementById("msg");
+    if (!msgBox) return;
 
-    setErrors({});
-    setImage(file);
-    setImagePreview(URL.createObjectURL(file));
-  };
+    // check if everything is filled in and an image is chosen
+    if (title && category && price && image instanceof File) {
+      msgBox.textContent = "Service Submitted Successfully ✅";
 
-  // submit form
-  const handleSubmit = () => {
-    const newErrors: { [key: string]: string } = {};
+      // empty the form so user can type again
+      form.reset();
 
+      // hide the image preview again
+      const preview = document.getElementById("imagePreview");
+      if (preview) {
+        preview.classList.add("hidden");
+      }
 
-    if (!title) newErrors.title = "Title is required";
-    if (!category) newErrors.category = "Category is required";
-    if (!price) newErrors.price = "Price is required";
-    if (!image) newErrors.image = "Image is required";
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
     } else {
-      setPopup("Service Submitted Successfully ✅");
+      // if something is missing show this
+      msgBox.textContent = "Please fill in all fields and upload an image.";
     }
-  };
+
+    // always show the message box
+    msgBox.classList.remove("hidden");
+  }
+
+  // when we click Save as Draft
+  function handleSaveDraft() {
+    const msgBox = document.getElementById("msg");
+    if (!msgBox) return;
+    msgBox.textContent = "Draft Saved Successfully 📝";
+    msgBox.classList.remove("hidden");
+  }
+
+  // when we choose a picture file
+  function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    const preview = document.getElementById("imagePreview") as HTMLImageElement | null;
+
+    if (file && preview) {
+      // show the chosen image in the preview box
+      preview.src = URL.createObjectURL(file);
+      preview.classList.remove("hidden");
+    }
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-neutral-100">
-      {/* Header with Back Arrow */}
-      <div className="bg-cyan-500 p-4 relative shadow-md flex items-center justify-center">
-        <Link href="/h-portfolio">
-          <button className="text-2xl absolute left-4 top-3 text-black">
-            ←
-          </button>
+
+      {/* top header */}
+      <header className="bg-cyan-500 p-4 shadow-md flex items-center justify-center relative">
+        <Link href="/h-portfolio" className="absolute left-4 top-4">
+          ←
         </Link>
         <h1 className="text-2xl font-bold text-black">Create Service</h1>
-      </div>
+      </header>
 
-      {/* Form */}
-      <div className="flex-1 p-5 space-y-6 bg-cyan-100 text-black">
-        {/* Title */}
-        <div className="flex flex-col">
-          <label className="mb-2 font-semibold text-black">Service Title</label>
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="rounded-xl p-3 border border-gray-300 text-black bg-white"
-          />
-          {errors.title && <p className="text-red-500 text-sm">{errors.title}</p>}
-        </div>
+      {/* form area */}
+      <main className="flex-1 p-5 bg-cyan-100 text-black">
+        <form id="serviceForm" onSubmit={handleFormSubmit} className="space-y-6">
 
-        {/* Category */}
-        <div className="flex flex-col">
-          <label className="mb-2 font-semibold text-black">Category</label>
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="rounded-xl p-3 border border-gray-300 text-black bg-white"
-          >
-            <option value="">Select Category</option>
-            <option>Electrical Repair</option>
-            <option>Plumbing</option>
-            <option>HVAC</option>
-            <option>Carpentry</option>
-          </select>
-          {errors.category && <p className="text-red-500 text-sm">{errors.category}</p>}
-        </div>
-
-        {/* Image Upload */}
-        <div className="flex flex-col">
-          <label className="mb-2 font-semibold text-black">Image</label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageUpload}
-            className="p-2 border border-gray-300 rounded-xl text-black bg-white"
-          />
-          {imagePreview && (
-            <Image
-              src={imagePreview}
-              alt="Preview"
-              width={120}
-              height={120}
-              className="rounded-md mt-2"
-            />
-          )}
-          {errors.image && <p className="text-red-500 text-sm">{errors.image}</p>}
-        </div>
-
-        {/* Price */}
-        <div className="flex flex-col">
-          <label className="mb-2 font-semibold text-black">Price</label>
-          <div className="flex space-x-3">
-            <select
-              value={priceType}
-              onChange={(e) => setPriceType(e.target.value)}
-              className="rounded-xl p-3 border border-gray-300 text-black bg-white"
-            >
-              <option>Hourly</option>
-              <option>Fixed</option>
-            </select>
+          <div>
+            <label className="font-semibold">Service Title</label>
             <input
+              name="title"
               type="text"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              className="flex-1 rounded-xl p-3 border border-gray-300 text-black bg-white"
+              placeholder="Enter service title"
+              className="block w-full rounded p-2 border border-gray-300 mt-1"
             />
           </div>
-          {errors.price && <p className="text-red-500 text-sm">{errors.price}</p>}
-        </div>
-      </div>
 
-      {/* Buttons */}
-      <div className="flex justify-around bg-gray-100 border-t py-4">
+          <div>
+            <label className="font-semibold">Category</label>
+            <select
+              name="category"
+              className="block w-full rounded p-2 border border-gray-300 mt-1"
+            >
+              <option value="">Select Category</option>
+              <option>Electrical Repair</option>
+              <option>Plumbing</option>
+              <option>HVAC</option>
+              <option>Carpentry</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="font-semibold">Image</label>
+            <input
+              name="image"
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="block w-full rounded p-2 border border-gray-300 mt-1"
+            />
+            <Image
+              id="imagePreview"
+              src=""
+              alt="Preview"
+              className="mt-2 w-32 h-32 object-cover rounded hidden"
+            />
+          </div>
+
+          <div>
+            <label className="font-semibold">Price</label>
+            <div className="flex space-x-3 mt-1">
+              <select
+                name="priceType"
+                className="rounded p-2 border border-gray-300"
+                defaultValue="Hourly"
+              >
+                <option>Hourly</option>
+                <option>Fixed</option>
+              </select>
+              <input
+                name="price"
+                type="number"
+                placeholder="Enter price"
+                className="flex-1 rounded p-2 border border-gray-300"
+              />
+            </div>
+          </div>
+
+          {/* message text shows here */}
+          <p id="msg" className="hidden text-center text-green-700 font-semibold"></p>
+        </form>
+      </main>
+
+      {/* bottom footer buttons */}
+      <footer className="bg-gray-200 p-4 mt-auto flex justify-around">
         <button
-          onClick={() => setPopup("Draft Saved Successfully 📝")}
-          className="bg-gray-500 text-white px-6 py-2 rounded-full shadow-md"
+          type="button"
+          onClick={handleSaveDraft}
+          className="bg-gray-500 text-white px-6 py-2 rounded"
         >
           Save As Draft
         </button>
         <button
-          onClick={handleSubmit}
-          className="bg-cyan-500 text-white px-6 py-2 rounded-full shadow-md"
+          form="serviceForm"
+          type="submit"
+          className="bg-cyan-500 text-white px-6 py-2 rounded"
         >
           Submit Now →
         </button>
-      </div>
-
-      {/* Popup */}
-      {popup && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-2xl shadow-lg text-center w-80 text-black">
-            <h2 className="text-xl font-bold mb-4">{popup}</h2>
-            <button
-              onClick={() => setPopup(null)}
-              className="bg-cyan-500 text-white px-6 py-2 rounded-xl shadow"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
+      </footer>
     </div>
   );
 }
