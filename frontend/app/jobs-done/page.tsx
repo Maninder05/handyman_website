@@ -14,8 +14,8 @@ export default function ProjectsPage() {
         <h1 className="text-2xl font-bold text-white">Projects</h1>
       </div>
 
-      {/* Content */}
-      {/* In Progress */}
+      {/* Main content of the page */}
+      {/* In Progress jobs */}
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-neutral-800 mb-4 mt-6 text-center">
           In Progress
