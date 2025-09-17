@@ -5,11 +5,21 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Menu, X } from "lucide-react";
-import {FiHome ,FiMessageCircle ,FiHelpCircle ,FiBell ,FiSettings ,FiUser} from "react-icons/fi";
+import {
+  FiHome,
+  FiMessageCircle,
+  FiHelpCircle,
+  FiBell,
+  FiSettings,
+  FiUser,
+} from "react-icons/fi";
 
 export default function PortfolioPage() {
   // this is for the little menu (open / close)
   const [showMenu, setShowMenu] = useState(false);
+
+  // toggle profile dropdown
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
 
   // this is for switching between buyer and seller
   const [buyerMode, setBuyerMode] = useState(false);
@@ -25,91 +35,132 @@ export default function PortfolioPage() {
     }
   };
 
+  // logout
+  const handleLogout = () => {
+    router.push("/");
+  };
+
+  // toggle hamburger dropdown
+  const toggleMenu = () => {
+    setShowMenu(!showMenu);
+    setShowProfileMenu(false); // close profile if menu is opened
+  };
+
+  // toggle profile dropdown
+  const toggleProfile = () => {
+    setShowProfileMenu(!showProfileMenu);
+    setShowMenu(false); // close menu if profile is opened
+  };
+
   return (
     <div className="min-h-screen bg-neutral-100 flex flex-col">
       {/* ================= HEADER ================= */}
       <header className="bg-white shadow-md relative">
-        <div className="max-w-5xl mx-auto bg flex items-center justify-between px-6 py-4">
+        <div className="max-w-5xl mx-auto flex items-center justify-between px-6 py-4">
           {/* Title */}
           <h1 className="text-2xl font-extrabold text-blue-600 tracking-wide">
             Handyman Portal
           </h1>
 
           {/* Right side buttons */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 relative">
             {/* Profile Icon */}
-            <Link
-              href="/account"
+            <button
+              onClick={toggleProfile}
               className="p-2 rounded-full hover:bg-neutral-100 transition"
             >
               <FiUser size={22} className="text-neutral-700" />
-            </Link>
+            </button>
+
+            {/* Profile dropdown */}
+            {showProfileMenu && (
+              <div className="absolute right-14 top-14 bg-gray-400 rounded-xl shadow-lg border w-48 z-50">
+                <ul className="text-sm divide-y">
+                  <li>
+                    <Link
+                      href="/account"
+                      className="block px-4 py-3 hover:bg-blue-50 hover:text-blue-600 transition"
+                    >
+                      View Account
+                    </Link>
+                  </li>
+                  <li>
+                    <button
+                      onClick={handleLogout}
+                      className="w-full text-left px-4 py-3 text-red-600 hover:bg-red-50 transition"
+                    >
+                      Logout
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            )}
 
             {/* Menu button (hamburger or X) */}
             <button
-              onClick={() => setShowMenu(!showMenu)}
+              onClick={toggleMenu}
               className="p-2 rounded-md hover:bg-neutral-100 transition"
             >
               {showMenu ? <X size={26} /> : <Menu size={26} />}
             </button>
+
+            {/* Hamburger dropdown */}
+            {showMenu && (
+              <div className="absolute right-0 top-14 bg-gray-400 shadow-xl rounded-xl border w-56 text-sm z-50 overflow-hidden">
+                <ul className="divide-y">
+                  <li>
+                    <Link
+                      href="/create-service"
+                      className="block px-4 py-3 hover:bg-blue-50 hover:text-blue-600 transition"
+                    >
+                      Add Service
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/account"
+                      className="block px-4 py-3 hover:bg-blue-50 hover:text-blue-600 transition"
+                    >
+                      My Account
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/order"
+                      className="block px-4 py-3 hover:bg-blue-50 hover:text-blue-600 transition"
+                    >
+                      Track Order
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/membership"
+                      className="block px-4 py-3 hover:bg-blue-50 hover:text-blue-600 transition"
+                    >
+                      Membership Plan
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/faq"
+                      className="block px-4 py-3 hover:bg-blue-50 hover:text-blue-600 transition"
+                    >
+                      FAQ
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/settings"
+                      className="block px-4 py-3 hover:bg-blue-50 hover:text-blue-600 transition"
+                    >
+                      Account Settings
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+            )}
           </div>
         </div>
-
-        {/* the dropdown menu when you click */}
-        {showMenu && (
-          <div className="absolute right-6 top-16 bg-white shadow-lg rounded-lg w-56 text-black text-sm z-50">
-            <ul className="divide-y">
-              <li>
-                <Link
-                  href="/create-service"
-                  className="block px-4 py-3 hover:bg-gray-50"
-                >
-                  Add Service
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/account"
-                  className="block px-4 py-3 hover:bg-gray-50"
-                >
-                  My Account
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/order"
-                  className="block px-4 py-3 hover:bg-gray-50"
-                >
-                  Track Order
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/membership"
-                  className="block px-4 py-3 hover:bg-gray-50"
-                >
-                  Membership Plan
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/faq"
-                  className="block px-4 py-3 hover:bg-gray-50"
-                >
-                  FAQ
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/settings"
-                  className="block px-4 py-3 hover:bg-gray-50"
-                >
-                  Account Settings
-                </Link>
-              </li>
-            </ul>
-          </div>
-        )}
       </header>
 
       {/* ================= PROFILE SECTION ================= */}
@@ -261,5 +312,3 @@ export default function PortfolioPage() {
     </div>
   );
 }
-
-
