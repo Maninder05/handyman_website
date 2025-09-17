@@ -113,7 +113,43 @@ export default function CreateService() {
           {errors.image && <p className="text-red-500 text-sm">{errors.image}</p>}
         </div>
 
-        
+        {/* Price */}
+        <div>
+          <label className="block mb-2 font-semibold">Price</label>
+          <div className="flex gap-3">
+            <select
+              value={priceType}
+              onChange={(e) => setPriceType(e.target.value)}
+              className="rounded-lg p-3 border bg-neutral-50"
+            >
+              <option>Hourly</option>
+              <option>Fixed</option>
+            </select>
+            <input
+              type="text"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              className="flex-1 rounded-lg p-3 border bg-neutral-50"
+            />
+          </div>
+          {errors.price && <p className="text-red-500 text-sm">{errors.price}</p>}
+        </div>
+      </div>
+
+      {/* Buttons */}
+      <div className="flex justify-around bg-neutral-200 py-4 border-t">
+        <button
+          onClick={() => setPopup("Draft Saved Successfully 📝")}
+          className="bg-gray-500 text-white px-6 py-2 rounded-full"
+        >
+          Save As Draft
+        </button>
+        <button
+          onClick={handleSubmit}
+          className="bg-blue-500 text-white px-6 py-2 rounded-full"
+        >
+          Submit Now →
+        </button>
       </div>
 
     </div>
