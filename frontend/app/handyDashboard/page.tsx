@@ -60,7 +60,7 @@ export default function PortfolioPage() {
             {/* Profile Icon */}
             <button
               onClick={toggleProfile}
-              className="p-2 rounded-full hover:bg-neutral-100 transition"
+              className="p-2 rounded-full hover:bg-neutral-400 transition"
             >
               <FiUser size={22} className="text-neutral-700" />
             </button>
@@ -71,7 +71,7 @@ export default function PortfolioPage() {
                 <ul className="text-sm divide-y">
                   <li>
                     <Link
-                      href="/account"
+                      href="/handyAccount"
                       className="block px-4 py-3 hover:bg-blue-50 hover:text-blue-600 transition"
                     >
                       View Account
@@ -92,7 +92,7 @@ export default function PortfolioPage() {
             {/* Menu button */}
             <button
               onClick={toggleMenu}
-              className="p-2 rounded-md hover:bg-neutral-100 transition"
+              className="p-2 rounded-md hover:bg-neutral-500 bg-gray-400 transition"
             >
               {showMenu ? <X size={26} /> : <Menu size={26} />}
             </button>
@@ -103,7 +103,7 @@ export default function PortfolioPage() {
                 <ul className="divide-y">
                   <li>
                     <Link
-                      href="/create-service"
+                      href="/createService"
                       className="block px-4 py-3 hover:bg-blue-50 hover:text-blue-600 transition"
                     >
                       Add Service
@@ -111,7 +111,7 @@ export default function PortfolioPage() {
                   </li>
                   <li>
                     <Link
-                      href="/account"
+                      href="/handyAccount"
                       className="block px-4 py-3 hover:bg-blue-50 hover:text-blue-600 transition"
                     >
                       My Account
