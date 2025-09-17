@@ -1,5 +1,5 @@
 "use client";
-
+//get help from chatgpt to use this lucide-react icons
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Bell, Home, MessageCircle, Settings, Users } from "lucide-react";

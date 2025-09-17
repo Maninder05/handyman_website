@@ -1,5 +1,5 @@
 "use client";
- 
+ // Side menu component with animation using Framer Motion 
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 interface SideMenuProps {
