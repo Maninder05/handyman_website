@@ -77,7 +77,7 @@ export default function CreateService() {
           {errors.title && <p className="text-red-500 text-sm">{errors.title}</p>}
         </div>
 
-        {/* Category */}
+        {/* Category select filed with five options */}
         <div>
           <label className="block mb-2 font-semibold text-neutral-800">
             Category
