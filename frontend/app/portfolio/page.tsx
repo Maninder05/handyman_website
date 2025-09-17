@@ -43,15 +43,20 @@ export default function PortfolioPage() {
         </div>
       </div>
 
-      {/* Switch to Buyer */}
+      {/* Switch to Handyman */}
       <div className="px-6 mb-2">
         <div className="bg-white flex justify-between items-center px-5 py-4 rounded-xl shadow-md">
-          <p className="font-medium">Switch To handyman</p>
+          <p className="font-medium">Switch To Handyman</p>
           <label className="inline-flex items-center cursor-pointer">
             <input
               type="checkbox"
               checked={isBuyer}
-              onChange={() => setIsBuyer(!isBuyer)}
+              onChange={() => {
+                setIsBuyer(!isBuyer);
+                if (!isBuyer) {
+                  router.push("/handyDashboard"); // Redirect to Handyman Dashboard
+                }
+              }}
               className="sr-only"
             />
             <div className="w-12 h-6 bg-gray-300 rounded-full p-1 flex items-center">
