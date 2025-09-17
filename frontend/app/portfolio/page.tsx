@@ -106,22 +106,22 @@ export default function PortfolioPage() {
       </div>
  
       {/* Bottom Navigation */}
-      <div className="mt-auto bg-teal-500 flex justify-around items-center py-3">
-        <button>
-          <Home className="w-7 h-7 text-white" />
+      <div className="bg-cyan-500 flex justify-around items-center h-14">
+        <button onClick={() => router.push("/")} className="cursor-pointer hover:text-white transition">
+          <Home className="w-6 h-6 text-black" />
         </button>
-        <button>
-          <MessageCircle className="w-7 h-7 text-white" />
+        <button onClick={() => router.push("/messages")} className="cursor-pointer hover:text-white transition">
+          <MessageCircle className="w-6 h-6 text-black" />
         </button>
-        <button>
-          <Users className="w-7 h-7 text-white" />
+        <button onClick={() => router.push("/portfolio")} className="cursor-pointer hover:text-white transition">
+          <Users className="w-6 h-6 text-black" />
         </button>
-        <button className="relative">
-          <Bell className="w-7 h-7 text-white" />
-          <span className="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full"></span>
+        <button onClick={() => router.push("/notifications")} className="relative cursor-pointer hover:text-white transition">
+          <Bell className="w-6 h-6 text-black" />
+          <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full"></span>
         </button>
-        <button>
-          <Settings className="w-7 h-7 text-white" />
+        <button onClick={() => router.push("/settings")} className="cursor-pointer hover:text-white transition">
+          <Settings className="w-6 h-6 text-black" />
         </button>
       </div>
     </div>
