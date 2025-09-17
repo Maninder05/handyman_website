@@ -54,7 +54,7 @@ export default function ChooseHandymanPage() {
               className="bg-cyan-500 text-white px-4 py-2 rounded-full font-semibold hover:bg-teal-600"
               onClick={() =>
                 router.push(
-                  `/hire-handyman?name=${encodeURIComponent(person.name)}&price=${person.price}&service=${encodeURIComponent(service)}`
+                  `/hire-handyman?name=${encodeURIComponent(person.name)}&price=${person.price}&service=${encodeURIComponent(service || '')}`
                 )
               }
             >
