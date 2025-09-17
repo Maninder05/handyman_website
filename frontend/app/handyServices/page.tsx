@@ -62,4 +62,33 @@ export default function MyServicesPage() {
           ))}
         </div>
       </section>
+      {/* Services Grid */}
+      <section className="px-4 py-10 max-w-7xl mx-auto">
+        <h2 className="text-3xl font-bold mb-8 text-neutral-900">Handyman Services Offered</h2>
+ 
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {services.map((service, index) => (
+            <div
+              key={index}
+              className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col"
+            >
+              <div className="relative w-full h-40">
+                <Image
+                  src={service.image}
+                  alt={service.name}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <div className="p-4 flex flex-col gap-1">
+                <h3 className="text-lg font-bold text-neutral-900">{service.name}</h3>
+                <p className="text-neutral-700">By Kenji Teneka</p>
+                <p className="text-yellow-500 font-semibold">Rating: {service.rating}/5</p>
+                <p className="text-neutral-900 font-semibold">${service.price} CAD/HR</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+ 
  
