@@ -113,7 +113,7 @@ export default function OrderDetailsPage() {
         </div>
       </div>
 
-      {/* popup modal */}
+      {/* modal for the popup of accept and decline */}
       {popup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
           <div className="bg-white p-5 rounded-xl shadow-md text-center w-72">
@@ -135,7 +135,7 @@ export default function OrderDetailsPage() {
         </div>
       )}
 
-      {/* Footer Nav */}
+        {/* footer with five elements  */}
       <footer className="bg-blue-500 py-4 mt-auto">
         <div className="flex justify-around items-center text-white text-sm font-medium">
           <Link href="/" className="flex flex-col items-center gap-1">
