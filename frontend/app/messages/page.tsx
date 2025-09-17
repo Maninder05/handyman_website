@@ -88,7 +88,6 @@ export default function MessagesPage() {
 
       {/* Input Bar */}
       <section className="bg-white flex items-center px-4 py-3 gap-3 shadow-md">
-        {/* Add Icon */}
         <button className="bg-gray-300 p-3 rounded-full hover:bg-gray-400">
           <FiPlus size={20} />
         </button>
