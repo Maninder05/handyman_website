@@ -23,7 +23,7 @@ export default function SettingsPage() {
                   onClick={() => setActive(item)}
                   className={`w-full text-left rounded-lg px-4 py-3 transition ${
                     active === item
-                      ? "bg-blue-100 text-blue-700 font-semibold"
+                      ? "bg-teal-100 text-black-700 font-semibold"
                       : "text-gray-600 hover:bg-gray-100"
                   }`}
                 >
@@ -37,20 +37,19 @@ export default function SettingsPage() {
             {active === "Profile Settings" && (
               <div className="rounded-xl border bg-white p-6 border-gray-200 shadow-sm">
                 <h2 className="text-xl font-semibold mb-6">Profile Settings</h2>
-                
                 <div className="grid grid-cols-2 gap-6 mb-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">First Name *</label>
                     <input
                       type="text"
-                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-blue-[#59b6bd] focus:border-[#008080]"
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Last Name *</label>
                     <input
                       type="text"
-                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-blue-[#59b6bd] focus:border-[#008080]"
                     />
                   </div>
                 </div>
@@ -60,20 +59,20 @@ export default function SettingsPage() {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
                     <input
                       type="email"
-                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-blue-[#59b6bd] focus:border-[#008080]"
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Mobile Number *</label>
                     <input
                       type="tel"
-                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-blue-[#59b6bd] focus:border-[#008080]"
                     />
                   </div>
                 </div>
                 
                 <div className="flex justify-end">
-                  <button className="bg-blue-600 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-blue-700">
+                  <button className="bg-[#59b6bd] text-white px-5 py-2.5 rounded-lg font-medium hover:bg-[#008080]">
                     Save Changes
                   </button>
                 </div>
@@ -89,7 +88,7 @@ export default function SettingsPage() {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
                     <input
                       type="password"
-                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-blue-[#59b6bd] focus:border-[#008080]"
                     />
                   </div>
                   
@@ -97,7 +96,7 @@ export default function SettingsPage() {
                     <label className="block text-sm font-medium text-gray-700 mb-2">New Password</label>
                     <input
                       type="password"
-                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-blue-[#59b6bd] focus:border-[#008080]"
                     />
                   </div>
                   
@@ -105,13 +104,13 @@ export default function SettingsPage() {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Confirm New Password</label>
                     <input
                       type="password"
-                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-blue-[#59b6bd] focus:border-[#008080]"
                     />
                   </div>
                 </div>
                 
                 <div className="flex justify-end">
-                  <button className="bg-blue-600 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-blue-700">
+                  <button className="bg-[#59b6bd] text-white px-5 py-2.5 rounded-lg font-medium hover:bg-[#008080]">
                     Update Password
                   </button>
                 </div>
@@ -149,13 +148,13 @@ export default function SettingsPage() {
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
                       <input type="checkbox" className="sr-only peer" defaultChecked />
-                      <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-blue-600 peer-checked:after:translate-x-full after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+                      <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-[#59b6bd] peer-checked:after:translate-x-full after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
                     </label>
                   </div>
                 </div>
                 
                 <div className="flex justify-end">
-                  <button className="bg-blue-600 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-blue-700">
+                  <button className="bg-[#59b6bd] text-white px-5 py-2.5 rounded-lg font-medium hover:bg-[#008080]">
                     Save Preferences
                   </button>
                 </div>
