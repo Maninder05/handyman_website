@@ -1,16 +1,18 @@
 "use client";
 
-
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
 
 export default function OrderDetailsPage() {
   // track popup state (accepted / declined / null)
- 
+  const [popup, setPopup] = useState<"accepted" | "declined" | null>(null);
 
   // reset popup
-  
+  const handleClose = () => {
+    setPopup(null);
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-neutral-100 text-neutral-800">
@@ -94,11 +96,45 @@ export default function OrderDetailsPage() {
           </div>
         </div>
 
+        {/* accept / decline buttons */}
+        <div className="flex justify-center gap-4 my-6 max-w-md mx-auto w-full">
+          <button
+            onClick={() => setPopup("accepted")}
+            className="bg-blue-500 text-white px-6 py-2 rounded-full shadow"
+          >
+            Accept Order
+          </button>
+          <button
+            onClick={() => setPopup("declined")}
+            className="bg-red-500 text-white px-6 py-2 rounded-full shadow"
+          >
+            Decline Order
+          </button>
         </div>
+      </div>
 
-     
+      {/* popup modal */}
+      {popup && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
+          <div className="bg-white p-5 rounded-xl shadow-md text-center w-72">
+            <h2 className="font-bold text-lg text-neutral-800 mb-3">
+              {popup === "accepted" ? "✅ Order Accepted" : "❌ Order Declined"}
+            </h2>
+            <p className="text-sm text-gray-700 mb-5">
+              {popup === "accepted"
+                ? "You accepted this order successfully."
+                : "You declined this order."}
+            </p>
+            <button
+              onClick={handleClose}
+              className="bg-blue-500 hover:bg-blue-600 transition text-white px-5 py-2 rounded-lg"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
 
-    
     </div>
   );
 }
