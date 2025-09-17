@@ -37,7 +37,7 @@ export default function ProjectsPage() {
         </div>
       </div>
 
-      {/* Completed */}
+      {/* Completed jobs */}
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-neutral-800 mb-4 mt-6 text-center">
           Completed
@@ -75,7 +75,7 @@ export default function ProjectsPage() {
         </div>
       </div>
 
-      {/* Footer Nav */}
+      {/* footer with five elements */}
       <footer className="bg-blue-500 py-4 mt-auto">
         <div className="flex justify-around items-center text-white text-sm font-medium">
           <Link href="/" className="flex flex-col items-center gap-1">
