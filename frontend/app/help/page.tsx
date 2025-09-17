@@ -79,7 +79,6 @@ export default function HelpCentrePage() {
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-semibold">Guides for getting started</h2>
           </div>
-
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
             <Link
               href="/book-services"
@@ -100,11 +99,9 @@ export default function HelpCentrePage() {
                 Step-by-step guide to finding and booking the right professional
               </p>
             </Link>
-
             <Link
               href="/create-service"
-              className="rounded-lg border border-neutral-200 p-4 text-left shadow-sm hover:bg-neutral-50 transition-colors"
-            >
+              className="rounded-lg border border-neutral-200 p-4 text-left shadow-sm hover:bg-neutral-50 transition-colors">
               <div className="relative w-full aspect-[4/3] rounded-md overflow-hidden mb-3 bg-neutral-100">
                 <Image
                   src="/images/firsthandyman.jpg"
@@ -119,11 +116,9 @@ export default function HelpCentrePage() {
                 Learn how to create and publish your service offerings
               </p>
             </Link>
-
             <Link
               href="/portfolio"
-              className="rounded-lg border border-neutral-200 p-4 text-left shadow-sm hover:bg-neutral-50 transition-colors"
-            >
+              className="rounded-lg border border-neutral-200 p-4 text-left shadow-sm hover:bg-neutral-50 transition-colors">
               <div className="relative w-full aspect-[4/3] rounded-md overflow-hidden mb-3 bg-neutral-100">
                 <Image
                   src="/images/managing.jpg"
@@ -200,7 +195,6 @@ export default function HelpCentrePage() {
             ))}
           </div>
         </section>
-
         <footer className="mt-16 w-full h-20" />
       </main>
     </div>
