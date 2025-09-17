@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+
 
 export default function HelpCentrePage() {
   const router = useRouter();  // Navigator
@@ -60,27 +62,6 @@ export default function HelpCentrePage() {
           </div>
         </section>
 
-        <section className="mt-6 max-w-5xl mx-auto px-6">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-semibold">Guides for getting started</h2>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-            <Link href="/guides/book-handyman" className="rounded-lg border border-neutral-200 p-6 text-center shadow-sm hover:bg-neutral-50">
-              How to book a handyman for your home
-            </Link>
-            <Link href="/guides/post-service" className="rounded-lg border border-neutral-200 p-6 text-center shadow-sm hover:bg-neutral-50">
-              Posting your first handyman service
-            </Link>
-            <Link href="/guides/manage-profile" className="rounded-lg border border-neutral-200 p-6 text-center shadow-sm hover:bg-neutral-50">
-              Managing and updating your profile details
-            </Link>
-            <Link href="/guides/handycover" className="rounded-lg border border-neutral-200 p-6 text-center shadow-sm hover:bg-neutral-50">
-              HandyCover protection for customers
-            </Link>
-          </div>
-        </section>
-
         <section className="mt-8 max-w-5xl mx-auto px-6 text-left">
           <h2 className="text-2xl font-semibold mb-6">Help Topics</h2>
 
@@ -99,6 +80,94 @@ export default function HelpCentrePage() {
             </Link>
           </div>
         </section>
+
+        <section className="mt-6 max-w-5xl mx-auto px-6">
+  <div className="flex items-center justify-between mb-6">
+    <h2 className="text-2xl font-semibold">Guides for getting started</h2>
+  </div>
+
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+    <Link
+      href="/guides/book-handyman"
+      className="rounded-lg border border-neutral-200 p-4 text-left shadow-sm hover:bg-neutral-50 transition-colors"
+    >
+      <div className="relative w-full aspect-[4/3] rounded-md overflow-hidden mb-3 bg-neutral-100">
+        <Image
+          src="/images/client3.jpg"
+          alt="Book a handyman for your home"
+          fill
+          sizes="(max-width: 768px) 100vw, 25vw"
+          className="object-cover"
+          priority
+        />
+      </div>
+      <h3 className="font-semibold mb-1">How to book a handyman for your home</h3>
+      <p className="text-sm text-neutral-600">
+        Step-by-step guide to finding and booking the right professional
+      </p>
+    </Link>
+
+    <Link
+      href="/guides/post-service"
+      className="rounded-lg border border-neutral-200 p-4 text-left shadow-sm hover:bg-neutral-50 transition-colors"
+    >
+      <div className="relative w-full aspect-[4/3] rounded-md overflow-hidden mb-3 bg-neutral-100">
+        <Image
+          src="/images/client3.jpg"
+          alt="Posting your first handyman service"
+          fill
+          sizes="(max-width: 768px) 100vw, 25vw"
+          className="object-cover"
+        />
+      </div>
+      <h3 className="font-semibold mb-1">Posting your first handyman service</h3>
+      <p className="text-sm text-neutral-600">
+        Learn how to create and publish your service offerings
+      </p>
+    </Link>
+
+    <Link
+      href="/guides/manage-profile"
+      className="rounded-lg border border-neutral-200 p-4 text-left shadow-sm hover:bg-neutral-50 transition-colors"
+    >
+      <div className="relative w-full aspect-[4/3] rounded-md overflow-hidden mb-3 bg-neutral-100">
+        <Image
+          src="/images/client3.jpg"
+          alt="Managing your profile details"
+          fill
+          sizes="(max-width: 768px) 100vw, 25vw"
+          className="object-cover"
+        />
+      </div>
+      <h3 className="font-semibold mb-1">Managing your profile details</h3>
+      <p className="text-sm text-neutral-600">
+        Keep your information up to date for better matches
+      </p>
+    </Link>
+
+    <Link
+      href="/guides/handycover"
+      className="rounded-lg border border-neutral-200 p-4 text-left shadow-sm hover:bg-neutral-50 transition-colors"
+    >
+      <div className="relative w-full aspect-[4/3] rounded-md overflow-hidden mb-3 bg-neutral-100">
+        <Image
+          src="/images/client3.jpg"
+          alt="HandyCover protection for customers"
+          fill
+          sizes="(max-width: 768px) 100vw, 25vw"
+          className="object-cover"
+        />
+      </div>
+      <h3 className="font-semibold mb-1">HandyCover protection for customers</h3>
+      <p className="text-sm text-neutral-600">
+        Understand how our protection plan keeps you covered
+      </p>
+    </Link>
+  </div>
+</section>
+
+
+        
 
         <section className="mt-10 max-w-5xl mx-auto px-6">
           <h2 className="mb-8 text-center text-4xl sm::text-5xl font-extrabold uppercase tracking-tight">Frequently Asked Questions</h2>
