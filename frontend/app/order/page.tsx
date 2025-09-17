@@ -136,21 +136,36 @@ export default function OrderDetailsPage() {
       )}
 
         {/* footer with five elements */}
-      <footer className="bg-blue-500 py-4 mt-auto">
-        <div className="flex justify-around items-center text-white text-sm font-medium">
-          <Link href="/" className="flex flex-col items-center gap-1">
+      <footer className="bg-gray-900 text-neutral-300 mt-10">
+        <div className="max-w-5xl mx-auto flex justify-around py-5 text-sm">
+          <Link
+            href="/"
+            className="flex flex-col items-center gap-1 hover:text-blue-400 transition"
+          >
             <FiHome size={20} /> Home
           </Link>
-          <Link href="/messages" className="flex flex-col items-center gap-1">
+          <Link
+            href="/messages"
+            className="flex flex-col items-center gap-1 hover:text-blue-400 transition"
+          >
             <FiMessageCircle size={20} /> Messages
           </Link>
-          <Link href="/help" className="flex flex-col items-center gap-1">
+          <Link
+            href="/help"
+            className="flex flex-col items-center gap-1 hover:text-blue-400 transition"
+          >
             <FiHelpCircle size={20} /> Help
           </Link>
-          <Link href="/notifications" className="flex flex-col items-center gap-1">
+          <Link
+            href="/notifications"
+            className="flex flex-col items-center gap-1 hover:text-blue-400 transition"
+          >
             <FiBell size={20} /> Notifications
           </Link>
-          <Link href="/settings" className="flex flex-col items-center gap-1">
+          <Link
+            href="/settings"
+            className="flex flex-col items-center gap-1 hover:text-blue-400 transition"
+          >
             <FiSettings size={20} /> Settings
           </Link>
         </div>
