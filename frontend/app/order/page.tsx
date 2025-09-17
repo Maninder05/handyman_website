@@ -16,7 +16,7 @@ export default function OrderDetailsPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-neutral-100 text-neutral-800">
-      {/* Header with Back Arrow */}
+      {/* Header */}
       <div className="bg-blue-500 p-4 relative shadow-md flex items-center justify-center">
         <Link href="/portfolio">
           <button className="text-2xl absolute left-4 top-3 text-white">←</button>
@@ -24,7 +24,7 @@ export default function OrderDetailsPage() {
         <h1 className="text-2xl font-bold text-white">Order Details</h1>
       </div>
 
-      {/* main content */}
+      {/* main content of the page */}
       <div className="flex-1 p-4 space-y-6">
         {/* booking card */}
         <div className="bg-white p-4 rounded-xl shadow-sm my-4 max-w-md mx-auto">
@@ -47,7 +47,7 @@ export default function OrderDetailsPage() {
           </div>
         </div>
 
-        {/* buyer card */}
+        {/* card having buyer info */}
         <div className="bg-white p-4 rounded-xl shadow-sm my-4 max-w-md mx-auto">
           <h2 className="font-semibold mb-2 text-blue-500">Buyer Info</h2>
           <div className="flex gap-4 items-center">
