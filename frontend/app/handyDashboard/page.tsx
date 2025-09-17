@@ -47,7 +47,7 @@ export default function PortfolioPage() {
 
   return (
     <div className="min-h-screen bg-neutral-100 flex flex-col">
-      {/* ================= HEADER ================= */}
+      {/* HEADER */}
       <header className="bg-white shadow-md relative">
         <div className="max-w-5xl mx-auto flex items-center justify-between px-6 py-4">
           {/* Title */}
@@ -267,7 +267,7 @@ export default function PortfolioPage() {
         </section>
       </main>
 
-      {/* ================= FOOTER ================= */}
+      {/* FOOTER */}
       <footer className="bg-gray-900 text-neutral-300 mt-10">
         <div className="max-w-5xl mx-auto flex justify-around py-5 text-sm">
           <Link
@@ -305,3 +305,9 @@ export default function PortfolioPage() {
     </div>
   );
 }
+
+
+//Create a Next.js client component PortfolioPage based on the attached reference image.
+//  Include a header with profile and menu dropdowns, a profile section with image and stats, toggle for buyer/seller mode, 
+// content cards for earnings, orders, recent orders, and services, plus a footer with five navigation icons.
+//  Use Tailwind CSS, React useState for dropdowns and toggle, and Next.js Image.
