@@ -12,9 +12,9 @@ export default function PortfolioPage() {
   return (
     <div className="min-h-screen w-full flex flex-col bg-gray-100 ">
         <div>
-      {/* Header */}
+
       <div className="bg-blue-400 p-6 relative mb-2">
-        {/* Menu Button */}
+        
         <button className="absolute right-4 top-6 text-white text-3xl">☰</button>
 
         {/* Profile Info */}
