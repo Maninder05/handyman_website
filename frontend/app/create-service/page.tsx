@@ -119,7 +119,7 @@ export default function CreateService() {
           {errors.image && <p className="text-red-500 text-sm">{errors.image}</p>}
         </div>
 
-        {/* Price */}
+        {/* Price details */}
         <div>
           <label className="block mb-2 font-semibold text-neutral-800">
             Price
@@ -160,7 +160,7 @@ export default function CreateService() {
         </button>
       </div>
 
-      {/* Popup */}
+      {/* Popup for draft and submit button */}
       {popup && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center">
           <div className="bg-white p-6 rounded-xl shadow text-center w-80 text-neutral-800">
