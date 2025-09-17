@@ -4,8 +4,6 @@ import Link from "next/link";
 import Image from "next/image";
 
 export default function HelpCentrePage() {
-  const [q, setQ] = useState(""); 
-
   return (
     <div className="min-h-screen bg-white text-neutral-900">
       <header className="w-full fixed top-0 z-50 bg-white border-b border-neutral-100">
@@ -29,12 +27,9 @@ export default function HelpCentrePage() {
             <form onSubmit={(e) => e.preventDefault()} className="flex items-center gap-2">
               <input
                 type="text"
-                value={q}
-                onChange={(e) => setQ(e.target.value)}
                 placeholder="Search how-tos and more"
                 className="h-10 w-72 rounded-full border border-neutral-200 px-4 text-sm
                            focus:outline-none focus:ring-0"
-                aria-label="Search help articles"
               />
               <button
                 type="button"
