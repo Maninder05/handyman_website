@@ -1,33 +1,18 @@
 "use client";
  
 import Link from "next/link";
-
-
 import { motion, AnimatePresence } from "framer-motion";
- 
 interface SideMenuProps {
-
-
   isOpen: boolean; //control if the menu is visible
-
-
-  onClose: () => void;
-
-
+  onClose: () => void; //function to close the menu
 }
  
 export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
-
-
-  return (
+ return (
 <AnimatePresence>
-
-
-      {isOpen && (
+  {isOpen && (
 <div className="fixed inset-0 z-50 flex">
-
-
-          {/* Background overlay */}
+ {/* Background overlay */}
 <motion.div
 
             className="flex-1"

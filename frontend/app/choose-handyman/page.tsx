@@ -17,8 +17,7 @@ export default function ChooseHandymanPage() {
 
   // Function to handle choosing a handyman
   const handleChoose = (person: typeof handymen[0]) => {
-    router.push(
-      `/hire-handyman?name=${encodeURIComponent(person.name)}&price=${person.price}&service=${encodeURIComponent(service || '')}`
+    router.push(`/hire-handyman?name=${encodeURIComponent(person.name)}&price=${person.price}&service=${encodeURIComponent(service || '')}`
     );
   };
 
