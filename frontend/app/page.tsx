@@ -1,10 +1,14 @@
 "use client"; //this makes current comp a Client Component i.e., being bundled and able to run in the browser so that hooks & event listeners can be implemented
 import Image from "next/image";
 import {useState} from 'react';
+import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react"; // for Google/Facebook OAuth
 
 export default function LandingPage() {
-   const [showSignup, setShowSignup] = useState(false);
+
+  const router=useRouter();
+
+  const [showSignup, setShowSignup] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
 
   //==========signup================
@@ -22,7 +26,7 @@ export default function LandingPage() {
 
   // ----------------- SIGNUP VALIDATION -----------------
   const validateSignupForm = () => {
-    const newErrors: { [key: string]: string } = {};
+    const newErrors: { [key: string]: string } = {};  //index signature(explicit type-casting) i.e. an obj can hv n number of key-val pairs only of str data-type
 
     if (!username.trim()) {
       newErrors.username = "Username cannot be empty";
@@ -45,13 +49,14 @@ export default function LandingPage() {
     }
 
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return Object.keys(newErrors).length === 0; //["username","email",etc]
   };
 
   const handleSignup = (e: React.FormEvent) => {
     e.preventDefault();
     if (validateSignupForm()) {
-      alert("✅ Signup successful! (Here you’d call backend API)");
+      alert("Woahh, signup successful!!");
+      router.push("/dashboard");
     }
   };
 
@@ -76,7 +81,8 @@ export default function LandingPage() {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (validateLoginForm()) {
-      alert("✅ Login successful! (Here you’d call backend API)");
+      alert("Woahh, login successful!!");
+      router.push("/dashboard"); 
     }
   };
 
@@ -415,7 +421,7 @@ export default function LandingPage() {
             {/* Social Login tags */}
             <div className="flex flex-col gap-3">
               <button
-                onClick={() => signIn("google")}
+                onClick={() => signIn("google")}   //redirect user to Google OAuth consent screen where signIn is in-built fxn from Next-Auth that initiates login
                 className="flex items-center gap-2 justify-center px-4 py-2 rounded-lg bg-neutral-800 border border-neutral-700 text-sm cursor-pointer hover:border-cyan-400 transition"
               >
                 <Image src="/images/google-icon.png" alt="Google" width={30} height={30} />
