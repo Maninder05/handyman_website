@@ -89,12 +89,13 @@ export default function LandingPage() {
     if (validateLoginForm()) {
       alert("Woahh, login successful!!");
       
-      if (userType === "handyman") {
-        router.push("/handyDashboard");
-      } 
-      else if (userType === "customer") {
-        router.push("/clientDashboard");
-      }
+      router.push("/handyDashboard")
+      // if (userType === "handyman") {
+      //   router.push("/handyDashboard");
+      // } 
+      // else if (userType === "customer") {
+      //   router.push("/clientDashboard");
+      // }
     }
   };
 
