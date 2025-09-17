@@ -54,7 +54,6 @@ export default function MessagesPage() {
           </div>
         </div>
 
-        {/* Button */}
         <div>
           <Link
             href="/hire-handyman"
