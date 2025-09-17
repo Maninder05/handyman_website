@@ -13,7 +13,7 @@ export default function PortfolioPage() {
     <div className="min-h-screen w-full flex flex-col bg-gray-100 ">
         <div>
       {/* Header */}
-      <div className="bg-teal-500 p-6 relative mb-2">
+      <div className="bg-blue-400 p-6 relative mb-2">
         {/* Menu Button */}
         <button className="absolute right-4 top-6 text-white text-3xl">☰</button>
  
@@ -59,7 +59,7 @@ export default function PortfolioPage() {
       />
       <div className="w-12 h-6 bg-gray-300 rounded-full p-1 flex items-center">
         <div
-          className={`w-5 h-5 rounded-full bg-teal-500 transition-transform ${
+          className={`w-5 h-5 rounded-full bg-blue-400 transition-transform ${
             isBuyer ? "translate-x-6" : ""
           }`}
         />
@@ -110,7 +110,7 @@ export default function PortfolioPage() {
       </div>
  
       {/* Bottom Navigation */}
-      <div className="mt-auto bg-teal-500 flex justify-around items-center py-3">
+      <div className="mt-auto bg-blue-400 flex justify-around items-center py-3">
         <button>
           <Home className="w-7 h-7 text-white" />
         </button>
