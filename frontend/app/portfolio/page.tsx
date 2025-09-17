@@ -1,5 +1,5 @@
 "use client";
-
+//Prompt: Add Comments in the code , Reference: chatgpt.com
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Bell, Home, MessageCircle, Settings, Users } from "lucide-react";
@@ -17,8 +17,7 @@ export default function PortfolioPage() {
 
         {/* Profile Info */}
         <div className="flex flex-col items-center mt-6">
-          <img
-            src="/images/client1.jpg"
+          <img src="../images/kenji.jpg"
             alt="Profile"
             className="w-20 h-20 rounded-full border-4 border-white shadow-md"
           />
