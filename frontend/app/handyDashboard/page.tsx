@@ -8,7 +8,7 @@ import { Menu, X } from "lucide-react";
 import {FiHome, FiMessageCircle, FiHelpCircle, FiBell, FiSettings, FiUser} from "react-icons/fi";
 
 export default function PortfolioPage() {
-  // this is for the little menu (open / close)
+  // this is for the dropdown menu
   const [showMenu, setShowMenu] = useState(false);
 
   // toggle profile dropdown
