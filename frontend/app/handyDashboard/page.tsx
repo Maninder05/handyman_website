@@ -5,14 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Menu, X } from "lucide-react";
-import {
-  FiHome,
-  FiMessageCircle,
-  FiHelpCircle,
-  FiBell,
-  FiSettings,
-  FiUser,
-} from "react-icons/fi";
+import {FiHome, FiMessageCircle, FiHelpCircle, FiBell, FiSettings, FiUser} from "react-icons/fi";
 
 export default function PortfolioPage() {
   // this is for the little menu (open / close)
