@@ -257,138 +257,164 @@ export default function LandingPage() {
 
       {/* **************** SIGNUP MODAL******************************* */}
       {showSignup && (
-      <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-        <div className="relative bg-neutral-900 border border-neutral-700 rounded-2xl shadow-2xl w-full max-w-md p-8 scale-95 hover:scale-100 transition-transform">
-          {/* Close Button */}
-          <button
-            onClick={() => setShowSignup(false)}
-            className="absolute top-3 right-3 text-neutral-400 hover:text-white"
-          >
-            ✕
-          </button>
-
-      {/* Title + tagline */}
-      <h2 className="text-2xl font-bold text-blue-400 mb-2 text-center">
-        Create Your Account
-      </h2>
-      <p className="text-sm text-neutral-400 mb-6 text-center">
-        Join thousands of homeowners trusting us every day.
-      </p>
-
-      {/* Form */}
-      <form onSubmit={handleSignup} className="space-y-4">
-        {/* Username */}
-        <div>
-          <input
-            type="text"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className="w-full px-4 py-2 rounded-lg bg-neutral-800 border border-neutral-700 focus:border-blue-400 outline-none"
-            required
-          />
-          {errors.username && (
-            <p className="text-red-500 text-sm mt-1">{errors.username}</p>
-          )}
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+          <div className="relative bg-neutral-900 border border-neutral-700 rounded-2xl shadow-2xl w-full max-w-md p-8 scale-95 hover:scale-100 transition-transform">
+            {/* Close Button */}
+            <button
+              onClick={() => setShowSignup(false)}
+              className="absolute top-3 right-3 text-neutral-400 hover:text-white"
+            >
+              ✕
+            </button>
+      
+            {/* Title + tagline */}
+            <h2 className="text-2xl font-bold text-blue-400 mb-2 text-center">
+              Create Your Account
+            </h2>
+            <p className="text-sm text-neutral-400 mb-6 text-center">
+              Join thousands of homeowners trusting us every day.
+            </p>
+      
+            {/* Form */}
+            <form onSubmit={handleSignup} className="space-y-4">
+              {/* Username */}
+              <div>
+                <input
+                  type="text"
+                  placeholder="Username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="w-full px-4 py-2 rounded-lg bg-neutral-800 border border-neutral-700 focus:border-blue-400 outline-none"
+                  required
+                />
+                {errors.username && (
+                  <p className="text-red-500 text-sm mt-1">{errors.username}</p>
+                )}
+              </div>
+      
+              {/* Email */}
+              <div>
+                <input
+                  type="email"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-4 py-2 rounded-lg bg-neutral-800 border border-neutral-700 focus:border-blue-400 outline-none"
+                  required
+                />
+                {errors.email && (
+                  <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+                )}
+              </div>
+      
+              {/* Password */}
+              <div>
+                <input
+                  type="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-4 py-2 rounded-lg bg-neutral-800 border border-neutral-700 focus:border-blue-400 outline-none"
+                  required
+                />
+                {errors.password && (
+                  <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+                )}
+              </div>
+      
+              {/* User Type (Side by Side Buttons) */}
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => setUserType("customer")}
+                  className={`w-1/2 flex items-center justify-center gap-2 px-3 py-2 rounded-lg border text-sm transition ${
+                    userType === "customer"
+                      ? "bg-blue-400 text-black border-blue-400"
+                      : "bg-neutral-800 text-neutral-300 border-neutral-700 hover:border-blue-400"
+                  }`}
+                >
+                  <Image
+                    src="/images/dummy-client.jpg"
+                    alt="Customer"
+                    width={30}
+                    height={30}
+                  />
+                  <span>Customer</span>
+                </button>
+      
+                <button
+                  type="button"
+                  onClick={() => setUserType("handyman")}
+                  className={`w-1/2 flex items-center justify-center gap-2 px-3 py-2 rounded-lg border text-sm transition ${
+                    userType === "handyman"
+                      ? "bg-blue-400 text-black border-blue-400"
+                      : "bg-neutral-800 text-neutral-300 border-neutral-700 hover:border-blue-400"
+                  }`}
+                >
+                  <Image
+                    src="/images/dummy-handyman.jpg"
+                    alt="Handyman"
+                    width={30}
+                    height={30}
+                    className="rounded-full"
+                  />
+                  <span>Handyman</span>
+                </button>
+              </div>
+              {errors.userType && (
+                <p className="text-red-500 text-sm mt-1">{errors.userType}</p>
+              )}
+      
+              {/* Submit Button */}
+              <button
+                type="submit"
+                className="w-full bg-blue-400 hover:bg-blue-500 text-black py-2 rounded-lg transition"
+              >
+                Sign Up
+              </button>
+            </form>
+      
+            {/* Divider */}
+            <div className="flex items-center my-6">
+              <div className="flex-1 h-px bg-neutral-700"></div>
+              <span className="px-2 text-neutral-500 text-xs">OR</span>
+              <div className="flex-1 h-px bg-neutral-700"></div>
+            </div>
+      
+            {/* Social Login tags */}
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={() => signIn("google")}
+                className="flex items-center gap-2 justify-center px-4 py-2 rounded-lg bg-neutral-800 border border-neutral-700 text-sm cursor-pointer hover:border-cyan-400 transition"
+              >
+                <Image src="/images/google-icon.png" alt="Google" width={30} height={30} />
+                <span>Sign up with Google</span>
+              </button>
+              <button
+                onClick={() => signIn("facebook")}
+                className="flex items-center gap-2 justify-center px-4 py-2 rounded-lg bg-neutral-800 border border-neutral-700 text-sm cursor-pointer hover:border-cyan-400 transition"
+              >
+                <Image src="/images/facebook-icon.png" alt="Facebook" width={30} height={30} />
+                <span>Sign up with Facebook</span>
+              </button>
+            </div>
+      
+            {/* Already have an account */}
+            <p className="text-sm text-neutral-400 mt-4 text-center">
+              Already have an account?{" "}
+              <a href="/auth/login" className="text-blue-400 hover:underline">
+                Login
+              </a>
+            </p>
+      
+            {/* Forgot Password at the end */}
+            <p className="text-sm text-blue-400 mt-2 cursor-pointer hover:underline text-center">
+              Forgot Password?
+            </p>
+          </div>
         </div>
-
-        {/* Email */}
-        <div>
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-2 rounded-lg bg-neutral-800 border border-neutral-700 focus:border-blue-400 outline-none"
-            required
-          />
-          {errors.email && (
-            <p className="text-red-500 text-sm mt-1">{errors.email}</p>
-          )}
-        </div>
-
-        {/* Password */}
-        <div>
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-4 py-2 rounded-lg bg-neutral-800 border border-neutral-700 focus:border-blue-400 outline-none"
-            required
-          />
-          {errors.password && (
-            <p className="text-red-500 text-sm mt-1">{errors.password}</p>
-          )}
-        </div>
-
-        {/* User Type */}
-        <div>
-          <select
-            value={userType}
-            onChange={(e) => setUserType(e.target.value)}
-            className="w-full px-4 py-2 rounded-lg bg-neutral-800 border border-neutral-700 focus:border-blue-400 outline-none"
-            required
-          >
-            <option value="">Select user type</option>
-            <option value="customer">Customer</option>
-            <option value="handyman">Handyman</option>
-          </select>
-          {errors.userType && (
-            <p className="text-red-500 text-sm mt-1">{errors.userType}</p>
-          )}
-        </div>
-
-        {/* Submit Button */}
-        <button
-          type="submit"
-          className="w-full bg-blue-400 hover:bg-blue-500 text-black py-2 rounded-lg transition"
-        >
-          Sign Up
-        </button>
-      </form>
-
-      {/* Divider */}
-      <div className="flex items-center my-6">
-        <div className="flex-1 h-px bg-neutral-700"></div>
-        <span className="px-2 text-neutral-500 text-xs">OR</span>
-        <div className="flex-1 h-px bg-neutral-700"></div>
-      </div>
-
-      {/* Social Login tags */}
-      <div className="flex flex-col gap-3">
-        <button
-          onClick={() => signIn("google")}
-          className="flex items-center gap-2 justify-center px-4 py-2 rounded-lg bg-neutral-800 border border-neutral-700 text-sm cursor-pointer hover:border-cyan-400 transition"
-        >
-          <Image src="/images/google-icon.png" alt="Google" width={18} height={18} />
-          <span>Sign up with Google</span>
-        </button>
-        <button
-          onClick={() => signIn("facebook")}
-          className="flex items-center gap-2 justify-center px-4 py-2 rounded-lg bg-neutral-800 border border-neutral-700 text-sm cursor-pointer hover:border-cyan-400 transition"
-        >
-          <Image src="/images/facebook-icon.png" alt="Facebook" width={18} height={18} />
-          <span>Sign up with Facebook</span>
-        </button>
-      </div>
-
-      {/* Already have an account */}
-      <p className="text-sm text-neutral-400 mt-4 text-center">
-        Already have an account?{" "}
-        <a href="/auth/login" className="text-blue-400 hover:underline">
-          Login
-        </a>
-      </p>
-
-      {/* Forgot Password at the end */}
-      <p className="text-sm text-blue-400 mt-2 cursor-pointer hover:underline text-center">
-        Forgot Password?
-      </p>
-    </div>
-  </div>
-)}
-</main>
+      )}
+    </main>
   );
 }
 
