@@ -13,14 +13,14 @@ export default function PortfolioPage() {
     <div className="min-h-screen w-full flex flex-col bg-gray-100 ">
         <div>
       {/* Header */}
-      <div className="bg-teal-500 p-6 relative mb-2">
+      <div className="bg-cyan-500 p-6 relative mb-2">
         {/* Menu Button */}
         <button className="absolute right-4 top-6 text-white text-3xl">☰</button>
  
         {/* Profile Info */}
         <div className="flex flex-col items-center mt-6">
           <img
-            src="/images/client1.jpg"
+            src="/public/images/client3.jpg"
             alt="Profile"
             className="w-20 h-20 rounded-full border-4 border-white shadow-md"
           />
@@ -67,11 +67,7 @@ export default function PortfolioPage() {
     </label>
   </div>
 </div>
-     
- 
-     
- 
- 
+
       {/* Earnings */}
       <div className="p-6 bg-gray-200">
         <div className="flex justify-between items-center">

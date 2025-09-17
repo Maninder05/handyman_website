@@ -36,14 +36,12 @@ export default function ChooseHandymanPage() {
 <h1 className="text-xl font-bold text-white">
 
 
-          {service ? `Choose Handyman for ${service}` : "Choose Handyman"}
+{service ? `Choose Handyman for ${service}` : "Choose Handyman"}
 </h1>
 <p className="text-sm text-white mt-1">
 
 
           Compare and choose the right handyman for your job <br />
-
-
           — fast, trusted, and nearby.
 </p>
 </div>
@@ -65,9 +63,7 @@ export default function ChooseHandymanPage() {
 <p className="mt-1 text-gray-700 font-medium">💵 {person.price} CAD/hr</p>
 </div>
 <button className="bg-cyan-500 text-white px-4 py-2 rounded-full font-semibold hover:bg-teal-600">
-
-
-              Choose
+  Choose
 </button>
 </div>
 
