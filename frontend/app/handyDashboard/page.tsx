@@ -96,7 +96,7 @@ export default function PortfolioPage() {
               </div>
             )}
 
-            {/* Menu button (hamburger or X) */}
+            {/* Menu button */}
             <button
               onClick={toggleMenu}
               className="p-2 rounded-md hover:bg-neutral-100 transition"
