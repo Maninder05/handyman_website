@@ -30,7 +30,7 @@ export default function MessagesPage() {
 
   return (
     <main className="bg-neutral-100 min-h-screen flex flex-col">
-      {/* Header */}
+      {/* Main Header */}
       <section className="bg-blue-500 py-4 text-center">
         <h1 className="text-2xl md:text-3xl font-bold text-white">Messages</h1>
       </section>
