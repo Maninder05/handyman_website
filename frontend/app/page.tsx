@@ -56,7 +56,13 @@ export default function LandingPage() {
     e.preventDefault();
     if (validateSignupForm()) {
       alert("Woahh, signup successful!!");
-      router.push("/dashboard");
+
+      if (userType === "handyman") {
+        router.push("/handyDashboard");
+      } 
+      else if (userType === "customer") {
+        router.push("/clientDashboard");
+      }
     }
   };
 
@@ -82,7 +88,13 @@ export default function LandingPage() {
     e.preventDefault();
     if (validateLoginForm()) {
       alert("Woahh, login successful!!");
-      router.push("/dashboard"); 
+      
+      if (userType === "handyman") {
+        router.push("/handyDashboard");
+      } 
+      else if (userType === "customer") {
+        router.push("/clientDashboard");
+      }
     }
   };
 
@@ -442,7 +454,7 @@ export default function LandingPage() {
               <a  onClick={() => {
                 setShowSignup(false);
                 setShowLogin(true);
-                }}className="text-blue-400 hover:underline">
+                }}className="text-blue-400 cursor-pointer hover:underline">
                 Login
               </a>
             </p>
