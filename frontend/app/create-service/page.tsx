@@ -52,11 +52,11 @@ export default function CreateService() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-neutral-100">
+    <div className="min-h-screen flex flex-col bg-neutral-100 text-neutral-800">
       {/* Header */}
       <div className="bg-blue-500 p-4 flex items-center justify-center relative">
         <Link href="/h-portfolio">
-          <button className="absolute left-4 text-white text-xl">←</button>
+          <button className="absolute left-4 bottom-4 text-white text-xl">←</button>
         </Link>
         <h1 className="text-xl font-bold text-white">Create Service</h1>
       </div>
@@ -65,23 +65,27 @@ export default function CreateService() {
       <div className="flex-1 p-5 space-y-6 bg-white">
         {/* Title */}
         <div>
-          <label className="block mb-2 font-semibold">Service Title</label>
+          <label className="block mb-2 font-semibold text-neutral-800">
+            Service Title
+          </label>
           <input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full rounded-lg p-3 border bg-neutral-50"
+            className="w-full rounded-lg p-3 border bg-neutral-50 text-neutral-800"
           />
           {errors.title && <p className="text-red-500 text-sm">{errors.title}</p>}
         </div>
 
         {/* Category */}
         <div>
-          <label className="block mb-2 font-semibold">Category</label>
+          <label className="block mb-2 font-semibold text-neutral-800">
+            Category
+          </label>
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className="w-full rounded-lg p-3 border bg-neutral-50"
+            className="w-full rounded-lg p-3 border bg-neutral-50 text-neutral-800"
           >
             <option value="">Select Category</option>
             <option>Electrical Repair</option>
@@ -94,12 +98,14 @@ export default function CreateService() {
 
         {/* Image */}
         <div>
-          <label className="block mb-2 font-semibold">Image</label>
+          <label className="block mb-2 font-semibold text-neutral-800">
+            Image
+          </label>
           <input
             type="file"
             accept="image/*"
             onChange={handleImageUpload}
-            className="w-full p-2 border rounded-lg bg-neutral-50"
+            className="w-full p-2 border rounded-lg bg-neutral-50 text-neutral-800"
           />
           {imagePreview && (
             <Image
@@ -115,12 +121,14 @@ export default function CreateService() {
 
         {/* Price */}
         <div>
-          <label className="block mb-2 font-semibold">Price</label>
+          <label className="block mb-2 font-semibold text-neutral-800">
+            Price
+          </label>
           <div className="flex gap-3">
             <select
               value={priceType}
               onChange={(e) => setPriceType(e.target.value)}
-              className="rounded-lg p-3 border bg-neutral-50"
+              className="rounded-lg p-3 border bg-neutral-50 text-neutral-800"
             >
               <option>Hourly</option>
               <option>Fixed</option>
@@ -129,7 +137,7 @@ export default function CreateService() {
               type="text"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
-              className="flex-1 rounded-lg p-3 border bg-neutral-50"
+              className="flex-1 rounded-lg p-3 border bg-neutral-50 text-neutral-800"
             />
           </div>
           {errors.price && <p className="text-red-500 text-sm">{errors.price}</p>}
@@ -155,7 +163,7 @@ export default function CreateService() {
       {/* Popup */}
       {popup && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-xl shadow text-center w-80">
+          <div className="bg-white p-6 rounded-xl shadow text-center w-80 text-neutral-800">
             <h2 className="text-lg font-bold mb-4">{popup}</h2>
             <button
               onClick={() => setPopup(null)}
