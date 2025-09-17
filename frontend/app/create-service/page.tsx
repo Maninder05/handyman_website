@@ -152,6 +152,20 @@ export default function CreateService() {
         </button>
       </div>
 
+      {/* Popup */}
+      {popup && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-xl shadow text-center w-80">
+            <h2 className="text-lg font-bold mb-4">{popup}</h2>
+            <button
+              onClick={() => setPopup(null)}
+              className="bg-blue-500 text-white px-6 py-2 rounded-lg"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
