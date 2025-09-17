@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-
+import { FiHome, FiMessageCircle, FiHelpCircle, FiBell, FiSettings } from "react-icons/fi";
 
 export default function OrderDetailsPage() {
   // track popup state (accepted / declined / null)
@@ -135,6 +135,26 @@ export default function OrderDetailsPage() {
         </div>
       )}
 
+      {/* Footer Nav */}
+      <footer className="bg-blue-500 py-4 mt-auto">
+        <div className="flex justify-around items-center text-white text-sm font-medium">
+          <Link href="/" className="flex flex-col items-center gap-1">
+            <FiHome size={20} /> Home
+          </Link>
+          <Link href="/messages" className="flex flex-col items-center gap-1">
+            <FiMessageCircle size={20} /> Messages
+          </Link>
+          <Link href="/help" className="flex flex-col items-center gap-1">
+            <FiHelpCircle size={20} /> Help
+          </Link>
+          <Link href="/notifications" className="flex flex-col items-center gap-1">
+            <FiBell size={20} /> Notifications
+          </Link>
+          <Link href="/settings" className="flex flex-col items-center gap-1">
+            <FiSettings size={20} /> Settings
+          </Link>
+        </div>
+      </footer>
     </div>
   );
 }
