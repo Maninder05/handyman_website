@@ -33,18 +33,6 @@ export default function AboutPage() {
             <a href="#values" className="hover:text-blue-400 transition">
               Values
             </a>
-            <a
-              href="/auth/signup"
-              className="ml-6 px-4 py-2 bg-blue-400 hover:bg-blue-500 text-neutral-900 rounded-lg shadow transition"
-            >
-              Sign Up
-            </a>
-            <a
-              href="/auth/login"
-              className="px-4 py-2 border border-teal-400 text-teal-400 rounded-lg hover:bg-neutral-800 transition"
-            >
-              Login
-            </a>
           </nav>
         </div>
       </header>
@@ -56,10 +44,10 @@ export default function AboutPage() {
       >
         <div className="absolute inset-0 bg-black/40"></div>
         <div className="relative z-10 text-center text-white max-w-3xl px-4">
-          <h2 className="text-4xl md:text-5xl font-extrabold mb-4 leading-tight text-blue-400">
+          <h2 className="text-4xl md:text-5xl font-extrabold mb-4 leading-tight text-neutral-900">
             About Handyman Services
           </h2>
-          <p className="text-lg md:text-xl mb-6 text-neutral-200">
+          <p className="text-lg md:text-xl mb-6 text-neutral-100">
             Learn more about our journey, our team, and the values that drive
             us to deliver reliable home repair services every day.
           </p>
@@ -138,19 +126,19 @@ export default function AboutPage() {
           Our Values
         </h3>
         <div className="grid md:grid-cols-3 gap-8 text-center">
-          <div className="p-6 bg-neutral-950 rounded-2xl border border-neutral-800 hover:border-blue-400 hover:shadow-lg hover:shadow-cyan-500/20 transition">
+          <div className="p-6 bg-neutral-950 rounded-2xl border border-neutral-800 hover:border-blue-400 hover:shadow-lg hover:shadow-blue-500/20 transition">
             <h4 className="font-semibold text-lg text-blue-300 mb-2">Trust</h4>
             <p className="text-neutral-400 text-sm">
               Building long-lasting relationships through honesty and reliability.
             </p>
           </div>
-          <div className="p-6 bg-neutral-950 rounded-2xl border border-neutral-800 hover:border-blue-400 hover:shadow-lg hover:shadow-cyan-500/20 transition">
+          <div className="p-6 bg-neutral-950 rounded-2xl border border-neutral-800 hover:border-blue-400 hover:shadow-lg hover:shadow-blue-500/20 transition">
             <h4 className="font-semibold text-lg text-blue-300 mb-2">Quality</h4>
             <p className="text-neutral-400 text-sm">
               Delivering exceptional service on every project, big or small.
             </p>
           </div>
-          <div className="p-6 bg-neutral-950 rounded-2xl border border-neutral-800 hover:border-blue-400 hover:shadow-lg hover:shadow-cyan-500/20 transition">
+          <div className="p-6 bg-neutral-950 rounded-2xl border border-neutral-800 hover:border-blue-400 hover:shadow-lg hover:shadow-blue-500/20 transition">
             <h4 className="font-semibold text-lg text-blue-300 mb-2">Efficiency</h4>
             <p className="text-neutral-400 text-sm">
               Completing tasks quickly without compromising quality or safety.
@@ -189,10 +177,10 @@ export default function AboutPage() {
           <div>
             <h4 className="text-lg font-semibold mb-4 text-blue-400">Quick Links</h4>
             <ul className="space-y-2 text-sm">
-              <li><a href="/" className="hover:text-blue-300">Home</a></li>
-              <li><a href="#team" className="hover:text-blue-300">Team</a></li>
-              <li><a href="#story" className="hover:text-blue-300">Our Story</a></li>
-              <li><a href="#values" className="hover:text-blue-300">Values</a></li>
+              <li><a href="/" className="hover:text-blue-400">Home</a></li>
+              <li><a href="#team" className="hover:text-blue-400">Team</a></li>
+              <li><a href="#story" className="hover:text-blue-400">Our Story</a></li>
+              <li><a href="#values" className="hover:text-blue-400">Values</a></li>
             </ul>
           </div>
           <div>
