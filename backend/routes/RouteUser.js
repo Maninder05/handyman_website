@@ -1,5 +1,5 @@
 const express=require('express');
-const {doSignup}=require("../controllers/ControllerUser");
+const {doSignup}=require("../controllers/ControllerUser"); //importing signup controller
 
 const app=express.Router();
 
