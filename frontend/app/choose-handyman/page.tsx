@@ -15,6 +15,13 @@ export default function ChooseHandymanPage() {
     { name: "Johnny Consey", rating: 4.5, reviews: 8, price: 35, image: "/images/johnny.jpg" },
   ];
 
+  // Function to handle choosing a handyman
+  const handleChoose = (person: typeof handymen[0]) => {
+    router.push(
+      `/hire-handyman?name=${encodeURIComponent(person.name)}&price=${person.price}&service=${encodeURIComponent(service || '')}`
+    );
+  };
+
   return (
     <div className="min-h-screen w-full flex flex-col bg-gray-200">
       {/* Header */}
@@ -52,11 +59,7 @@ export default function ChooseHandymanPage() {
             </div>
             <button
               className="bg-cyan-500 text-white px-4 py-2 rounded-full font-semibold hover:bg-teal-600"
-              onClick={() =>
-                router.push(
-                  `/hire-handyman?name=${encodeURIComponent(person.name)}&price=${person.price}&service=${encodeURIComponent(service || '')}`
-                )
-              }
+              onClick={() => handleChoose(person)}
             >
               Choose
             </button>
