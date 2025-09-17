@@ -1,12 +1,10 @@
- 
-"use client";
- 
-import { useRouter } from "next/navigation";
+ "use client";
+
 import { useState } from "react";
+import Image from "next/image";
 import { Bell, Home, MessageCircle, Settings, Users } from "lucide-react";
  
 export default function PortfolioPage() {
-  const router = useRouter();
   const [isBuyer, setIsBuyer] = useState(false);
  
   return (
@@ -19,7 +17,7 @@ export default function PortfolioPage() {
  
         {/* Profile Info */}
         <div className="flex flex-col items-center mt-6">
-          <img
+          <Image
             src="/images/client1.jpg"
             alt="Profile"
             className="w-20 h-20 rounded-full border-4 border-white shadow-md"
