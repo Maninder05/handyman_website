@@ -6,7 +6,7 @@ import Image from "next/image";
 import { FiHome, FiMessageCircle, FiHelpCircle, FiBell, FiSettings } from "react-icons/fi";
 
 export default function OrderDetailsPage() {
-  // track popup state (accepted / declined / null)
+  // track popup state whether it is accepted or declined even if it is null
   const [popup, setPopup] = useState<"accepted" | "declined" | null>(null);
 
   // reset popup
