@@ -18,7 +18,7 @@ interface Handyman {
 }
 
 export default function HandymanFinder() {
-  // State for filter values
+  // State for filter vals
   const [hourlyRate, setHourlyRate] = useState(500);
   const [experience, setExperience] = useState("");
   const [distance, setDistance] = useState(5);
