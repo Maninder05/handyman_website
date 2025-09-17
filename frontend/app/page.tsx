@@ -52,10 +52,18 @@ export default function LandingPage() {
     return Object.keys(newErrors).length === 0; //["username","email",etc]
   };
 
-  const handleSignup = (e: React.FormEvent) => {
+  async const handleSignup = (e: React.FormEvent) => {
     e.preventDefault();
     if (validateSignupForm()) {
-      alert("Woahh, signup successful!!");
+      const url = "https://g2c-mern-project.onrender.com/user/do-signup"; 
+      const serverMsg= await axios.post(url,obj)
+
+      console.log(JSON.stringify(serverMsg));
+      if(serverMsg.data.status===true)
+        alert("Signup Successful!!");
+      else    
+        alert(serverMsg.data.msg+"  "+serverMsg.data.err);
+        //alert("Woahh, signup successful!!");
 
       if (userType === "handyman") {
         router.push("/handyDashboard");
