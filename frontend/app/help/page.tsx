@@ -50,25 +50,25 @@ export default function HelpCentrePage() {
           <div className="flex justify-between gap-4">
             <Link
               href="/payment"
-              className="flex-1 text-center px-6 py-3 rounded-lg bg-neutral-100 text-neutral-800 font-medium hover:bg-[#59b6bd]"
+              className="flex-1 text-center px-6 py-3 rounded-lg bg-neutral-100 text-neutral-800 font-medium hover:bg-[#59b6bd] hover:text-white"
             >
               Billing & Payments
             </Link>
             <Link
               href="/create-service"
-              className="flex-1 text-center px-6 py-3 rounded-lg bg-neutral-100 text-neutral-800 font-medium hover:bg-[#59b6bd]"
+              className="flex-1 text-center px-6 py-3 rounded-lg bg-neutral-100 text-neutral-800 font-medium hover:bg-[#59b6bd] hover:text-white"
             >
               Create Services
             </Link>
             <Link
               href="/membership"
-              className="flex-1 text-center px-6 py-3 rounded-lg bg-neutral-100 text-neutral-800 font-medium hover:bg-[#59b6bd]"
+              className="flex-1 text-center px-6 py-3 rounded-lg bg-neutral-100 text-neutral-800 font-medium hover:bg-[#59b6bd] hover:text-white"
             >
               Membership Plan
             </Link>
             <Link
               href="/messages"
-              className="flex-1 text-center px-6 py-3 rounded-lg bg-neutral-100 text-neutral-800 font-medium hover:bg-[#59b6bd]"
+              className="flex-1 text-center px-6 py-3 rounded-lg bg-neutral-100 text-neutral-800 font-medium hover:bg-[#59b6bd] hover:text-white"
             >
               Report an Issue
             </Link>
@@ -82,12 +82,12 @@ export default function HelpCentrePage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
             <Link
-              href="/guides/book-handyman"
+              href="/book-services"
               className="rounded-lg border border-neutral-200 p-4 text-left shadow-sm hover:bg-neutral-50 transition-colors"
             >
               <div className="relative w-full aspect-[4/3] rounded-md overflow-hidden mb-3 bg-neutral-100">
                 <Image
-                  src="/images/client3.jpg"
+                  src="/images/getstarted.jpg"
                   alt="Book a handyman for your home"
                   fill
                   sizes="(max-width: 768px) 100vw, 25vw"
@@ -102,12 +102,12 @@ export default function HelpCentrePage() {
             </Link>
 
             <Link
-              href="/guides/post-service"
+              href="/create-service"
               className="rounded-lg border border-neutral-200 p-4 text-left shadow-sm hover:bg-neutral-50 transition-colors"
             >
               <div className="relative w-full aspect-[4/3] rounded-md overflow-hidden mb-3 bg-neutral-100">
                 <Image
-                  src="/images/client3.jpg"
+                  src="/images/firsthandyman.jpg"
                   alt="Posting your first handyman service"
                   fill
                   sizes="(max-width: 768px) 100vw, 25vw"
@@ -121,12 +121,12 @@ export default function HelpCentrePage() {
             </Link>
 
             <Link
-              href="/guides/manage-profile"
+              href="/portfolio"
               className="rounded-lg border border-neutral-200 p-4 text-left shadow-sm hover:bg-neutral-50 transition-colors"
             >
               <div className="relative w-full aspect-[4/3] rounded-md overflow-hidden mb-3 bg-neutral-100">
                 <Image
-                  src="/images/client3.jpg"
+                  src="/images/managing.jpg"
                   alt="Managing your profile details"
                   fill
                   sizes="(max-width: 768px) 100vw, 25vw"
@@ -140,12 +140,12 @@ export default function HelpCentrePage() {
             </Link>
 
             <Link
-              href="/guides/handycover"
+              href="/account"
               className="rounded-lg border border-neutral-200 p-4 text-left shadow-sm hover:bg-neutral-50 transition-colors"
             >
               <div className="relative w-full aspect-[4/3] rounded-md overflow-hidden mb-3 bg-neutral-100">
                 <Image
-                  src="/images/client3.jpg"
+                  src="/images/protection.jpg"
                   alt="HandyCover protection for customers"
                   fill
                   sizes="(max-width: 768px) 100vw, 25vw"
