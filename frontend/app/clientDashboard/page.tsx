@@ -1,5 +1,4 @@
- 
-"use client";
+ "use client";
  
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -47,32 +46,26 @@ export default function PortfolioPage() {
       </div>
  
       {/* Switch to Buyer */}
-<div className="px-20 mb-2 ">
-  <div className="bg-white flex justify-between items-center px-5 py-4 rounded-xl shadow-md">
-    <p className="font-medium">Switch To Buyer</p>
-    <label className="inline-flex items-center cursor-pointer">
-      <input
-        type="checkbox"
-        checked={isBuyer}
-        onChange={() => setIsBuyer(!isBuyer)}
-        className="sr-only"
-      />
-      <div className="w-12 h-6 bg-gray-300 rounded-full p-1 flex items-center">
-        <div
-          className={`w-5 h-5 rounded-full bg-blue-400 transition-transform ${
-            isBuyer ? "translate-x-6" : ""
-          }`}
-        />
+      <div className="px-20 mb-2 ">
+        <div className="bg-white flex justify-between items-center px-5 py-4 rounded-xl shadow-md">
+          <p className="font-medium">Switch To Buyer</p>
+          <label className="inline-flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              checked={isBuyer}
+              onChange={() => setIsBuyer(!isBuyer)}
+              className="sr-only"
+            />
+            <div className="w-12 h-6 bg-gray-300 rounded-full p-1 flex items-center">
+              <div
+                className={`w-5 h-5 rounded-full bg-blue-400 transition-transform ${
+                  isBuyer ? "translate-x-6" : ""
+                }`}
+              /> 
+            </div>
+          </label>
+        </div>
       </div>
-    </label>
-  </div>
-</div>
-     
- 
-     
- 
- 
-      {/* Earnings */}
       <div className="p-6 bg-gray-200">
         <div className="flex justify-between items-center">
           <h3 className="font-semibold">Your Earning</h3>
