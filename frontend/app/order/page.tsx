@@ -135,7 +135,7 @@ export default function OrderDetailsPage() {
         </div>
       )}
 
-        {/* footer with five elements  */}
+        {/* footer with five elements */}
       <footer className="bg-blue-500 py-4 mt-auto">
         <div className="flex justify-around items-center text-white text-sm font-medium">
           <Link href="/" className="flex flex-col items-center gap-1">
