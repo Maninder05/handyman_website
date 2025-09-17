@@ -79,7 +79,7 @@ export default function OrderDetailsPage() {
           </div>
         </div>
 
-        {/* price card */}
+        {/* card for price */}
         <div className="bg-white p-4 rounded-xl shadow-sm my-4 max-w-md mx-auto">
           <h2 className="font-semibold mb-2 text-blue-500">Price Details</h2>
           <div className="text-sm text-neutral-800 flex justify-between">
@@ -96,7 +96,7 @@ export default function OrderDetailsPage() {
           </div>
         </div>
 
-        {/* accept / decline buttons */}
+        {/* buttons for accept and decline */}
         <div className="flex justify-center gap-4 my-6 max-w-md mx-auto w-full">
           <button
             onClick={() => setPopup("accepted")}
