@@ -119,3 +119,71 @@ export default function ReviewsPage() {
               Trusted by <span className="font-semibold">200+ homeowners</span>
             </p>
           </div>
+              {/* Featured Review */}
+          {featured && (
+            <div className="w-full max-w-4xl bg-white px-6 py-6 rounded-2xl shadow-xl border-l-4 border-blue-500 mb-12">
+              <h3 className="text-xl font-bold text-neutral-900 mb-3">
+                Featured Review
+              </h3>
+              <div className="flex items-start gap-4">
+                <Image
+                  src={featured.image}
+                  alt={featured.name}
+                  width={120}
+                  height={30}
+                  className="rounded-full object-cover"
+                />
+                <div>
+                  <p className="font-semibold text-neutral-800">{featured.name}</p>
+                  <p className="text-sm text-neutral-500 italic">{featured.job}</p>
+                  <p className="text-sm text-neutral-700 mt-2">{featured.comment}</p>
+                  <p className="text-neutral-800 font-bold mt-1">
+                    Rating: {featured.rating}/5
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+ 
+          {/* Reviews List */}
+          <div className="w-full max-w-4xl bg-white px-6 py-8 rounded-2xl shadow-lg">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-xl font-bold text-neutral-900">All Reviews</h3>
+              <select
+                value={filter}
+                onChange={(e) => setFilter(e.target.value)} //i.e. val in the dropdown current input
+                className="bg-neutral-100 text-neutral-800 px-3 py-1 rounded-md text-sm"
+              >
+                <option>Most Recent</option>
+                <option>Highest Rated</option>
+                <option>Lowest Rated</option>
+              </select>
+            </div>
+ 
+            {/* the array filteredReviews is mapped to the review cards that appear on screen */}
+            {filteredReviews.map((review, i) => (
+              <div
+                key={i}
+                className="border-b border-neutral-300 last:border-0 py-5 flex gap-4"
+              >
+                <Image
+                  src={review.image}
+                  alt={review.name}
+                  width={120}
+                  height={30}
+                  className="rounded-full object-cover"
+                />
+                <div>
+                  <p className="font-semibold text-neutral-800">{review.name}</p>
+                  <p className="text-sm text-neutral-500 italic">{review.job}</p>
+                  <p className="text-sm text-neutral-700 mt-1">{review.comment}</p>
+                  <p className="text-neutral-800 font-bold mt-1">
+                    Rating: {review.rating}/5
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      </main>
+ 
