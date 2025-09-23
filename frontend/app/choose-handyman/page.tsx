@@ -1,5 +1,5 @@
 "use client";
-//
+// Page to choose a handyman for a selected service 
 import { useSearchParams, useRouter } from "next/navigation";
 import { Bell, Home, MessageCircle, Settings, Users } from "lucide-react";
 

@@ -8,7 +8,6 @@ import SideMenu from "../components/SideMenu";
 export default function ServicesPage() {
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
   return (
     <div className="min-h-screen w-full flex flex-col bg-gray-100">
       {/* Header */}
