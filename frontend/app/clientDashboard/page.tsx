@@ -1,7 +1,8 @@
-"use client";
+"use client"; //client component
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter} from "next/navigation";
+import Image from "next/image";
 import { Bell, Home, MessageCircle, Settings, Users, Search } from "lucide-react";
 import SideMenu from "../components/SideMenu";
 
@@ -54,7 +55,7 @@ export default function ServicesPage() {
               we bring the right handyman to your home — quickly, safely, and affordably.
             </p>
           </div>
-          <img
+          <Image
             src="/images/services-banner.jpg"
             alt="Handyman Services"
             className="w-20 h-20 rounded-lg object-cover ml-3"
@@ -103,7 +104,7 @@ export default function ServicesPage() {
               key={i}
               className="bg-white p-4 rounded-xl shadow flex items-center gap-3 hover:shadow-lg transition"
             >
-              <img
+              <Image
                 src="/images/profile.jpg"
                 alt="Kenji"
                 className="w-12 h-12 rounded-full"
