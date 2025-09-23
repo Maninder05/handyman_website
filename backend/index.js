@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from "cors";   //connecting backend with the frontend
 import dotenv from 'dotenv';
+const RouterUser=require('./routers/RouterUser')
  
 const app = express();
 dotenv.config();
@@ -21,3 +22,5 @@ mongoose.connect(process.env.MONGO_URL).then(() => {
         console.log('Server is running on port', PORT)
     });
 }).catch((err) => console.error("DB Connection Error:", err));
+
+app.use('/user',RouterUser);

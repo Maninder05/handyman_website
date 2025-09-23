@@ -113,3 +113,7 @@ export default function ProjectsPage() {
     </div>
   );
 }
+
+//Build a Next.js client component using next.js and tailwiin css and ProjectsPage from the attached reference image. 
+// Include header with back button, In Progress and Completed project sections with image, client, status/rating, and price, 
+// plus a footer with five nav icons. Use Tailwind CSS and Next.js Image, keep it clean and easy to customize.
