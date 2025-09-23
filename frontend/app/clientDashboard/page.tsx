@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Bell, Home, MessageCircle, Settings, Users } from "lucide-react";
+import { Bell, Home, MessageCircle, Settings, Users, Search } from "lucide-react";
 import SideMenu from "../components/SideMenu";
 
 export default function ServicesPage() {
@@ -10,48 +10,48 @@ export default function ServicesPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen w-full flex flex-col bg-gray-100">
-      {/* Header */}
-      <div className="bg-gray-300 flex items-center justify-between p-4 relative">
-        {/* Back Button */}
+    <div className="min-h-screen w-full flex flex-col bg-gradient-to-b from-cyan-50 to-gray-100">
+      {/* ================= HEADER ================= */}
+      <header className="bg-white shadow-sm flex items-center justify-between p-4 relative">
         <button
           onClick={() => router.back()}
-          className="absolute left-4 text-black text-2xl"
+          className="absolute left-4 text-gray-700 text-2xl hover:text-cyan-600 transition"
         >
           ←
         </button>
-        <h1 className="text-lg font-bold mx-auto">Handyman Services</h1>
-
-        {/* Menu Button */}
+        <h1 className="text-lg font-bold mx-auto text-gray-800">
+          Handyman Services
+        </h1>
         <button
           onClick={() => setIsMenuOpen(true)}
-          className="absolute right-4 text-black text-3xl"
+          className="absolute right-4 text-gray-700 text-2xl hover:text-cyan-600 transition"
         >
           ☰
         </button>
+      </header>
+
+      {/* ================= SEARCH ================= */}
+      <div className="p-4 bg-cyan-600">
+        <div className="relative">
+          <Search className="absolute left-3 top-2.5 text-gray-400 w-5 h-5" />
+          <input
+            type="text"
+            placeholder="Search handyman, services..."
+            className="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+          />
+        </div>
       </div>
 
-      {/* Search Bar */}
-      <div className="p-4 bg-cyan-500">
-        <input
-          type="text"
-          placeholder="Search Handyman"
-          className="w-full px-4 py-2 rounded-full border border-gray-300 focus:outline-none"
-        />
-      </div>
-
-      {/* Promo Banner */}
-      <div className="p-4 bg-cyan-500">
-        <div className="bg-white rounded-xl shadow flex items-center justify-between p-4">
-          <div>
-            <h2 className="text-sm font-bold text-purple-600">
-              Handyman Services Now Available At Your Home
+      {/* ================= PROMO BANNER ================= */}
+      <div className="p-4">
+        <div className="bg-white rounded-xl shadow-md flex items-center justify-between p-4">
+          <div className="max-w-sm">
+            <h2 className="text-sm font-bold text-cyan-700">
+              Reliable Services At Your Doorstep
             </h2>
             <p className="text-xs text-gray-600 mt-1">
-              No more long waits or unreliable fixes. With just a few clicks,
-              get skilled professionals at your doorstep when you need them,
-              where you need them. Because your time and home deserve better
-              care.
+              Get skilled professionals without the hassle. From plumbing to painting, 
+              we bring the right handyman to your home — quickly, safely, and affordably.
             </p>
           </div>
           <img
@@ -62,92 +62,105 @@ export default function ServicesPage() {
         </div>
       </div>
 
-      {/* Categories */}
-      <div className="bg-cyan-500 px-4 py-6">
+      {/* ================= CATEGORIES ================= */}
+      <section className="px-4 py-6">
         <div className="flex justify-between items-center mb-3">
-          <h3 className="font-semibold">Category</h3>
-          <a href="#" className="text-sm text-purple-600 hover:underline">
-            Book Services
-          </a>
+          <h3 className="font-semibold text-gray-800">Categories</h3>
+          <button
+            onClick={() => router.push("/book")}
+            className="text-sm text-cyan-600 hover:underline"
+          >
+            Book Service →
+          </button>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div className="bg-white rounded-xl shadow flex flex-col items-center p-4">
-            <span className="text-3xl">🚰</span>
-            <p className="mt-2 font-medium">Plumbing</p>
-          </div>
-          <div className="bg-white rounded-xl shadow flex flex-col items-center p-4">
-            <span className="text-3xl">⚡</span>
-            <p className="mt-2 font-medium">Technician</p>
-          </div>
-          <div className="bg-white rounded-xl shadow flex flex-col items-center p-4">
-            <span className="text-3xl">🧹</span>
-            <p className="mt-2 font-medium">House Clean</p>
-          </div>
-          <div className="bg-white rounded-xl shadow flex flex-col items-center p-4">
-            <span className="text-3xl">👨‍🎨</span>
-            <p className="mt-2 font-medium">Painting</p>
-          </div>
+          {[
+            { emoji: "🚰", name: "Plumbing" },
+            { emoji: "⚡", name: "Technician" },
+            { emoji: "🧹", name: "House Cleaning" },
+            { emoji: "🎨", name: "Painting" },
+          ].map((cat, i) => (
+            <div
+              key={i}
+              className="bg-white rounded-xl shadow hover:shadow-lg transition flex flex-col items-center p-4 cursor-pointer"
+            >
+              <span className="text-3xl">{cat.emoji}</span>
+              <p className="mt-2 font-medium text-gray-700">{cat.name}</p>
+            </div>
+          ))}
         </div>
-      </div>
+      </section>
 
-      {/* Recommended Services */}
-      <div className="p-4 bg-gray-100 flex-1">
-        <h3 className="font-semibold mb-3">Recommended Services</h3>
-        <div className="bg-white p-4 rounded-xl shadow flex items-center gap-3">
-          <img
-            src="/images/profile.jpg"
-            alt="Kenji"
-            className="w-12 h-12 rounded-full"
-          />
-          <div>
-            <p className="font-bold">TECHNICAL REPAIR</p>
-            <p className="text-sm text-gray-600">By Kenji Teneka</p>
-            <p className="text-yellow-500 text-sm">⭐ 5</p>
-            <p className="font-semibold text-black">$55/hr</p>
-          </div>
+      {/* ================= RECOMMENDED ================= */}
+      <section className="p-4 flex-1">
+        <h3 className="font-semibold mb-3 text-gray-800">
+          Recommended Services
+        </h3>
+        <div className="grid gap-4">
+          {[1, 2, 3].map((i) => (
+            <div
+              key={i}
+              className="bg-white p-4 rounded-xl shadow flex items-center gap-3 hover:shadow-lg transition"
+            >
+              <img
+                src="/images/profile.jpg"
+                alt="Kenji"
+                className="w-12 h-12 rounded-full"
+              />
+              <div className="flex-1">
+                <p className="font-bold text-gray-800">TECHNICAL REPAIR</p>
+                <p className="text-sm text-gray-600">By Kenji Teneka</p>
+                <p className="text-yellow-500 text-sm">⭐ 5.0</p>
+              </div>
+              <p className="font-semibold text-cyan-600">$55/hr</p>
+            </div>
+          ))}
         </div>
-      </div>
+      </section>
 
-      {/* Bottom Navigation */}
-      <div className="bg-cyan-500 flex justify-around items-center h-14">
+      {/* ================= BOTTOM NAV ================= */}
+      <nav className="bg-white shadow-inner flex justify-around items-center h-14 border-t">
         <button
           onClick={() => router.push("/")}
-          className="cursor-pointer hover:text-white transition"
+          className="flex flex-col items-center text-gray-600 hover:text-cyan-600 transition"
         >
-          <Home className="w-6 h-6 text-black" />
+          <Home className="w-5 h-5" />
+          <span className="text-xs">Home</span>
         </button>
         <button
           onClick={() => router.push("/messages")}
-          className="cursor-pointer hover:text-white transition"
+          className="flex flex-col items-center text-gray-600 hover:text-cyan-600 transition"
         >
-          <MessageCircle className="w-6 h-6 text-black" />
+          <MessageCircle className="w-5 h-5" />
+          <span className="text-xs">Messages</span>
         </button>
         <button
           onClick={() => router.push("/portfolio")}
-          className="cursor-pointer hover:text-white transition"
+          className="flex flex-col items-center text-gray-600 hover:text-cyan-600 transition"
         >
-          <Users className="w-6 h-6 text-black" />
+          <Users className="w-5 h-5" />
+          <span className="text-xs">Portfolio</span>
         </button>
         <button
           onClick={() => router.push("/notifications")}
-          className="relative cursor-pointer hover:text-white transition"
+          className="relative flex flex-col items-center text-gray-600 hover:text-cyan-600 transition"
         >
-          <Bell className="w-6 h-6 text-black" />
-          <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full"></span>
+          <Bell className="w-5 h-5" />
+          <span className="text-xs">Alerts</span>
+          <span className="absolute top-0 right-3 w-2.5 h-2.5 bg-red-500 rounded-full"></span>
         </button>
         <button
           onClick={() => router.push("/settings")}
-          className="cursor-pointer hover:text-white transition"
+          className="flex flex-col items-center text-gray-600 hover:text-cyan-600 transition"
         >
-          <Settings className="w-6 h-6 text-black" />
+          <Settings className="w-5 h-5" />
+          <span className="text-xs">Settings</span>
         </button>
-      </div>
+      </nav>
 
-      {/* Side Menu */}
+      {/* ================= SIDE MENU ================= */}
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
     </div>
   );
 }
-
- 
