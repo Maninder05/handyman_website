@@ -254,8 +254,8 @@ export default function LandingPage() {
         <h4 id="contact" className="text-lg font-semibold mb-4 text-[#FFCC66]">
           Contact
         </h4>
-        <p className="text-sm">📍 Calgary, AB</p>
-        <p className="text-sm">📞 +1 825-123-4567</p>
+        <p className="text-sm"> Calgary, AB</p>
+        <p className="text-sm"> +1 825-123-4567</p>
         <p className="text-sm">✉ support@handyman.com</p>
       </div>
     </div>
