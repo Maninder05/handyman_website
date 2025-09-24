@@ -44,7 +44,7 @@ export default function ReviewsPage() {
 
   // Dynamic min and max ratings
   const maxRating = Math.max(...allReviews.map((r) => r.rating));
-  const minRating = Math.min(...allReviews.map((r) => r.rating)); //returns an array of all
+  const minRating = Math.min(...allReviews.map((r) => r.rating));
 
   // Apply filter
   const filteredReviews =
