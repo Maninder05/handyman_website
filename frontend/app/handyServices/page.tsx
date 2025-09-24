@@ -8,10 +8,9 @@ import {
   FiHelpCircle,
   FiBell,
   FiSettings,
-} from "react-icons/fi"; //Feather Icons for minimal, thin and modern design
+} from "react-icons/fi";
 
 export default function MyServicesPage() {
-  //creating services arr so that map fxn can be implemented and each one of it's elements i.e. objs can be rendered recursively
   const services = [
     {
       name: "Residential Wiring Repair",

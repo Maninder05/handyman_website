@@ -38,15 +38,13 @@ export default function ReviewsPage() {
     },
   ];
 
-  // Featured review = first review with rating === 5
   const featured = allReviews.find((r) => r.rating === 5);
 
-  //using filter state to update the reviews based on the setFilter() fxn that gets triggered everytime dropdown menu input changes
   const [filter, setFilter] = React.useState("Most Recent");
 
   // Dynamic min and max ratings
-  const maxRating = Math.max(...allReviews.map((r) => r.rating)); //allReviews obj is destructured
-  const minRating = Math.min(...allReviews.map((r) => r.rating)); //returns an array of all reviews whose rating equals the min rating
+  const maxRating = Math.max(...allReviews.map((r) => r.rating));
+  const minRating = Math.min(...allReviews.map((r) => r.rating));
 
   // Apply filter
   const filteredReviews =
