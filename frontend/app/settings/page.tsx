@@ -157,7 +157,6 @@ export default function SettingsPage() {
               </div>
             )}
 
-            {/* Notifications */}
             {active === "Notifications" && (
               <div className="rounded-xl border border-gray-700 bg-gray-800 p-6 shadow-sm max-w-xl">
                 <h2 className="text-xl font-semibold mb-6 text-yellow-400">Notification Preferences</h2>
