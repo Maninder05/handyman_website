@@ -63,7 +63,7 @@ export default function CreateService() {
 
       {/* Form */}
       <div className="flex-1 p-5 space-y-6 bg-white">
-        {/* Title */}
+        {/* Title header */}
         <div>
           <label className="block mb-2 font-semibold text-neutral-800">
             Service Title
