@@ -144,7 +144,7 @@ export default function CreateService() {
         </div>
       </div>
 
-      {/* Buttons */}
+      {/* Buttons for save as draft and submit now */}
       <div className="flex justify-around bg-neutral-200 py-4 border-t">
         <button
           onClick={() => setPopup("Draft Saved Successfully 📝")}
