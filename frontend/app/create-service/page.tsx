@@ -47,7 +47,7 @@ export default function CreateService() {
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
     } else {
-      setPopup("Service Submitted Successfully ✅");
+      setPopup("Service Submitted Successfully");
     }
   };
 

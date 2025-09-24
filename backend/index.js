@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from "cors";   //connecting backend with the frontend
 import dotenv from 'dotenv';
+import RouterUser from "./routes/RouteUser.js";
  
 const app = express();
 dotenv.config();
@@ -14,6 +15,9 @@ app.use(
     credentials: true,
   })
 );
+app.use(express.json());
+
+app.use("/api/users", RouterUser);
  
 mongoose.connect(process.env.MONGO_URL).then(() => {
     console.log("Connected to Database successfully!!")
