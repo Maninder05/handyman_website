@@ -142,7 +142,7 @@ export default function PortfolioPage() {
                   </li>
                   <li>
                     <Link
-                      href="/faq"
+                      href="/help"
                       className="block px-4 py-3 hover:bg-yellow-600 hover:text-gray-900 transition"
                     >
                       FAQ

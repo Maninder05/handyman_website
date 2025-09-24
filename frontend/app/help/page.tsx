@@ -127,7 +127,7 @@ export default function HelpCentrePage() {
         </section>
 
         {/* FAQ */}
-        <section className="mt-14 max-w-5xl mx-auto px-6">
+        <section id="faq" className="mt-14 max-w-5xl mx-auto px-6">
           <h2 className="mb-8 text-center text-4xl sm:text-5xl font-extrabold uppercase tracking-tight text-yellow-400">
             Frequently Asked Questions
           </h2>

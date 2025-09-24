@@ -28,7 +28,7 @@ export default function LandingPage() {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://localhost:5000/api/users/signup", {
+      const res = await axios.post("http://localhost:7000/api/users/signup", {
         username,
         email,
         password,
@@ -53,7 +53,7 @@ export default function LandingPage() {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://localhost:5000/api/users/login", {
+      const res = await axios.post("http://localhost:7000/api/users/login", {
         email: loginEmail,
         password: loginPassword,
       });
