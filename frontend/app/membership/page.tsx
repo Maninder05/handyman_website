@@ -37,7 +37,6 @@ export default function MembershipPage() {
 
   return (
     <main className="min-h-screen bg-gray-900 text-gray-100">
-      {/* Header — gradient like your first file */}
       <header className="w-full sticky top-0 z-50 bg-gradient-to-r from-[#FFCC66] to-[#FF7E5F] shadow-md">
         <div className="mx-auto max-w-[1100px] px-6 py-4 flex items-center justify-between">
           <h1 className="text-2xl font-extrabold tracking-wide text-gray-900">Membership</h1>
