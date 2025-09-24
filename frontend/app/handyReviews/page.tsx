@@ -237,5 +237,3 @@ export default function ReviewsPage() {
     </>
   );
 }
-
-//I tak ehelp from W3 school//
