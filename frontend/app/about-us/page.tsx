@@ -147,7 +147,7 @@ export default function AboutPage() {
       </section>
 
       {/* CTAs */}
-      <section className="bg-gradient-to-r from-[#FFCC66] to-[#FF7E5F] py-16">
+      <section className="bg-gradient-to-r from-[#ecd4a6] to-[#eeb84b] py-16">
         <div className="max-w-5xl mx-auto text-center text-neutral-900">
           <h3 className="text-3xl font-bold mb-4">Join Our Community</h3>
           <p className="mb-6 text-lg">

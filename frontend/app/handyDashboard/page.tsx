@@ -5,7 +5,14 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Menu, X } from "lucide-react";
-import {FiHome, FiMessageCircle, FiHelpCircle, FiBell, FiSettings, FiUser} from "react-icons/fi";
+import {
+  FiHome,
+  FiMessageCircle,
+  FiHelpCircle,
+  FiBell,
+  FiSettings,
+  FiUser,
+} from "react-icons/fi";
 
 export default function PortfolioPage() {
   // this is for the dropdown menu
@@ -51,7 +58,7 @@ export default function PortfolioPage() {
       <header className="bg-white shadow-md relative">
         <div className="max-w-5xl mx-auto flex items-center justify-between px-6 py-4">
           {/* Title */}
-          <h1 className="text-2xl font-extrabold text-blue-600 tracking-wide">
+          <h1 className="text-2xl font-extrabold text-[#FF7E5F] tracking-wide">
             Handyman Portal
           </h1>
 
@@ -60,19 +67,19 @@ export default function PortfolioPage() {
             {/* Profile Icon */}
             <button
               onClick={toggleProfile}
-              className="p-2 rounded-full hover:bg-neutral-400 transition"
+              className="p-2 rounded-full  hover:bg-[#ef7d48] transition"
             >
               <FiUser size={22} className="text-neutral-700" />
             </button>
 
             {/* Profile dropdown */}
             {showProfileMenu && (
-              <div className="absolute right-14 top-14 bg-gray-400 rounded-xl shadow-lg border w-48 z-50">
+              <div className="absolute right-14 top-14 bg-gray-500 rounded-xl shadow-lg border w-48 z-50">
                 <ul className="text-sm divide-y">
                   <li>
                     <Link
                       href="/handyAccount"
-                      className="block px-4 py-3 hover:bg-blue-50 hover:text-blue-600 transition"
+                      className="block px-4 py-3 hover:bg-[#FFF5E6] hover:text-[#FF7E5F] transition"
                     >
                       View Account
                     </Link>
@@ -92,19 +99,19 @@ export default function PortfolioPage() {
             {/* Menu button */}
             <button
               onClick={toggleMenu}
-              className="p-2 rounded-md hover:bg-neutral-500 bg-gray-400 transition"
+              className="p-2 rounded-md hover:bg-[#ef7d48] bg-[#FFCC66] text-white transition"
             >
               {showMenu ? <X size={26} /> : <Menu size={26} />}
             </button>
 
             {/* Hamburger dropdown */}
             {showMenu && (
-              <div className="absolute right-0 top-14 bg-gray-400 shadow-xl rounded-xl border w-56 text-sm z-50 overflow-hidden">
+              <div className="absolute right-0 top-14 bg-gray-500 shadow-xl rounded-xl border w-56 text-sm z-50 overflow-hidden">
                 <ul className="divide-y">
                   <li>
                     <Link
                       href="/create-service"
-                      className="block px-4 py-3 hover:bg-blue-50 hover:text-blue-600 transition"
+                      className="block px-4 py-3 hover:bg-[#FFF5E6] hover:text-[#FF7E5F] transition"
                     >
                       Add Service
                     </Link>
@@ -112,7 +119,7 @@ export default function PortfolioPage() {
                   <li>
                     <Link
                       href="/handyAccount"
-                      className="block px-4 py-3 hover:bg-blue-50 hover:text-blue-600 transition"
+                      className="block px-4 py-3 hover:bg-[#FFF5E6] hover:text-[#FF7E5F] transition"
                     >
                       My Account
                     </Link>
@@ -120,7 +127,7 @@ export default function PortfolioPage() {
                   <li>
                     <Link
                       href="/order"
-                      className="block px-4 py-3 hover:bg-blue-50 hover:text-blue-600 transition"
+                      className="block px-4 py-3 hover:bg-[#FFF5E6] hover:text-[#FF7E5F] transition"
                     >
                       Track Order
                     </Link>
@@ -128,7 +135,7 @@ export default function PortfolioPage() {
                   <li>
                     <Link
                       href="/membership"
-                      className="block px-4 py-3 hover:bg-blue-50 hover:text-blue-600 transition"
+                      className="block px-4 py-3 hover:bg-[#FFF5E6] hover:text-[#FF7E5F] transition"
                     >
                       Membership Plan
                     </Link>
@@ -136,7 +143,7 @@ export default function PortfolioPage() {
                   <li>
                     <Link
                       href="/faq"
-                      className="block px-4 py-3 hover:bg-blue-50 hover:text-blue-600 transition"
+                      className="block px-4 py-3 hover:bg-[#FFF5E6] hover:text-[#FF7E5F] transition"
                     >
                       FAQ
                     </Link>
@@ -144,7 +151,7 @@ export default function PortfolioPage() {
                   <li>
                     <Link
                       href="/settings"
-                      className="block px-4 py-3 hover:bg-blue-50 hover:text-blue-600 transition"
+                      className="block px-4 py-3 hover:bg-[#FFF5E6] hover:text-[#FF7E5F] transition"
                     >
                       Account Settings
                     </Link>
@@ -158,7 +165,7 @@ export default function PortfolioPage() {
 
       {/* ================= PROFILE SECTION ================= */}
       <main className="flex-1 overflow-y-auto">
-        <section className="bg-gradient-to-r from-blue-400 to-blue-500 text-white py-10">
+        <section className="bg-gradient-to-r from-[#FFCC66] to-[#FF7E5F] text-white py-10">
           <div className="max-w-5xl mx-auto text-center">
             {/* profile image */}
             <Image
@@ -199,7 +206,7 @@ export default function PortfolioPage() {
             <button
               onClick={handleSwitchClick}
               className={`w-14 h-7 flex items-center rounded-full p-1 transition ${
-                buyerMode ? "bg-blue-500" : "bg-gray-400"
+                buyerMode ? "bg-[#FF7E5F]" : "bg-gray-400"
               }`}
             >
               {/* the little round circle */}
@@ -214,11 +221,11 @@ export default function PortfolioPage() {
           {/* earnings and orders */}
           <div className="grid grid-cols-2 gap-6">
             <div className="bg-white rounded-xl shadow p-6 text-center">
-              <p className="text-2xl font-bold text-blue-500">$800</p>
+              <p className="text-2xl font-bold text-[#FF7E5F]">$800</p>
               <p className="text-sm text-neutral-600">Total Earnings</p>
             </div>
             <div className="bg-white rounded-xl shadow p-6 text-center">
-              <p className="text-2xl font-bold text-blue-500">3</p>
+              <p className="text-2xl font-bold text-[#FF7E5F]">3</p>
               <p className="text-sm text-neutral-600">Active Orders</p>
             </div>
           </div>
@@ -251,13 +258,13 @@ export default function PortfolioPage() {
             <h3 className="font-semibold mb-4 text-neutral-800">My Services</h3>
             <div className="grid sm:grid-cols-2 gap-4">
               <div className="p-4 border rounded-lg hover:shadow transition">
-                <p className="font-bold text-blue-500">Painting</p>
+                <p className="font-bold text-[#FF7E5F]">Painting</p>
                 <p className="text-sm text-neutral-600">
                   Offered at $150 per room
                 </p>
               </div>
               <div className="p-4 border rounded-lg hover:shadow transition">
-                <p className="font-bold text-blue-500">Carpentry</p>
+                <p className="font-bold text-[#FF7E5F]">Carpentry</p>
                 <p className="text-sm text-neutral-600">
                   Custom furniture and repairs
                 </p>
@@ -272,31 +279,31 @@ export default function PortfolioPage() {
         <div className="max-w-5xl mx-auto flex justify-around py-5 text-sm">
           <Link
             href="/"
-            className="flex flex-col items-center gap-1 hover:text-blue-400 transition"
+            className="flex flex-col items-center gap-1 hover:text-[#FF7E5F] transition"
           >
             <FiHome size={20} /> Home
           </Link>
           <Link
             href="/messages"
-            className="flex flex-col items-center gap-1 hover:text-blue-400 transition"
+            className="flex flex-col items-center gap-1 hover:text-[#FF7E5F] transition"
           >
             <FiMessageCircle size={20} /> Messages
           </Link>
           <Link
             href="/help"
-            className="flex flex-col items-center gap-1 hover:text-blue-400 transition"
+            className="flex flex-col items-center gap-1 hover:text-[#FF7E5F] transition"
           >
             <FiHelpCircle size={20} /> Help
           </Link>
           <Link
             href="/notifications"
-            className="flex flex-col items-center gap-1 hover:text-blue-400 transition"
+            className="flex flex-col items-center gap-1 hover:text-[#FF7E5F] transition"
           >
             <FiBell size={20} /> Notifications
           </Link>
           <Link
             href="/settings"
-            className="flex flex-col items-center gap-1 hover:text-blue-400 transition"
+            className="flex flex-col items-center gap-1 hover:text-[#FF7E5F] transition"
           >
             <FiSettings size={20} /> Settings
           </Link>
@@ -305,4 +312,3 @@ export default function PortfolioPage() {
     </div>
   );
 }
-
