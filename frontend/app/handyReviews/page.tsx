@@ -43,7 +43,7 @@ export default function ReviewsPage() {
   const [filter, setFilter] = React.useState("Most Recent");
 
   // Dynamic min and max ratings
-  const maxRating = Math.max(...allReviews.map((r) => r.rating)); //allReviews obj is destructured
+  const maxRating = Math.max(...allReviews.map((r) => r.rating));
   const minRating = Math.min(...allReviews.map((r) => r.rating)); //returns an array of all reviews whose rating equals the min rating
 
   // Apply filter
