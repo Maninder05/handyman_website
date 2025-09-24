@@ -1,13 +1,13 @@
 "use client";
-
+ 
 import { useState } from "react";
-
+ 
 export default function HandymanBooking() {
   const [selectedDate, setSelectedDate] = useState("25");
   const [selectedHours, setSelectedHours] = useState("1");
   const [selectedHandyman, setSelectedHandyman] = useState("kenji");
   const [isConfirmed, setIsConfirmed] = useState(false);
-
+ 
   const dates = [
     { day: "MON", date: "21" },
     { day: "TUE", date: "22" },
@@ -17,9 +17,9 @@ export default function HandymanBooking() {
     { day: "SAT", date: "26" },
     { day: "SUN", date: "27" },
   ];
-
+ 
   const hoursOptions = ["1", "2", "3", "4", "5", "6", "7", "8"];
-
+ 
   const handymen = [
     {
       id: "kenji",
@@ -49,17 +49,17 @@ export default function HandymanBooking() {
       color: "bg-teal-400",
     },
   ];
-
+ 
   const handleConfirm = () => {
     setIsConfirmed(true);
     setTimeout(() => setIsConfirmed(false), 3000);
   };
-
+ 
   const selectedHandymanObj = handymen.find((h) => h.id === selectedHandyman);
   const totalPrice = selectedHandymanObj
     ? selectedHandymanObj.price * parseInt(selectedHours)
     : 0;
-
+ 
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-50 to-cyan-100 flex items-center justify-center p-4">
       <div className="max-w-4xl w-full bg-white rounded-2xl shadow-xl overflow-hidden">
@@ -70,7 +70,7 @@ export default function HandymanBooking() {
             Book your handyman service in just a few clicks
           </p>
         </div>
-
+ 
         <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Handyman Selection */}
           <div>
@@ -124,7 +124,7 @@ export default function HandymanBooking() {
               ))}
             </div>
           </div>
-
+ 
           {/* Date & Time Selection */}
           <div>
             <div className="mb-6">
@@ -156,7 +156,7 @@ export default function HandymanBooking() {
                 ))}
               </div>
             </div>
-
+ 
             <div className="mb-6">
               <h3 className="text-xl font-semibold text-gray-800 mb-4">
                 SELECT HOURS
@@ -175,7 +175,7 @@ export default function HandymanBooking() {
                 </select>
               </div>
             </div>
-
+ 
             {/* Summary */}
             <div className="bg-teal-50 p-5 rounded-xl mb-6">
               <h3 className="font-semibold text-gray-800 mb-3 text-lg">
@@ -201,7 +201,7 @@ export default function HandymanBooking() {
                 <span>${totalPrice}.00</span>
               </div>
             </div>
-
+ 
             {/* Confirm Button */}
             <button
               className="w-full bg-teal-600 text-white font-semibold py-3 px-6 rounded-xl flex items-center justify-center hover:bg-teal-700 transition text-lg"
@@ -211,7 +211,7 @@ export default function HandymanBooking() {
             </button>
           </div>
         </div>
-
+ 
         {/* Confirmation Modal */}
         {isConfirmed && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -252,3 +252,4 @@ export default function HandymanBooking() {
     </div>
   );
 }
+ 

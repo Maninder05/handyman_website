@@ -179,7 +179,3 @@ export default function CreateService() {
 }
 
 
-//Build a Next.js client component using only next.js and tailwiind css and CreateService based on this reference image. 
-// Include Title, Category, Image upload with preview, and Price, with validation errors and popups
-//  for submit/draft. Style it with Tailwind CSS and manage state using useState.
-//(chatGPT)
