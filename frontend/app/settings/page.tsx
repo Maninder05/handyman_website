@@ -1,106 +1,39 @@
+// settings (dark theme to match Help Centre)
 "use client";
-
-import Link from "next/link";
 import { useState } from "react";
 
 export default function SettingsPage() {
-  const [active, setActive] = useState<
-    "Overview" | "Membership" | "Security" | "Devices" | "Profiles"
-  >("Overview");
-
-  const navItems: Array<typeof active> = [
-    "Overview",
-    "Membership",
-    "Security",
-    "Devices",
-    "Profiles",
-  ];
-
-  const BrandBtn = ({
-    children,
-    as: As = "button",
-    href,
-    className = "",
-    ...props
-  }: any) => {
-    const base =
-      "inline-flex items-center justify-center rounded-lg border text-sm px-3 py-2 " +
-      "border-yellow-400 text-yellow-400 hover:bg-yellow-400/20 transition-colors " +
-      "focus:outline-none focus:ring-2 focus:ring-yellow-500/40";
-    if (As === Link)
-      return (
-        <Link
-          href={href!}
-          className={`${base} ${className}`}
-          {...props}
-        >
-          {children}
-        </Link>
-      );
-    return (
-      <button className={`${base} ${className}`} {...props}>
-        {children}
-      </button>
-    );
-  };
-
-  const Card = ({ children, className = "", padded = true }: any) => (
-    <section
-      className={`rounded-xl border bg-gray-800/90 ${
-        padded ? "p-6" : ""
-      } ${className} border-yellow-400/30 shadow-sm`}
-    >
-      {children}
-    </section>
-  );
+  const [active, setActive] = useState("Profile Settings");
+  const navItems = ["Profile Settings", "Password", "Account Management", "Notifications"];
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100">
       {/* HEADER */}
-      <header className="w-full sticky top-0 bg-gradient-to-r from-[#FFCC66] to-[#FF7E5F] shadow-md">
-        <div className="mx-auto max-w-[1100px] px-6 py-4 flex items-center justify-between">
-          <div className="text-xl font-semibold tracking-tight text-gray-900">
-            Settings
-          </div>
-          <nav className="flex items-center gap-2 sm:gap-3">
-            <button
-              className="px-3 py-2 rounded-full hover:bg-yellow-400/20 text-sm text-gray-900 border border-transparent hover:border-yellow-400/40 focus:outline-none focus:ring-2 focus:ring-yellow-500/40 transition bg-yellow-400"
-              type="button"
-            >
-              Dark Mode
-            </button>
-          </nav>
+      <header className="w-full fixed top-0 z-50 bg-gradient-to-r from-[#FFCC66] to-[#FF7E5F] shadow-md">
+        <div className="max-w-5xl mx-auto px-6 py-4">
+          <h1 className="text-xl font-extrabold tracking-tight text-gray-900">Settings</h1>
         </div>
       </header>
 
-      <div className="mx-auto max-w-[1100px] px-6 py-8">
-        <div className="grid grid-cols-[240px_1fr] gap-10">
+      {/* Content padding to offset fixed header */}
+      <div className="max-w-5xl mx-auto px-6 pt-20 pb-10">
+        <div className="grid grid-cols-[200px_1fr] gap-8">
           {/* SIDEBAR */}
-          <aside className="pr-8">
-            <nav aria-label="Account settings" className="space-y-1">
+          <aside>
+            <nav className="space-y-1">
               {navItems.map((item) => {
                 const isActive = active === item;
                 return (
                   <button
                     key={item}
+                    type="button"
                     onClick={() => setActive(item)}
                     aria-current={isActive ? "page" : undefined}
-                    className={[
-                      "group relative block w-full text-left rounded-md px-3 py-2 transition",
-                      "focus:outline-none focus:ring-2 focus:ring-yellow-400/40",
-                      isActive
-                        ? "bg-yellow-400/20 text-yellow-400 font-semibold"
-                        : "text-gray-300 hover:bg-yellow-400/10 hover:text-yellow-300",
-                    ].join(" ")}
+                    className={`w-full text-left rounded-lg px-4 py-3 transition
+                      ${isActive
+                        ? "bg-yellow-400 text-gray-900 font-semibold"
+                        : "text-gray-300 hover:bg-gray-800 hover:text-gray-100"}`}
                   >
-                    <span
-                      className={[
-                        "absolute left-0 top-1/2 -translate-y-1/2 h-6 w-1 rounded-r",
-                        isActive
-                          ? "bg-yellow-400"
-                          : "bg-transparent group-hover:bg-yellow-300/70",
-                      ].join(" ")}
-                    />
                     {item}
                   </button>
                 );
@@ -108,163 +41,155 @@ export default function SettingsPage() {
             </nav>
           </aside>
 
-          {/* MAIN CONTENT */}
+          {/* MAIN */}
           <main className="min-w-0">
-            <h1 className="text-3xl font-bold mb-6 text-yellow-400">{active}</h1>
+            {/* Profile Settings */}
+            {active === "Profile Settings" && (
+              <div className="rounded-xl border border-gray-700 bg-gray-800 p-6 shadow-sm">
+                <h2 className="text-xl font-semibold mb-6 text-yellow-400">Profile Settings</h2>
 
-            {active === "Overview" && (
-              <div className="space-y-6 animate-[fadeIn_.2s_ease]">
-                <Card>
-                  <h2 className="text-lg font-semibold mb-2 text-yellow-400">
-                    Membership
-                  </h2>
-                  <p className="text-sm text-gray-300">
-                    No membership plan is currently set.
-                  </p>
-                  <BrandBtn as={Link} href="/membership" className="mt-4">
-                    Choose a Plan
-                  </BrandBtn>
-                </Card>
-
-                <Card padded={false}>
-                  <h2 className="text-lg font-semibold px-5 py-3 text-yellow-400">
-                    Quick Links
-                  </h2>
-                  <div className="divide-y divide-yellow-400/20">
-                    {[
-                      { text: "Change plan", target: "Membership" },
-                      { text: "Manage payment method", target: "Membership" },
-                      { text: "Manage access and devices", target: "Devices" },
-                      { text: "Update password", target: "Security" },
-                      { text: "Update profile", target: "Profiles" },
-                      { text: "Edit settings", target: "Overview" },
-                    ].map(({ text, target }) => (
-                      <button
-                        key={text}
-                        onClick={() => setActive(target as typeof active)}
-                        className="w-full text-left px-5 py-4 hover:bg-yellow-400/10 focus:bg-yellow-400/10 focus:outline-none focus:ring-2 focus:ring-yellow-400/40 transition"
-                      >
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm font-medium text-yellow-300">
-                            {text}
-                          </span>
-                          <span
-                            aria-hidden="true"
-                            className="text-yellow-400 text-xl"
-                          >
-                            ›
-                          </span>
-                        </div>
-                      </button>
-                    ))}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-200 mb-2">First Name *</label>
+                    <input
+                      type="text"
+                      className="w-full px-4 py-2.5 rounded-lg border border-gray-600 bg-gray-900 text-gray-100 placeholder-gray-400
+                                 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
+                    />
                   </div>
-                </Card>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-200 mb-2">Last Name *</label>
+                    <input
+                      type="text"
+                      className="w-full px-4 py-2.5 rounded-lg border border-gray-600 bg-gray-900 text-gray-100 placeholder-gray-400
+                                 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-200 mb-2">Email</label>
+                    <input
+                      type="email"
+                      className="w-full px-4 py-2.5 rounded-lg border border-gray-600 bg-gray-900 text-gray-100 placeholder-gray-400
+                                 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-200 mb-2">Mobile Number *</label>
+                    <input
+                      type="tel"
+                      className="w-full px-4 py-2.5 rounded-lg border border-gray-600 bg-gray-900 text-gray-100 placeholder-gray-400
+                                 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex justify-end">
+                  <button className="inline-flex items-center justify-center rounded-lg px-5 py-2.5 text-sm font-medium
+                                     bg-yellow-400 text-gray-900 hover:bg-yellow-500 transition">
+                    Save Changes
+                  </button>
+                </div>
               </div>
             )}
 
-            {active === "Membership" && (
-              <section className="max-w-xl space-y-4 animate-[fadeIn_.2s_ease]">
-                <Card>
-                  <h2 className="text-lg font-semibold mb-2 text-yellow-400">
-                    Membership
-                  </h2>
-                  <p className="text-sm text-gray-300">
-                    No active membership plan.
-                  </p>
-                  <BrandBtn as={Link} href="/membership" className="mt-4">
-                    Choose a Plan
-                  </BrandBtn>
-                </Card>
-              </section>
-            )}
+            {/* Password */}
+            {active === "Password" && (
+              <div className="rounded-xl border border-gray-700 bg-gray-800 p-6 shadow-sm max-w-xl">
+                <h2 className="text-xl font-semibold mb-6 text-yellow-400">Change Password</h2>
 
-            {active === "Security" && (
-              <section className="max-w-xl space-y-4 animate-[fadeIn_.2s_ease]">
-                <Card>
-                  <h2 className="text-lg font-semibold mb-2 text-yellow-400">
-                    Password
-                  </h2>
-                  <p className="text-sm text-gray-300 mb-4">
-                    Last changed 3 months ago
-                  </p>
-                  <BrandBtn>Change Password</BrandBtn>
-                </Card>
-                <Card>
-                  <h2 className="text-lg font-semibold mb-2 text-yellow-400">
-                    Two-Step Verification
-                  </h2>
-                  <p className="text-sm text-gray-300">Auth app enabled</p>
-                  <div className="mt-3 flex gap-2">
-                    <BrandBtn>Manage 2FA</BrandBtn>
-                    <BrandBtn>Backup Codes</BrandBtn>
+                <div className="space-y-4 mb-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-200 mb-2">Current Password</label>
+                    <input
+                      type="password"
+                      className="w-full px-4 py-2.5 rounded-lg border border-gray-600 bg-gray-900 text-gray-100
+                                 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
+                    />
                   </div>
-                </Card>
-              </section>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-200 mb-2">New Password</label>
+                    <input
+                      type="password"
+                      className="w-full px-4 py-2.5 rounded-lg border border-gray-600 bg-gray-900 text-gray-100
+                                 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-200 mb-2">Confirm New Password</label>
+                    <input
+                      type="password"
+                      className="w-full px-4 py-2.5 rounded-lg border border-gray-600 bg-gray-900 text-gray-100
+                                 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex justify-end">
+                  <button className="inline-flex items-center justify-center rounded-lg px-5 py-2.5 text-sm font-medium
+                                     bg-yellow-400 text-gray-900 hover:bg-yellow-500 transition">
+                    Update Password
+                  </button>
+                </div>
+              </div>
             )}
 
-            {active === "Devices" && (
-              <div className="space-y-6 max-w-xl animate-[fadeIn_.2s_ease]">
-                {[
-                  {
-                    title: "Access and devices",
-                    desc: "Manage signed-in devices",
-                  },
-                  {
-                    title: "Mobile download devices",
-                    desc: "Using 0 of 2 download devices",
-                  },
-                ].map(({ title, desc }) => (
-                  <a
-                    key={title}
-                    className="block rounded-xl border border-yellow-400/30 p-5 hover:bg-yellow-400/10 focus:bg-yellow-400/10 focus:outline-none focus:ring-2 focus:ring-yellow-400/40 transition shadow-sm"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="font-semibold text-yellow-400">{title}</p>
-                        <p className="text-sm text-gray-300">{desc}</p>
-                      </div>
-                      <span
-                        aria-hidden="true"
-                        className="text-yellow-400 text-xl"
-                      >
-                        ›
-                      </span>
+            {/* Account Management */}
+            {active === "Account Management" && (
+              <div className="rounded-xl border border-gray-700 bg-gray-800 p-6 shadow-sm max-w-xl">
+                <h2 className="text-xl font-semibold mb-6 text-yellow-400">Account Management</h2>
+
+                <div className="space-y-4 mb-6">
+                  <div className="p-4 rounded-lg border border-red-700 bg-red-900/20">
+                    <h3 className="font-medium text-red-300 mb-1">Delete Account</h3>
+                    <p className="text-sm text-red-200/90">Permanently remove your account and data.</p>
+                  </div>
+                </div>
+
+                <div className="flex justify-end">
+                  <button className="inline-flex items-center justify-center rounded-lg px-5 py-2.5 text-sm font-medium
+                                     bg-red-600 text-white hover:bg-red-700 transition">
+                    Delete Account
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {active === "Notifications" && (
+              <div className="rounded-xl border border-gray-700 bg-gray-800 p-6 shadow-sm max-w-xl">
+                <h2 className="text-xl font-semibold mb-6 text-yellow-400">Notification Preferences</h2>
+
+                <div className="space-y-4 mb-6">
+                  <div className="flex items-center justify-between py-2">
+                    <div>
+                      <h3 className="font-medium text-gray-100">Email Notifications</h3>
+                      <p className="text-sm text-gray-300">Receive updates via email</p>
                     </div>
-                  </a>
-                ))}
-              </div>
-            )}
-
-            {active === "Profiles" && (
-              <section className="max-w-xl space-y-4 animate-[fadeIn_.2s_ease]">
-                <Card>
-                  <h2 className="text-lg font-semibold mb-2 text-yellow-400">
-                    Profiles
-                  </h2>
-                  <p className="text-sm text-gray-300">
-                    Manage who can access and personalize content.
-                  </p>
-                  <div className="mt-4 flex gap-2">
-                    <BrandBtn>Add Profile</BrandBtn>
-                    <BrandBtn>Edit Profiles</BrandBtn>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" className="sr-only peer" defaultChecked />
+                      <div className="w-11 h-6 bg-gray-600 rounded-full peer
+                                      peer-checked:bg-yellow-400
+                                      peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-yellow-400/60
+                                      after:content-[''] after:absolute after:top-[2px] after:left-[2px]
+                                      after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all
+                                      peer-checked:after:translate-x-full" />
+                    </label>
                   </div>
-                </Card>
-              </section>
+                </div>
+
+                <div className="flex justify-end">
+                  <button className="inline-flex items-center justify-center rounded-lg px-5 py-2.5 text-sm font-medium
+                                     bg-yellow-400 text-gray-900 hover:bg-yellow-500 transition">
+                    Save Preferences
+                  </button>
+                </div>
+              </div>
             )}
           </main>
         </div>
       </div>
-
-      <style jsx global>{`
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
-        }
-      `}</style>
     </div>
   );
 }
