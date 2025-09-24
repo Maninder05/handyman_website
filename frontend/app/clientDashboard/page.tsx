@@ -1,167 +1,131 @@
-"use client"; //client component
+ "use client";
 
 import { useState } from "react";
-import { useRouter} from "next/navigation";
 import Image from "next/image";
-import { Bell, Home, MessageCircle, Settings, Users, Search } from "lucide-react";
-import SideMenu from "../components/SideMenu";
-
-export default function ServicesPage() {
-  const router = useRouter();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+import { Bell, Home, MessageCircle, Settings, Users } from "lucide-react";
+ 
+export default function PortfolioPage() {
+  const [isBuyer, setIsBuyer] = useState(false);
+ 
   return (
-    <div className="min-h-screen w-full flex flex-col bg-gradient-to-b from-cyan-50 to-gray-100">
-      {/* ================= HEADER ================= */}
-      <header className="bg-white shadow-sm flex items-center justify-between p-4 relative">
-        <button
-          onClick={() => router.back()}
-          className="absolute left-4 text-gray-700 text-2xl hover:text-cyan-600 transition"
-        >
-          ←
-        </button>
-        <h1 className="text-lg font-bold mx-auto text-gray-800">
-          Handyman Services
-        </h1>
-        <button
-          onClick={() => setIsMenuOpen(true)}
-          className="absolute right-4 text-gray-700 text-2xl hover:text-cyan-600 transition"
-        >
-          ☰
-        </button>
-      </header>
-
-      {/* ================= SEARCH ================= */}
-      <div className="p-4 bg-cyan-600">
-        <div className="relative">
-          <Search className="absolute left-3 top-2.5 text-gray-400 w-5 h-5" />
-          <input
-            type="text"
-            placeholder="Search handyman, services..."
-            className="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+    <div className="min-h-screen w-full flex flex-col bg-gray-100 ">
+        <div>
+      {/* Header */}
+      <div className="bg-blue-400 p-6 relative mb-2">
+        {/* Menu Button */}
+        <button className="absolute right-4 top-6 text-white text-3xl">☰</button>
+ 
+        {/* Profile Info */}
+        <div className="flex flex-col items-center mt-6">
+          <Image
+            src="/images/client1.jpg"
+            alt="Profile"
+            className="w-20 h-20 rounded-full border-4 border-white shadow-md"
           />
+          <h2 className="text-lg font-bold text-black mt-3">Kenji Teneka</h2>
+          <p className="text-sm text-black">kenjiteneka@gmail.com</p>
+        </div>
+ 
+        {/* Stats */}
+        <div className="flex justify-around text-center mt-6 mb-1 text-black font-semibold">
+          <div>
+            <p className="text-xl">15</p>
+            <p className="text-sm">Job Done</p>
+          </div>
+          <div>
+            <p className="text-xl">3</p>
+            <p className="text-sm">Job In Progress</p>
+          </div>
+          <div>
+            <p className="text-xl">5 ⭐</p>
+            <p className="text-sm">Rating</p>
+          </div>
         </div>
       </div>
-
-      {/* ================= PROMO BANNER ================= */}
-      <div className="p-4">
-        <div className="bg-white rounded-xl shadow-md flex items-center justify-between p-4">
-          <div className="max-w-sm">
-            <h2 className="text-sm font-bold text-cyan-700">
-              Reliable Services At Your Doorstep
-            </h2>
-            <p className="text-xs text-gray-600 mt-1">
-              Get skilled professionals without the hassle. From plumbing to painting, 
-              we bring the right handyman to your home — quickly, safely, and affordably.
+      </div>
+ 
+      {/* Switch to Buyer */}
+<div className="px-20 mb-2 ">
+  <div className="bg-white flex justify-between items-center px-5 py-4 rounded-xl shadow-md">
+    <p className="font-medium">Switch To Buyer</p>
+    <label className="inline-flex items-center cursor-pointer">
+      <input
+        type="checkbox"
+        checked={isBuyer}
+        onChange={() => setIsBuyer(!isBuyer)}
+        className="sr-only"
+      />
+      <div className="w-12 h-6 bg-gray-300 rounded-full p-1 flex items-center">
+        <div
+          className={`w-5 h-5 rounded-full bg-blue-400 transition-transform ${
+            isBuyer ? "translate-x-6" : ""
+          }`}
+        />
+      </div>
+    </label>
+  </div>
+</div>
+     
+ 
+     
+ 
+ 
+      {/* Earnings */}
+      <div className="p-6 bg-gray-200">
+        <div className="flex justify-between items-center">
+          <h3 className="font-semibold">Your Earning</h3>
+          <a href="#" className="text-sm text-teal-600 hover:underline">
+            View All
+          </a>
+        </div>
+ 
+        <div className="grid grid-cols-2 gap-4 mt-4">
+          <div className="bg-purple-100 p-4 rounded-xl text-center">
+            <p className="text-2xl font-bold">$800</p>
+            <p className="text-sm text-gray-700">Your this month</p>
+          </div>
+          <div className="bg-purple-100 p-4 rounded-xl text-center">
+            <p className="text-2xl font-bold">3</p>
+            <p className="text-sm text-gray-700">Active Order</p>
+          </div>
+        </div>
+      </div>
+ 
+      {/* Recent Orders */}
+      <div className="p-6 bg-gray-200">
+        <h3 className="font-semibold mb-3">Recent Orders</h3>
+        <div className="bg-purple-100 p-4 rounded-xl flex items-center gap-3">
+          <div className="w-12 h-12 bg-white flex items-center justify-center rounded-full shadow">
+            🏠
+          </div>
+          <div>
+            <p className="font-bold">ELECTRICAL REPAIR 👨‍🔧</p>
+            <p className="text-sm text-gray-600">
+              John Patronsky recently booked for the “electrical repair” service.
             </p>
           </div>
-          <Image
-            src="/images/services-banner.jpg"
-            alt="Handyman Services"
-            className="w-20 h-20 rounded-lg object-cover ml-3"
-          />
         </div>
       </div>
-
-      {/* ================= CATEGORIES ================= */}
-      <section className="px-4 py-6">
-        <div className="flex justify-between items-center mb-3">
-          <h3 className="font-semibold text-gray-800">Categories</h3>
-          <button
-            onClick={() => router.push("/book")}
-            className="text-sm text-cyan-600 hover:underline"
-          >
-            Book Service →
-          </button>
-        </div>
-
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          {[
-            { emoji: "🚰", name: "Plumbing" },
-            { emoji: "⚡", name: "Technician" },
-            { emoji: "🧹", name: "House Cleaning" },
-            { emoji: "🎨", name: "Painting" },
-          ].map((cat, i) => (
-            <div
-              key={i}
-              className="bg-white rounded-xl shadow hover:shadow-lg transition flex flex-col items-center p-4 cursor-pointer"
-            >
-              <span className="text-3xl">{cat.emoji}</span>
-              <p className="mt-2 font-medium text-gray-700">{cat.name}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ================= RECOMMENDED ================= */}
-      <section className="p-4 flex-1">
-        <h3 className="font-semibold mb-3 text-gray-800">
-          Recommended Services
-        </h3>
-        <div className="grid gap-4">
-          {[1, 2, 3].map((i) => (
-            <div
-              key={i}
-              className="bg-white p-4 rounded-xl shadow flex items-center gap-3 hover:shadow-lg transition"
-            >
-              <Image
-                src="/images/profile.jpg"
-                alt="Kenji"
-                className="w-12 h-12 rounded-full"
-              />
-              <div className="flex-1">
-                <p className="font-bold text-gray-800">TECHNICAL REPAIR</p>
-                <p className="text-sm text-gray-600">By Kenji Teneka</p>
-                <p className="text-yellow-500 text-sm">⭐ 5.0</p>
-              </div>
-              <p className="font-semibold text-cyan-600">$55/hr</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ================= BOTTOM NAV ================= */}
-      <nav className="bg-white shadow-inner flex justify-around items-center h-14 border-t">
-        <button
-          onClick={() => router.push("/")}
-          className="flex flex-col items-center text-gray-600 hover:text-cyan-600 transition"
-        >
-          <Home className="w-5 h-5" />
-          <span className="text-xs">Home</span>
+ 
+      {/* Bottom Navigation */}
+      <div className="mt-auto bg-blue-400 flex justify-around items-center py-3">
+        <button>
+          <Home className="w-7 h-7 text-white" />
         </button>
-        <button
-          onClick={() => router.push("/messages")}
-          className="flex flex-col items-center text-gray-600 hover:text-cyan-600 transition"
-        >
-          <MessageCircle className="w-5 h-5" />
-          <span className="text-xs">Messages</span>
+        <button>
+          <MessageCircle className="w-7 h-7 text-white" />
         </button>
-        <button
-          onClick={() => router.push("/portfolio")}
-          className="flex flex-col items-center text-gray-600 hover:text-cyan-600 transition"
-        >
-          <Users className="w-5 h-5" />
-          <span className="text-xs">Portfolio</span>
+        <button>
+          <Users className="w-7 h-7 text-white" />
         </button>
-        <button
-          onClick={() => router.push("/notifications")}
-          className="relative flex flex-col items-center text-gray-600 hover:text-cyan-600 transition"
-        >
-          <Bell className="w-5 h-5" />
-          <span className="text-xs">Alerts</span>
-          <span className="absolute top-0 right-3 w-2.5 h-2.5 bg-red-500 rounded-full"></span>
+        <button className="relative">
+          <Bell className="w-7 h-7 text-white" />
+          <span className="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full"></span>
         </button>
-        <button
-          onClick={() => router.push("/settings")}
-          className="flex flex-col items-center text-gray-600 hover:text-cyan-600 transition"
-        >
-          <Settings className="w-5 h-5" />
-          <span className="text-xs">Settings</span>
+        <button>
+          <Settings className="w-7 h-7 text-white" />
         </button>
-      </nav>
-
-      {/* ================= SIDE MENU ================= */}
-      <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+      </div>
     </div>
   );
 }

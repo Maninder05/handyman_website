@@ -55,12 +55,13 @@ export default function ReviewsPage() {
       : filter === "Lowest Rated"
       ? allReviews.filter((r) => r.rating === minRating)
       : allReviews;
+
   return (
     <>
-      <main className="bg-neutral-900 min-h-screen text-neutral-100 flex flex-col">
+      <main className="bg-gray-900 min-h-screen text-gray-100 flex flex-col">
         {/* Header */}
-        <section className="bg-blue-500 pb-24 relative text-center">
-          <h1 className="text-2xl md:text-3xl mb-4 font-bold text-neutral-900 pt-6 tracking-wide">
+        <section className="bg-yellow-600 pb-24 relative text-center shadow-md">
+          <h1 className="text-2xl md:text-3xl mb-4 font-bold text-gray-900 pt-6 tracking-wide">
             Reviews
           </h1>
 
@@ -73,7 +74,7 @@ export default function ReviewsPage() {
             }}
             className="absolute z-30 w-48 h-48 md:w-52 md:h-52"
           >
-            <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-neutral-200 shadow-xl">
+            <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-gray-900 shadow-xl">
               <Image
                 src="/images/profile.jpg"
                 alt="Handyman"
@@ -85,7 +86,7 @@ export default function ReviewsPage() {
 
             {/* Price */}
             <div className="absolute left-full ml-4 top-1/2 -translate-y-1/2 z-40">
-              <div className="flex items-center gap-2 bg-black text-white px-4 py-2 rounded-lg shadow-md">
+              <div className="flex items-center gap-2 bg-gray-900 text-yellow-400 px-4 py-2 rounded-lg shadow-md">
                 <span className="text-sm md:text-base font-semibold whitespace-nowrap">
                   $55 CAD/HR
                 </span>
@@ -93,9 +94,10 @@ export default function ReviewsPage() {
             </div>
           </div>
         </section>
-        <section className="bg-neutral-200 flex flex-col items-center pt-32 pb-16 px-4 relative">
+
+        <section className="bg-gray-800 flex flex-col items-center pt-32 pb-16 px-4 relative">
           {/* Name */}
-          <p className="text-2xl md:text-3xl font-bold text-neutral-900 mb-2">
+          <p className="text-2xl md:text-3xl font-bold text-yellow-400 mb-2">
             Kenji Teneka
           </p>
 
@@ -112,8 +114,8 @@ export default function ReviewsPage() {
                 href={tab.href}
                 className={`px-4 py-2 rounded-full text-sm font-semibold ${
                   tab.name === "Reviews"
-                    ? "bg-blue-500 text-white"
-                    : "bg-neutral-300 text-neutral-800 hover:bg-neutral-400"
+                    ? "bg-gray-900 text-yellow-400"
+                    : "bg-yellow-500 text-gray-900 hover:bg-yellow-400 hover:text-gray-900 transition"
                 }`}
               >
                 {tab.name}
@@ -123,17 +125,18 @@ export default function ReviewsPage() {
 
           <div className="flex flex-col items-center mb-10">
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-blue-500 font-bold text-2xl">5.0</span>
-              <span className="text-neutral-700 text-base">(20+ reviews)</span>
+              <span className="text-yellow-400 font-bold text-2xl">5.0</span>
+              <span className="text-gray-300 text-base">(20+ reviews)</span>
             </div>
-            <p className="text-neutral-600 text-sm">
+            <p className="text-gray-400 text-sm">
               Trusted by <span className="font-semibold">200+ homeowners</span>
             </p>
           </div>
+
           {/* Featured Review */}
           {featured && (
-            <div className="w-full max-w-4xl bg-white px-6 py-6 rounded-2xl shadow-xl border-l-4 border-blue-500 mb-12">
-              <h3 className="text-xl font-bold text-neutral-900 mb-3">
+            <div className="w-full max-w-4xl bg-gray-900 px-6 py-6 rounded-2xl shadow-xl border-l-4 border-yellow-400 mb-12">
+              <h3 className="text-xl font-bold text-yellow-400 mb-3">
                 Featured Review
               </h3>
               <div className="flex items-start gap-4">
@@ -145,16 +148,10 @@ export default function ReviewsPage() {
                   className="rounded-full object-cover"
                 />
                 <div>
-                  <p className="font-semibold text-neutral-800">
-                    {featured.name}
-                  </p>
-                  <p className="text-sm text-neutral-500 italic">
-                    {featured.job}
-                  </p>
-                  <p className="text-sm text-neutral-700 mt-2">
-                    {featured.comment}
-                  </p>
-                  <p className="text-neutral-800 font-bold mt-1">
+                  <p className="font-semibold text-gray-100">{featured.name}</p>
+                  <p className="text-sm text-gray-400 italic">{featured.job}</p>
+                  <p className="text-sm text-gray-300 mt-2">{featured.comment}</p>
+                  <p className="text-yellow-400 font-bold mt-1">
                     Rating: {featured.rating}/5
                   </p>
                 </div>
@@ -163,15 +160,13 @@ export default function ReviewsPage() {
           )}
 
           {/* Reviews List */}
-          <div className="w-full max-w-4xl bg-white px-6 py-8 rounded-2xl shadow-lg">
+          <div className="w-full max-w-4xl bg-gray-900 px-6 py-8 rounded-2xl shadow-lg">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="text-xl font-bold text-neutral-900">
-                All Reviews
-              </h3>
+              <h3 className="text-xl font-bold text-yellow-400">All Reviews</h3>
               <select
                 value={filter}
                 onChange={(e) => setFilter(e.target.value)} //i.e. val in the dropdown current input
-                className="bg-neutral-100 text-neutral-800 px-3 py-1 rounded-md text-sm"
+                className="bg-gray-800 text-gray-300 px-3 py-1 rounded-md text-sm"
               >
                 <option>Most Recent</option>
                 <option>Highest Rated</option>
@@ -183,7 +178,7 @@ export default function ReviewsPage() {
             {filteredReviews.map((review, i) => (
               <div
                 key={i}
-                className="border-b border-neutral-300 last:border-0 py-5 flex gap-4"
+                className="border-b border-gray-700 last:border-0 py-5 flex gap-4"
               >
                 <Image
                   src={review.image}
@@ -193,16 +188,10 @@ export default function ReviewsPage() {
                   className="rounded-full object-cover"
                 />
                 <div>
-                  <p className="font-semibold text-neutral-800">
-                    {review.name}
-                  </p>
-                  <p className="text-sm text-neutral-500 italic">
-                    {review.job}
-                  </p>
-                  <p className="text-sm text-neutral-700 mt-1">
-                    {review.comment}
-                  </p>
-                  <p className="text-neutral-800 font-bold mt-1">
+                  <p className="font-semibold text-gray-100">{review.name}</p>
+                  <p className="text-sm text-gray-400 italic">{review.job}</p>
+                  <p className="text-sm text-gray-300 mt-1">{review.comment}</p>
+                  <p className="text-yellow-400 font-bold mt-1">
                     Rating: {review.rating}/5
                   </p>
                 </div>
@@ -211,36 +200,37 @@ export default function ReviewsPage() {
           </div>
         </section>
       </main>
+
       {/* Footer */}
-      <footer className="bg-gray-900 text-neutral-300">
+      <footer className="bg-gray-900 text-gray-400">
         <div className="max-w-5xl mx-auto flex justify-around py-5 text-sm">
           <Link
             href="/"
-            className="flex flex-col items-center gap-1 hover:text-blue-400 transition"
+            className="flex flex-col items-center gap-1 hover:text-yellow-400 transition"
           >
             <FiHome size={20} /> Home
           </Link>
           <Link
             href="/messages"
-            className="flex flex-col items-center gap-1 hover:text-blue-400 transition"
+            className="flex flex-col items-center gap-1 hover:text-yellow-400 transition"
           >
             <FiMessageCircle size={20} /> Messages
           </Link>
           <Link
             href="/help"
-            className="flex flex-col items-center gap-1 hover:text-blue-400 transition"
+            className="flex flex-col items-center gap-1 hover:text-yellow-400 transition"
           >
             <FiHelpCircle size={20} /> Help
           </Link>
           <Link
             href="/notifications"
-            className="flex flex-col items-center gap-1 hover:text-blue-400 transition"
+            className="flex flex-col items-center gap-1 hover:text-yellow-400 transition"
           >
             <FiBell size={20} /> Notifications
           </Link>
           <Link
             href="/settings"
-            className="flex flex-col items-center gap-1 hover:text-blue-400 transition"
+            className="flex flex-col items-center gap-1 hover:text-yellow-400 transition"
           >
             <FiSettings size={20} /> Settings
           </Link>

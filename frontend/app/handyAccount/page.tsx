@@ -2,28 +2,25 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { FiHome, FiMessageCircle, FiHelpCircle, FiBell, FiSettings,} from "react-icons/fi";
+import { FiHome, FiMessageCircle, FiHelpCircle, FiBell, FiSettings } from "react-icons/fi";
 
 export default function MyAccountPage() {
   const [showMore, setShowMore] = useState(false);
 
   return (
-    <div className="min-h-screen flex flex-col bg-neutral-100">
+    <div className="min-h-screen flex flex-col bg-gray-900 text-gray-100">
       {/* ================= HEADER ================= */}
-      <section className="bg-blue-500 pb-24 relative text-center">
-        <h1 className="text-2xl md:text-3xl mb-4 font-bold text-white pt-6 tracking-wide">
+      <section className="bg-yellow-600 pb-24 relative text-center shadow-md">
+        <h1 className="text-2xl md:text-3xl mb-4 font-bold text-gray-900 pt-6 tracking-wide">
           My Account
         </h1>
 
         {/* Profile */}
-        {/* element is fixed, because left and top are positioning properties relative to its containing block (parent with position: relative) */}
         <div
-          // place center x-axis relative to parent , place element just below the parent, shift left/up by half of element's w/h
           style={{ left: "50%", top: "100%", transform: "translate(-50%, -50%)" }}
           className="absolute z-30 w-48 h-48 md:w-52 md:h-52"
         >
-          {/* circle image wrapper (relative so price can position relative to it) */}
-          <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-white shadow-xl">
+          <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-gray-900 shadow-xl">
             <Image
               src="/images/profile.jpg"
               alt="Handyman"
@@ -33,9 +30,8 @@ export default function MyAccountPage() {
             />
           </div>
 
-          {/* price badge attached immediately to the right of the circle */}
           <div className="absolute left-full ml-4 top-1/2 -translate-y-1/2 z-40">
-            <div className="flex items-center gap-2 bg-neutral-900 text-white px-4 py-2 rounded-lg shadow-md">
+            <div className="flex items-center gap-2 bg-gray-800 text-yellow-500 px-4 py-2 rounded-lg shadow-md">
               <span className="text-sm md:text-base font-semibold whitespace-nowrap">
                 $55 CAD/HR
               </span>
@@ -46,30 +42,30 @@ export default function MyAccountPage() {
 
       {/* ================= PROFILE SECTION ================= */}
       <main className="flex-1 overflow-y-auto">
-        <section className="bg-white flex flex-col items-center pt-32 pb-12 px-4 relative">
+        <section className="bg-gray-800 flex flex-col items-center pt-32 pb-12 px-4 relative rounded-t-3xl shadow-xl">
           {/* Name */}
-          <p className="text-2xl md:text-3xl font-bold text-neutral-900 mb-2">
+          <p className="text-2xl md:text-3xl font-bold text-yellow-400 mb-2">
             Kenji Teneka
           </p>
 
           <div className="flex items-center gap-3 mb-4">
-            <span className="bg-blue-100 text-blue-700 text-sm px-4 py-1 rounded-full font-semibold">
+            <span className="bg-gray-700 text-yellow-400 text-sm px-4 py-1 rounded-full font-semibold">
               ✅ Verified Pro
             </span>
-            <span className="bg-orange-500 text-neutral-900 text-sm px-4 py-1 rounded-full font-semibold">
+            <span className="bg-yellow-500 text-gray-900 text-sm px-4 py-1 rounded-full font-semibold">
               Top Rated
             </span>
           </div>
 
           {/* Rating */}
           <div className="flex items-center gap-2 mb-8">
-            <span className="text-orange-500 font-bold text-lg">5.0</span>
-            <span className="text-yellow-400 text-xl">★</span>
-            <span className="text-neutral-700 text-sm">(20+ reviews)</span>
+            <span className="text-yellow-400 font-bold text-lg">5.0</span>
+            <span className="text-yellow-300 text-xl">★</span>
+            <span className="text-gray-400 text-sm">(20+ reviews)</span>
           </div>
 
           {/* Tabs Navigation */}
-          <div className="w-full max-w-6xl bg-neutral-100 px-6 py-8 rounded-2xl mb-8 shadow-lg">
+          <div className="w-full max-w-6xl bg-gray-900 px-6 py-8 rounded-2xl mb-8 shadow-lg">
             <div className="grid grid-cols-4 text-center text-lg">
               {[
                 { label: "About", href: "#" },
@@ -82,8 +78,8 @@ export default function MyAccountPage() {
                   href={tab.href}
                   className={`py-2 font-semibold border-b-4 ${
                     tab.label === "About"
-                      ? "border-blue-500 text-blue-500"
-                      : "border-transparent text-neutral-500 hover:text-blue-400"
+                      ? "border-yellow-500 text-yellow-400"
+                      : "border-transparent text-gray-400 hover:text-yellow-400 transition"
                   }`}
                 >
                   {tab.label}
@@ -92,16 +88,16 @@ export default function MyAccountPage() {
             </div>
 
             {/* About Me */}
-            <div className="mt-6 text-neutral-900">
+            <div className="mt-6 text-gray-100">
               <h3 className="text-2xl font-bold mb-3">About Me</h3>
-              <p className="mb-2 text-base leading-relaxed">
+              <p className="mb-2 text-base leading-relaxed text-gray-300">
                 With over 6 years of hands-on experience, I provide handyman
                 services that prioritize safety, efficiency, and satisfaction.
                 Skilled in electrical, plumbing, and furniture assembly tasks, I
                 ensure every job is done right the first time.
               </p>
               {showMore && (
-                <p className="mb-2 text-neutral-700 text-sm leading-relaxed">
+                <p className="mb-2 text-gray-400 text-sm leading-relaxed">
                   I am also passionate about delivering creative solutions for
                   unique challenges. My clients value my attention to detail,
                   punctuality, and dedication to maintaining long-term
@@ -111,7 +107,7 @@ export default function MyAccountPage() {
               )}
               <button
                 onClick={() => setShowMore(!showMore)}
-                className="text-blue-500 font-semibold flex items-center gap-1"
+                className="text-yellow-400 font-semibold flex items-center gap-1 mt-2 hover:underline"
               >
                 {showMore ? "Show Less ▲" : "Read More ▼"}
               </button>
@@ -127,19 +123,19 @@ export default function MyAccountPage() {
             ].map((item) => (
               <div
                 key={item.title}
-                className="bg-neutral-100 rounded-xl p-6 text-center shadow hover:bg-blue-50 transition"
+                className="bg-gray-700 rounded-xl p-6 text-center shadow hover:bg-yellow-600 hover:text-gray-900 transition"
               >
-                <h4 className="text-lg font-semibold text-neutral-700 mb-1">
+                <h4 className="text-lg font-semibold text-gray-200 mb-1">
                   {item.title}
                 </h4>
-                <p className="text-xl font-bold text-blue-600">{item.value}</p>
+                <p className="text-xl font-bold">{item.value}</p>
               </div>
             ))}
           </div>
 
           {/* Work Skills */}
-          <div className="w-full max-w-6xl bg-neutral-100 px-6 py-8 rounded-2xl shadow-lg mb-10">
-            <h3 className="text-2xl font-bold mb-6 text-neutral-900">
+          <div className="w-full max-w-6xl bg-gray-900 px-6 py-8 rounded-2xl shadow-lg mb-10">
+            <h3 className="text-2xl font-bold mb-6 text-yellow-400">
               Work Skills
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -151,9 +147,9 @@ export default function MyAccountPage() {
               ].map((skill) => (
                 <div
                   key={skill.name}
-                  className="flex flex-col items-center gap-2 bg-blue-100 rounded-xl p-4 hover:bg-blue-300 transition"
+                  className="flex flex-col items-center gap-2 bg-gray-700 rounded-xl p-4 hover:bg-yellow-600 hover:text-gray-900 transition"
                 >
-                  <div className="relative w-30 h-30 overflow-hidden shadow">
+                  <div className="relative w-30 h-30 overflow-hidden shadow rounded-lg">
                     <Image
                       src={skill.img}
                       alt={skill.name}
@@ -161,24 +157,22 @@ export default function MyAccountPage() {
                       className="object-cover"
                     />
                   </div>
-                  <p className="text-sm font-medium text-neutral-900">
-                    {skill.name}
-                  </p>
+                  <p className="text-sm font-medium">{skill.name}</p>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Availability Preview */}
-          <div className="w-full max-w-6xl bg-neutral-100 px-6 py-8 rounded-2xl shadow-lg mb-10">
-            <h3 className="text-2xl font-bold mb-6 text-neutral-900">
+          <div className="w-full max-w-6xl bg-gray-900 px-6 py-8 rounded-2xl shadow-lg mb-10">
+            <h3 className="text-2xl font-bold mb-6 text-yellow-400">
               Availability
             </h3>
-            <div className="grid grid-cols-7 gap-2 text-sm text-neutral-700">
+            <div className="grid grid-cols-7 gap-2 text-sm text-gray-300">
               {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
                 <div
                   key={day}
-                  className="bg-blue-100 text-blue-700 p-3 rounded-lg text-center font-semibold"
+                  className="bg-gray-700 text-yellow-400 p-3 rounded-lg text-center font-semibold hover:bg-yellow-600 hover:text-gray-900 transition"
                 >
                   {day}
                 </div>
@@ -189,35 +183,35 @@ export default function MyAccountPage() {
       </main>
 
       {/* ================= FOOTER ================= */}
-      <footer className="bg-gray-900 text-neutral-300">
+      <footer className="bg-gray-900 text-gray-400">
         <div className="max-w-5xl mx-auto flex justify-around py-5 text-sm">
           <Link
             href="/"
-            className="flex flex-col items-center gap-1 hover:text-blue-400 transition"
+            className="flex flex-col items-center gap-1 hover:text-yellow-400 transition"
           >
             <FiHome size={20} /> Home
           </Link>
           <Link
             href="/messages"
-            className="flex flex-col items-center gap-1 hover:text-blue-400 transition"
+            className="flex flex-col items-center gap-1 hover:text-yellow-400 transition"
           >
             <FiMessageCircle size={20} /> Messages
           </Link>
           <Link
             href="/help"
-            className="flex flex-col items-center gap-1 hover:text-blue-400 transition"
+            className="flex flex-col items-center gap-1 hover:text-yellow-400 transition"
           >
             <FiHelpCircle size={20} /> Help
           </Link>
           <Link
             href="/notifications"
-            className="flex flex-col items-center gap-1 hover:text-blue-400 transition"
+            className="flex flex-col items-center gap-1 hover:text-yellow-400 transition"
           >
             <FiBell size={20} /> Notifications
           </Link>
           <Link
             href="/settings"
-            className="flex flex-col items-center gap-1 hover:text-blue-400 transition"
+            className="flex flex-col items-center gap-1 hover:text-yellow-400 transition"
           >
             <FiSettings size={20} /> Settings
           </Link>
