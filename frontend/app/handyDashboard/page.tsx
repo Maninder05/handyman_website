@@ -163,7 +163,7 @@ export default function PortfolioPage() {
         </div>
       </header>
 
-      {/* ================= PROFILE SECTION ================= */}
+      {/* PROFILE SECTION */}
       <main className="flex-1 overflow-y-auto">
         <section className="bg-gray-700 text-white py-10">
           <div className="max-w-5xl mx-auto text-center">
@@ -198,7 +198,7 @@ export default function PortfolioPage() {
           </div>
         </section>
 
-        {/* ================= CONTENT CARDS ================= */}
+        {/* CONTENT CARDS */}
         <section className="max-w-5xl mx-auto px-6 py-10 space-y-8">
           {/* toggle switch for buyer/seller */}
           <div className="bg-gray-800 rounded-xl shadow p-5 flex items-center justify-between">
@@ -314,3 +314,4 @@ export default function PortfolioPage() {
     </div>
   );
 }
+
