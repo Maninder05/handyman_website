@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 export default function CreateService() {
-  // form fields
+  // all fields in the form
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [priceType, setPriceType] = useState("Hourly");
