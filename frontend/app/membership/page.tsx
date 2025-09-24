@@ -140,7 +140,6 @@ export default function MembershipPage() {
         </div>
       </section>
 
-      {/* Footer — optional note, dark-muted like your first theme */}
       <footer className="mx-auto max-w-[1100px] px-6">
         <p className="mt-10 text-xs text-gray-400 text-center">
           Prices are in CAD. Taxes may apply. <br /> All rights reserved.
