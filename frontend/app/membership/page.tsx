@@ -89,7 +89,6 @@ export default function MembershipPage() {
           </div>
         </div>
 
-        {/* Plan cards — dark containers, yellow accents, subtle borders */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
           {PLANS.map((plan) => {
             const price = billing === "monthly" ? plan.monthly : plan.yearly;
