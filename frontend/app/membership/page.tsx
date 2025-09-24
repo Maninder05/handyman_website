@@ -1,255 +1,155 @@
+// membership
 "use client";
 
-import { useState, memo } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { Menu, X, CheckCircle2 } from "lucide-react";
-import {
-  FiHome,
-  FiMessageCircle,
-  FiHelpCircle,
-  FiBell,
-  FiSettings,
-  FiUser,
-} from "react-icons/fi";
+import { CheckCircle2 } from "lucide-react";
 
-function cn(...cls: Array<string | false | undefined>) {
-  return cls.filter(Boolean).join(" ");
-}
+type Billing = "monthly" | "yearly";
 
-type Plan = {
-  name: string;
-  blurb: string;
-  monthly: number;
-  yearly: number;
-  badge?: string;
-  features: string[];
-};
-
-const PLANS: Plan[] = [
-  /** Static plan data used to render the cards */
+const PLANS = [
   {
     name: "Basic",
-    blurb: "Great for individuals starting out.",
+    tagline: "Great for individuals starting out.",
     monthly: 10,
     yearly: 96,
-    features: [
-      "Create a profile",
-      "Browse & request jobs",
-      "In-app messaging",
-      "Email support",
-    ],
+    features: ["Create a profile", "Browse & request jobs", "In-app messaging", "Email support"],
   },
   {
     name: "Seasonal",
-    blurb: "For weekend warriors & seasonal pros.",
+    tagline: "For weekend warriors & seasonal pros.",
     monthly: 12,
     yearly: 108,
-    badge: "Popular", //Highlighted badge
-    features: [
-      "Everything in Basic",
-      "5 featured listings / mo",
-      "Priority placement in search",
-      "Standard support",
-    ],
+    badge: "Popular",
+    features: ["Everything in Basic", "5 featured listings / mo", "Priority placement in search", "Standard support"],
   },
   {
     name: "Pro",
-    blurb: "For full-time contractors who want more.",
+    tagline: "For full-time contractors who want more.",
     monthly: 15,
     yearly: 144,
-    features: [
-      "Everything in Seasonal",
-      "Unlimited featured listings",
-      "Verified badge",
-      "Priority support",
-    ],
+    features: ["Everything in Seasonal", "Unlimited featured listings", "Verified badge", "Priority support"],
   },
 ];
 
-const BillingToggle = memo(function BillingToggle({
-  value,
-  onChange,
-}: {
-  value: "monthly" | "yearly";
-  onChange: () => void;
-}) {
-  return (
-    <div className="flex items-center gap-3 text-sm">
-      <span
-        className={cn(
-          "px-3 py-1 rounded-full border",
-          value === "monthly"
-            ? "border-gray-900 text-yellow-400"
-            : "border-transparent text-gray-400"
-        )}
-      >
-        Monthly
-      </span>
-      <button
-        aria-label="Toggle billing period"
-        onClick={onChange}
-        className="relative inline-flex h-8 w-14 items-center rounded-full border border-gray-600 bg-gray-700"
-      >
-        <span
-          className={cn(
-            "inline-block h-6 w-6 transform rounded-full bg-yellow-400 transition",
-            value === "yearly" ? "translate-x-7" : "translate-x-1"
-          )}
-        />
-      </button>
-      <span
-        className={cn(
-          "px-3 py-1 rounded-full border",
-          value === "yearly"
-            ? "border-gray-900 text-yellow-400"
-            : "border-transparent text-gray-400"
-        )}
-      >
-        Yearly{" "}
-        <span className="ml-1 text-xs text-green-400">(Save ~20%)</span>
-      </span>
-    </div>
-  );
-});
-
-const PlanCard = memo(function PlanCard({
-  plan,
-  billing,
-}: {
-  plan: Plan;
-  billing: "monthly" | "yearly";
-}) {
-  const price = billing === "monthly" ? plan.monthly : plan.yearly;
-  const cycle = billing === "monthly" ? "/month" : "/year";
-
-  return (
-    <article className="relative rounded-2xl border border-gray-700 shadow hover:shadow-lg hover:-translate-y-1 transition-all p-6 sm:p-8 flex flex-col min-h-[440px] bg-gray-800 text-gray-100">
-      {plan.badge && (
-        <span className="absolute -top-3 right-6 rounded-full border border-gray-700 bg-yellow-400 px-3 py-1 text-xs font-medium shadow-sm">
-          {plan.badge}
-        </span>
-      )}
-
-      <div>
-        <h2 className="text-xl font-semibold tracking-tight text-yellow-400">
-          {plan.name}
-        </h2>
-        <p className="mt-1 text-gray-300">{plan.blurb}</p>
-        <div className="mt-5 flex items-end gap-2">
-          <span className="text-4xl font-bold leading-none text-yellow-400">
-            ${price}
-          </span>
-          <span className="mb-1 text-gray-400">{cycle}</span>
-        </div>
-      </div>
-
-      <ul className="mt-6 space-y-3 text-sm text-gray-200">
-        {plan.features.map((f) => (
-          <li key={f} className="flex items-start gap-3">
-            <CheckCircle2
-              className="h-5 w-5 mt-0.5 text-yellow-400"
-              aria-hidden
-            />
-            <span>{f}</span>
-          </li>
-        ))}
-      </ul>
-
-      <div className="mt-auto pt-8">
-        <Link
-          href="/payment"
-          className="block w-full rounded-xl border border-yellow-400 bg-yellow-400 text-gray-900 px-4 py-3 text-center font-medium hover:bg-yellow-500 hover:text-gray-900 transition"
-        >
-          Choose {plan.name}
-        </Link>
-        <p className="mt-3 text-center text-xs text-gray-400">
-          {billing === "yearly"
-            ? "Billed annually."
-            : "Billed monthly. Cancel anytime."}
-        </p>
-      </div>
-    </article>
-  );
-});
-
 export default function MembershipPage() {
-  const [billing, setBilling] = useState<"monthly" | "yearly">("monthly");
-  const router = useRouter();
+  const [billing, setBilling] = useState<Billing>("monthly");
 
   return (
-    <div className="min-h-screen bg-gray-900 flex flex-col text-gray-100">
-      {/* HEADER */}
-      <header className="bg-gradient-to-r from-[#FFCC66] to-[#FF7E5F] shadow-md relative">
-        <div className="max-w-5xl mx-auto flex items-center justify-between px-6 py-4">
-          {/* Title */}
-          <h1 className="text-2xl font-extrabold text-gray-900 tracking-wide">
-            Membership Plans
-          </h1>
+    <main className="min-h-screen bg-gray-900 text-gray-100">
+      {/* Header — gradient like your first file */}
+      <header className="w-full sticky top-0 z-50 bg-gradient-to-r from-[#FFCC66] to-[#FF7E5F] shadow-md">
+        <div className="mx-auto max-w-[1100px] px-6 py-4 flex items-center justify-between">
+          <h1 className="text-2xl font-extrabold tracking-wide text-gray-900">Membership</h1>
+          <nav className="flex items-center gap-2 sm:gap-3" />
         </div>
       </header>
 
-      {/* PLANS SECTION */}
-      <main className="flex-1 overflow-y-auto">
-        <section className="max-w-5xl mx-auto px-6 py-10">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-            {PLANS.map((p) => (
-              <PlanCard key={p.name} plan={p} billing={billing} />
-            ))}
-          </div>
-          <div className="mt-8 flex justify-center md:justify-end">
-            <BillingToggle
-              value={billing}
-              onChange={() =>
-                setBilling(billing === "monthly" ? "yearly" : "monthly")
-              }
-            />
-          </div>
-        </section>
-
-        <section className="max-w-5xl mx-auto px-6">
-          <p className="mt-10 text-xs text-gray-400 text-center">
-            Prices are in CAD. Taxes may apply. Changing plans prorates
-            automatically.
+      <section className="mx-auto max-w-[1100px] px-6 py-10">
+        {/* Pricing */}
+        <div className="text-center mb-10">
+          <h2 className="text-3xl font-bold tracking-tight text-yellow-400">Pricing</h2>
+          <p className="mt-2 text-gray-300">
+            Choose the plan that fits your work style. <br />
+            Whether you’re just starting out or managing multiple jobs, we’ve got you covered.
           </p>
-        </section>
-      </main>
 
-      {/* FOOTER */}
-      <footer className="bg-gray-800 text-gray-300 mt-10">
-        <div className="max-w-5xl mx-auto flex justify-around py-5 text-sm">
-          <Link
-            href="/"
-            className="flex flex-col items-center gap-1 hover:text-yellow-400 transition"
-          >
-            <FiHome size={20} /> Home
-          </Link>
-          <Link
-            href="/messages"
-            className="flex flex-col items-center gap-1 hover:text-yellow-400 transition"
-          >
-            <FiMessageCircle size={20} /> Messages
-          </Link>
-          <Link
-            href="/help"
-            className="flex flex-col items-center gap-1 hover:text-yellow-400 transition"
-          >
-            <FiHelpCircle size={20} /> Help
-          </Link>
-          <Link
-            href="/notifications"
-            className="flex flex-col items-center gap-1 hover:text-[#FF7E5F] transition"
-          >
-            <FiBell size={20} /> Notifications
-          </Link>
-          <Link
-            href="/settings"
-            className="flex flex-col items-center gap-1 hover:text-[#FF7E5F] transition"
-          >
-            <FiSettings size={20} /> Settings
-          </Link>
+          {/* Toggle — dark theme with yellow accent */}
+          <div className="mt-6 flex justify-center">
+            <div
+              role="tablist"
+              aria-label="Billing period"
+              className="inline-flex items-center rounded-full bg-gray-800 border border-gray-700 p-1 shadow-sm"
+            >
+              <button
+                role="tab"
+                aria-selected={billing === "monthly"}
+                onClick={() => setBilling("monthly")}
+                className={`px-4 py-2 rounded-full text-sm transition ${
+                  billing === "monthly"
+                    ? "bg-gray-900 border border-gray-700 text-yellow-400 shadow-sm font-medium"
+                    : "text-gray-300 hover:text-yellow-300"
+                }`}
+              >
+                Monthly
+              </button>
+
+              <button
+                role="tab"
+                aria-selected={billing === "yearly"}
+                onClick={() => setBilling("yearly")}
+                className={`px-4 py-2 rounded-full text-sm transition ${
+                  billing === "yearly"
+                    ? "bg-gray-900 border border-gray-700 text-yellow-400 shadow-sm font-medium"
+                    : "text-gray-300 hover:text-yellow-300"
+                }`}
+              >
+                Yearly
+              </button>
+            </div>
+          </div>
         </div>
+
+        {/* Plan cards — dark containers, yellow accents, subtle borders */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+          {PLANS.map((plan) => {
+            const price = billing === "monthly" ? plan.monthly : plan.yearly;
+            const cycle = billing === "monthly" ? "/month" : "/year";
+
+            return (
+              <article
+                key={plan.name}
+                className="relative rounded-2xl border border-gray-700 shadow hover:shadow-lg hover:-translate-y-1 transition-all p-6 sm:p-8 flex flex-col min-h-[440px] bg-gray-800"
+              >
+                {plan.badge && (
+                  <span className="absolute -top-3 right-6 rounded-full border border-gray-700 bg-yellow-400 px-3 py-1 text-xs font-medium text-gray-900 shadow-sm">
+                    {plan.badge}
+                  </span>
+                )}
+
+                <div>
+                  <h3 className="text-xl font-semibold tracking-tight text-yellow-400">{plan.name}</h3>
+                  <p className="mt-1 text-gray-300">{plan.tagline}</p>
+                  <div className="mt-5 flex items-end gap-2">
+                    <span className="text-4xl font-bold leading-none text-yellow-400">${price}</span>
+                    <span className="mb-1 text-gray-400">{cycle}</span>
+                  </div>
+                </div>
+
+                <ul className="mt-6 space-y-3 text-sm text-gray-200">
+                  {plan.features.map((feature) => (
+                    <li key={feature} className="flex items-start gap-3">
+                      <CheckCircle2 className="h-5 w-5 mt-0.5 text-yellow-400" aria-hidden />
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="mt-auto pt-8">
+                  <Link
+                    href="/payment"
+                    className="block w-full rounded-xl border border-[#59b6bd] bg-[#59b6bd] text-gray-900 px-4 py-3 text-center font-medium hover:bg-[#59b6bd]/90 focus:outline-none focus:ring-2 focus:ring-[#59b6bd]/40"
+                  >
+                    Choose {plan.name}
+                  </Link>
+                  <p className="mt-3 text-center text-xs text-gray-400">
+                    {billing === "yearly" ? "Billed annually. Cancel anytime." : "Billed monthly. Cancel anytime."}
+                  </p>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* Footer — optional note, dark-muted like your first theme */}
+      <footer className="mx-auto max-w-[1100px] px-6">
+        <p className="mt-10 text-xs text-gray-400 text-center">
+          Prices are in CAD. Taxes may apply. <br /> All rights reserved.
+        </p>
       </footer>
-    </div>
+
+      <div className="h-24" />
+    </main>
   );
 }
