@@ -119,7 +119,7 @@ export default function CreateService() {
           {errors.image && <p className="text-red-500 text-sm">{errors.image}</p>}
         </div>
 
-        {/* Price details */}
+        {/* Price details section */}
         <div>
           <label className="block mb-2 font-semibold text-neutral-800">
             Price
