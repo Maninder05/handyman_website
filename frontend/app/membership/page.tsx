@@ -126,7 +126,7 @@ export default function MembershipPage() {
                 <div className="mt-auto pt-8">
                   <Link
                     href="/payment"
-                    className="block w-full rounded-xl border border-[#59b6bd] bg-[#59b6bd] text-gray-900 px-4 py-3 text-center font-medium hover:bg-[#59b6bd]/90 focus:outline-none focus:ring-2 focus:ring-[#59b6bd]/40"
+                    className="block w-full rounded-xl  bg-yellow-400 text-gray-900 px-4 py-3 text-center font-medium hover:bg-yellow-800 focus:outline-none focus:ring-2 focus:ring-[#59b6bd]/40"
                   >
                     Choose {plan.name}
                   </Link>
