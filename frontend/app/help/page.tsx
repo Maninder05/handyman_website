@@ -14,7 +14,7 @@ export default function HelpCentrePage() {
           <nav className="flex items-center gap-2 sm:gap-3">
             <Link
               href="/profile"
-              className="p-2 rounded-full bg-yellow-400 hover:bg-yellow-500 transition"
+              className="p-2 rounded-full transition"
               aria-label="Profile"
             >
               <svg
