@@ -36,7 +36,7 @@ export default function CreateService() {
     setImagePreview(URL.createObjectURL(file));
   };
 
-  // submit form
+  // errors for file submission
   const handleSubmit = () => {
     const newErrors: { [key: string]: string } = {};
     if (!title) newErrors.title = "Title is required";
