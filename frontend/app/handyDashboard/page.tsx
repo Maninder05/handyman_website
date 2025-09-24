@@ -156,7 +156,7 @@ export default function PortfolioPage() {
         </div>
       </header>
 
-      {/* ================= PROFILE SECTION ================= */}
+      {/* PROFILE SECTION */}
       <main className="flex-1 overflow-y-auto">
         <section className="bg-gradient-to-r from-blue-400 to-blue-500 text-white py-10">
           <div className="max-w-5xl mx-auto text-center">
@@ -189,7 +189,7 @@ export default function PortfolioPage() {
           </div>
         </section>
 
-        {/* ================= CONTENT CARDS ================= */}
+        {/* CONTENT CARDS */}
         <section className="max-w-5xl mx-auto px-6 py-10 space-y-8">
           {/* toggle switch for buyer/seller */}
           <div className="bg-white rounded-xl shadow p-5 flex items-center justify-between">
@@ -311,3 +311,4 @@ export default function PortfolioPage() {
 //  Include a header with profile and menu dropdowns, a profile section with image and stats, toggle for buyer/seller mode, 
 // content cards for earnings, orders, recent orders, and services, plus a footer with five navigation icons.
 //  Use Tailwind CSS, React useState for dropdowns and toggle, and Next.js Image.
+//(chatGPT)

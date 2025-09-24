@@ -55,7 +55,7 @@ export default function CreateService() {
     <div className="min-h-screen flex flex-col bg-neutral-100 text-neutral-800">
       {/* Header */}
       <div className="bg-blue-500 p-4 flex items-center justify-center relative">
-        <Link href="/h-portfolio">
+        <Link href="/handyDashboard">
           <button className="absolute left-4 bottom-4 text-white text-xl">←</button>
         </Link>
         <h1 className="text-xl font-bold text-white">Create Service</h1>
@@ -182,3 +182,4 @@ export default function CreateService() {
 //Build a Next.js client component using only next.js and tailwiind css and CreateService based on this reference image. 
 // Include Title, Category, Image upload with preview, and Price, with validation errors and popups
 //  for submit/draft. Style it with Tailwind CSS and manage state using useState.
+//(chatGPT)
