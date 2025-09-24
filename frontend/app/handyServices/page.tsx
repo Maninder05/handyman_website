@@ -8,7 +8,7 @@ import {
   FiHelpCircle,
   FiBell,
   FiSettings,
-} from "react-icons/fi"; //Feather Icons for minimal, thin and modern design
+} from "react-icons/fi";
 
 export default function MyServicesPage() {
   const services = [
