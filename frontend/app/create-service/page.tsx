@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 
 export default function CreateService() {
   // form fields
@@ -47,127 +46,118 @@ export default function CreateService() {
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
     } else {
-      setPopup("Service Submitted Successfully");
+      setPopup("Service Submitted Successfully ✅");
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-neutral-100 text-neutral-800">
+    <div className="min-h-screen bg-neutral-100 flex flex-col">
       {/* Header */}
-      <div className="bg-blue-500 p-4 flex items-center justify-center relative">
-        <Link href="/handyDashboard">
-          <button className="absolute left-4 bottom-4 text-white text-xl">←</button>
-        </Link>
-        <h1 className="text-xl font-bold text-white">Create Service</h1>
-      </div>
+      <header className="bg-yellow-500 p-6 shadow-md text-center">
+        <h1 className="text-3xl font-bold text-white">Create Service</h1>
+      </header>
 
-      {/* Form */}
-      <div className="flex-1 p-5 space-y-6 bg-white">
-        {/* Title */}
-        <div>
-          <label className="block mb-2 font-semibold text-neutral-800">
-            Service Title
-          </label>
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="w-full rounded-lg p-3 border bg-neutral-50 text-neutral-800"
-          />
-          {errors.title && <p className="text-red-500 text-sm">{errors.title}</p>}
-        </div>
-
-        {/* Category select filed with five options */}
-        <div>
-          <label className="block mb-2 font-semibold text-neutral-800">
-            Category
-          </label>
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="w-full rounded-lg p-3 border bg-neutral-50 text-neutral-800"
-          >
-            <option value="">Select Category</option>
-            <option>Electrical Repair</option>
-            <option>Plumbing</option>
-            <option>HVAC</option>
-            <option>Carpentry</option>
-          </select>
-          {errors.category && <p className="text-red-500 text-sm">{errors.category}</p>}
-        </div>
-
-        {/* Image upload field */}
-        <div>
-          <label className="block mb-2 font-semibold text-neutral-800">
-            Image
-          </label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageUpload}
-            className="w-full p-2 border rounded-lg bg-neutral-50 text-neutral-800"
-          />
-          {imagePreview && (
-            <Image
-              src={imagePreview}
-              alt="Preview"
-              width={120}
-              height={120}
-              className="rounded-md mt-2 shadow"
-            />
-          )}
-          {errors.image && <p className="text-red-500 text-sm">{errors.image}</p>}
-        </div>
-
-        {/* Price details */}
-        <div>
-          <label className="block mb-2 font-semibold text-neutral-800">
-            Price
-          </label>
-          <div className="flex gap-3">
-            <select
-              value={priceType}
-              onChange={(e) => setPriceType(e.target.value)}
-              className="rounded-lg p-3 border bg-neutral-50 text-neutral-800"
-            >
-              <option>Hourly</option>
-              <option>Fixed</option>
-            </select>
+      {/* Main content area */}
+      <main className="flex-1 flex justify-center items-start py-10 px-4">
+        {/* Form card */}
+        <div className="w-full max-w-4xl bg-white rounded-xl shadow-lg p-10 space-y-8">
+          {/* Title */}
+          <div>
+            <label className="block mb-2 font-semibold text-neutral-800">Service Title</label>
             <input
               type="text"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              className="flex-1 rounded-lg p-3 border bg-neutral-50 text-neutral-800"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="w-full rounded-lg p-4 border border-gray-300 bg-neutral-50 text-neutral-800 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
+              placeholder="Enter service title"
             />
+            {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title}</p>}
           </div>
-          {errors.price && <p className="text-red-500 text-sm">{errors.price}</p>}
+
+          {/* Category */}
+          <div>
+            <label className="block mb-2 font-semibold text-neutral-800">Category</label>
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className="w-full rounded-lg p-4 border border-gray-300 bg-neutral-50 text-neutral-800 focus:outline-none focus:ring-2 focus:ring-yellow-400 appearance-none pr-8 transition cursor-pointer"
+            >
+              <option value="">Select Category</option>
+              <option>Electrical Repair</option>
+              <option>Plumbing</option>
+              <option>HVAC</option>
+              <option>Carpentry</option>
+            </select>
+            {errors.category && <p className="text-red-500 text-sm mt-1">{errors.category}</p>}
+          </div>
+
+          {/* Image upload */}
+          <div>
+            <label className="block mb-2 font-semibold text-neutral-800">Image</label>
+            <div className="flex items-center gap-4">
+              <label className="flex-1 flex justify-between items-center px-4 py-3 border border-gray-300 rounded-lg bg-neutral-50 cursor-pointer hover:bg-gray-100 transition">
+                {image ? image.name : "No file chosen"}
+                <span className="ml-2 text-gray-500">▼</span>
+                <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
+              </label>
+              {imagePreview && (
+                <div className="w-24 h-24 relative border rounded-lg overflow-hidden shadow">
+                  <Image src={imagePreview} alt="Preview" fill className="object-cover" />
+                </div>
+              )}
+            </div>
+            {errors.image && <p className="text-red-500 text-sm mt-1">{errors.image}</p>}
+          </div>
+
+          {/* Price */}
+          <div>
+            <label className="block mb-2 font-semibold text-neutral-800">Price</label>
+            <div className="flex gap-4">
+              <select
+                value={priceType}
+                onChange={(e) => setPriceType(e.target.value)}
+                className="rounded-lg p-4 border border-gray-300 bg-neutral-50 text-neutral-800 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition cursor-pointer"
+              >
+                <option>Hourly</option>
+                <option>Fixed</option>
+              </select>
+              <input
+                type="text"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                className="flex-1 rounded-lg p-4 border border-gray-300 bg-neutral-50 text-neutral-800 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
+                placeholder="Enter price"
+              />
+            </div>
+            {errors.price && <p className="text-red-500 text-sm mt-1">{errors.price}</p>}
+          </div>
+
+          {/* Buttons */}
+          <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+            <button
+              onClick={() => setPopup("Draft Saved Successfully 📝")}
+              className="bg-gray-600 text-white px-5 py-2 rounded-lg hover:bg-gray-700 transition shadow"
+            >
+              Save Draft
+            </button>
+            <button
+              onClick={handleSubmit}
+              className="bg-yellow-500 text-white px-5 py-2 rounded-lg hover:bg-yellow-600 transition shadow"
+            >
+              Submit Now →
+            </button>
+          </div>
         </div>
-      </div>
+      </main>
 
-      {/* Buttons */}
-      <div className="flex justify-around bg-neutral-200 py-4 border-t">
-        <button
-          onClick={() => setPopup("Draft Saved Successfully 📝")}
-          className="bg-gray-500 text-white px-6 py-2 rounded-full"
-        >
-          Save As Draft
-        </button>
-        <button
-          onClick={handleSubmit}
-          className="bg-blue-500 text-white px-6 py-2 rounded-full"
-        >
-          Submit Now →
-        </button>
-      </div>
-
-      {/* Popup for draft and submit button */}
+      {/* Popup */}
       {popup && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-xl shadow text-center w-80 text-neutral-800">
             <h2 className="text-lg font-bold mb-4">{popup}</h2>
             <button
               onClick={() => setPopup(null)}
-              className="bg-blue-500 text-white px-6 py-2 rounded-lg"
+              className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition"
             >
               Close
             </button>
@@ -177,5 +167,3 @@ export default function CreateService() {
     </div>
   );
 }
-
-
