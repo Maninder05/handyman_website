@@ -103,7 +103,7 @@ export default function PortfolioPage() {
                 <ul className="divide-y">
                   <li>
                     <Link
-                      href="/createService"
+                      href="/create-service"
                       className="block px-4 py-3 hover:bg-blue-50 hover:text-blue-600 transition"
                     >
                       Add Service
@@ -306,8 +306,3 @@ export default function PortfolioPage() {
   );
 }
 
-
-//Create a Next.js client component PortfolioPage based on the attached reference image.
-//  Include a header with profile and menu dropdowns, a profile section with image and stats, toggle for buyer/seller mode, 
-// content cards for earnings, orders, recent orders, and services, plus a footer with five navigation icons.
-//  Use Tailwind CSS, React useState for dropdowns and toggle, and Next.js Image.
