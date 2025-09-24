@@ -44,7 +44,7 @@ export default function BookServicesPage() {
     <div className="min-h-screen flex flex-col bg-gray-900 text-gray-100">
       {/* HEADER */}
       <header className="bg-gradient-to-r from-[#FFCC66] to-[#FF7E5F] shadow-md relative">
-        <div className="max-w-5xl mx-auto flex items-center justify-between px-4 py-4 relative">
+        <div className="max-w-5xl mx-auto flex items-center justify-between px-4 py-4">
           {/* Back Button (left aligned) */}
           <button
             onClick={() => router.back()}
