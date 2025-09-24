@@ -99,40 +99,43 @@ export default function ChooseHandymanPage() {
         ))}
       </main>
 
-      {/* Bottom Navigation */}
-      <footer className="bg-gray-800 flex justify-around items-center h-14">
-        <button
-          onClick={() => router.push("/")}
-          className="cursor-pointer hover:text-yellow-400 transition"
-        >
-          <Home className="w-6 h-6 text-gray-200" />
-        </button>
-        <button
-          onClick={() => router.push("/messages")}
-          className="cursor-pointer hover:text-yellow-400 transition"
-        >
-          <MessageCircle className="w-6 h-6 text-gray-200" />
-        </button>
-        <button
-          onClick={() => router.push("/portfolio")}
-          className="cursor-pointer hover:text-yellow-400 transition"
-        >
-          <Users className="w-6 h-6 text-gray-200" />
-        </button>
-        <button
-          onClick={() => router.push("/notifications")}
-          className="relative cursor-pointer hover:text-yellow-400 transition"
-        >
-          <Bell className="w-6 h-6 text-gray-200" />
-          <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full"></span>
-        </button>
-        <button
-          onClick={() => router.push("/settings")}
-          className="cursor-pointer hover:text-yellow-400 transition"
-        >
-          <Settings className="w-6 h-6 text-gray-200" />
-        </button>
-      </footer>
+   {/* Bottom Navigation */}
+<footer className="bg-gray-800 text-gray-300">
+  <div className="max-w-5xl mx-auto flex justify-around items-center h-14 text-sm">
+    <button
+      onClick={() => router.push("/")}
+      className="flex flex-col items-center gap-1 hover:text-yellow-400 transition"
+    >
+      <Home className="w-5 h-5" /> Home
+    </button>
+    <button
+      onClick={() => router.push("/messages")}
+      className="flex flex-col items-center gap-1 hover:text-yellow-400 transition"
+    >
+      <MessageCircle className="w-5 h-5" /> Messages
+    </button>
+    <button
+      onClick={() => router.push("/portfolio")}
+      className="flex flex-col items-center gap-1 hover:text-yellow-400 transition"
+    >
+      <Users className="w-5 h-5" /> Portfolio
+    </button>
+    <button
+      onClick={() => router.push("/notifications")}
+      className="relative flex flex-col items-center gap-1 hover:text-yellow-400 transition"
+    >
+      <Bell className="w-5 h-5" /> Notifications
+      <span className="absolute top-0 right-2 w-2.5 h-2.5 bg-red-500 rounded-full"></span>
+    </button>
+    <button
+      onClick={() => router.push("/settings")}
+      className="flex flex-col items-center gap-1 hover:text-yellow-400 transition"
+    >
+      <Settings className="w-5 h-5" /> Settings
+    </button>
+  </div>
+</footer>
+
     </div>
   );
 }
