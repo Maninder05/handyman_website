@@ -38,7 +38,6 @@ export default function ReviewsPage() {
     },
   ];
 
-  // Featured review = first review with rating === 5
   const featured = allReviews.find((r) => r.rating === 5);
 
   //using filter state to update the reviews based on the setFilter() fxn that gets triggered everytime dropdown menu input changes
