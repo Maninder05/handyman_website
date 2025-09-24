@@ -40,7 +40,6 @@ export default function ReviewsPage() {
 
   const featured = allReviews.find((r) => r.rating === 5);
 
-  //using filter state to update the reviews based on the setFilter
   const [filter, setFilter] = React.useState("Most Recent");
 
   // Dynamic min and max ratings
