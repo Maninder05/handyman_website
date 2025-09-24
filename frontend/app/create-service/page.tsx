@@ -160,7 +160,7 @@ export default function CreateService() {
         </button>
       </div>
 
-      {/* Popup for draft button and submit button */}
+      {/* Popup for the buttons (draft button and submit button) */}
       {popup && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center">
           <div className="bg-white p-6 rounded-xl shadow text-center w-80 text-neutral-800">
