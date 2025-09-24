@@ -13,7 +13,7 @@ export default function CreateService() {
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  // errors + popup
+  // errors and popup
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [popup, setPopup] = useState<string | null>(null);
 
