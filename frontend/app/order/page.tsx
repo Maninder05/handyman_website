@@ -176,3 +176,4 @@ export default function OrderDetailsPage() {
 // Include a header with booking details card, buyer info card, price details card, 
 // and Accept/Decline buttons with a modal popup for each action. 
 // Add a footer with five navigation icons, use Tailwind CSS and Next.js Image, and keep it clean and easy to customize.
+
