@@ -25,7 +25,8 @@ export function createPaymentIntent({ amount, currency, metadata }) {
   return stripe.paymentIntents.create({
     amount,
     currency,
-    automatic_payment_methods: { enabled: true },
+    payment_method_types: ["card"],
+    automatic_payment_methods: { enabled: false },
     metadata: metadata || {},
   });
 }

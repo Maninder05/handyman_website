@@ -125,11 +125,12 @@ export default function MembershipPage() {
 
                 <div className="mt-auto pt-8">
                   <Link
-                    href="/payment"
-                    className="block w-full rounded-xl  bg-yellow-400 text-gray-900 px-4 py-3 text-center font-medium hover:bg-yellow-800 focus:outline-none focus:ring-2 focus:ring-[#59b6bd]/40"
-                  >
-                    Choose {plan.name}
-                  </Link>
+  href={`/pay?plan=${encodeURIComponent(plan.name)}&billing=${billing}`}
+  className="block w-full rounded-xl bg-yellow-400 text-gray-900 px-4 py-3 text-center font-medium hover:bg-yellow-500"
+>
+  Choose {plan.name}
+</Link>
+
                   <p className="mt-3 text-center text-xs text-gray-400">
                     {billing === "yearly" ? "Billed annually. Cancel anytime." : "Billed monthly. Cancel anytime."}
                   </p>
