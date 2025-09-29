@@ -191,7 +191,6 @@ export default function PayPage() {
             <div className="h-6 w-6 rounded-md bg-yellow-400" />
             <p className="text-sm text-zinc-300">Handyman Inc</p>
           </div>
-          <p className="text-xs text-zinc-500">Powered by Stripe</p>
         </div>
       </header>
 
