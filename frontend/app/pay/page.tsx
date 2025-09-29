@@ -193,8 +193,6 @@ export default function PayPage() {
           </div>
         </div>
       </header>
-
-      {/* Content */}
       <section className="mx-auto max-w-6xl px-6 py-8">
         <div className="grid grid-cols-1 md:grid-cols-[1fr_1.2fr] gap-6 md:gap-8">
           {/* Left: Summary */}
