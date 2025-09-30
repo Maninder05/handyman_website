@@ -82,7 +82,7 @@ export default function FilterPage() {
           <input
             type="range"
             min="1"
-            max="10"
+            max="50"
             value={distance}
             onChange={(e) => setDistance(Number(e.target.value))}
             className="w-full accent-yellow-500"
