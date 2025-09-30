@@ -23,7 +23,7 @@ export default function FilterPage() {
   return (
     <main className="bg-gray-900 min-h-screen text-gray-100 flex flex-col items-center py-12 px-4">
       {/* Header */}
-      <section className="bg-yellow-600 w-full py-12 shadow-md text-center">
+      <section className="bg-yellow-600 w-full py-10 shadow-md text-center">
         <h1 className="text-3xl font-bold text-gray-900 tracking-wide">
           Find Your Perfect Handyman
         </h1>
