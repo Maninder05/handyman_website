@@ -7,7 +7,6 @@ import { Menu, X } from "lucide-react";
 import {
   FiHome,
   FiMessageCircle,
-  FiHelpCircle,
   FiBell,
   FiSettings,
   FiUser,
