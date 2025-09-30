@@ -26,17 +26,43 @@ export default function FilterPage() {
     );
   };
 
-  const applyFilters = () => {
-    const filters = {
-      rate,
-      distance,
-      experience,
-      skills,
-    };
-    console.log("✅ Applied Filters:", filters);
+  // ✅ Save filters to backend
+  const applyFilters = async () => {
+    try {
+      const token = localStorage.getItem("token"); // must be set after login
+      if (!token) {
+        alert("Please login first!");
+        return;
+      }
 
-    // 👉 You can replace console.log with API call or state update
-    // axios.post("/api/filters", filters).then(...)
+      const filters = {
+        hourlyRate: rate,
+        distanceRadiusKm: distance,
+        experience: Number(experience),
+        skills,
+        attributes: { updatedAt: new Date().toISOString() },
+      };
+
+      const res = await fetch("http://localhost:7000/api/handymen/me", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(filters),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        alert("✅ Filters saved successfully!");
+        console.log("Saved handyman:", data);
+      } else {
+        alert("❌ Error: " + data.error);
+      }
+    } catch (err) {
+      console.error("Apply filters failed:", err);
+      alert("Something went wrong!");
+    }
   };
 
   return (
@@ -67,10 +93,6 @@ export default function FilterPage() {
             onChange={(e) => setRate(Number(e.target.value))}
             className="w-full accent-yellow-500"
           />
-          <div className="flex justify-between text-sm text-gray-400 mt-1">
-            <span>$50</span>
-            <span>$1000</span>
-          </div>
           <p className="text-sm mt-2 text-yellow-400 text-center">
             Selected: ${rate}
           </p>
@@ -84,7 +106,7 @@ export default function FilterPage() {
           <select
             value={experience}
             onChange={(e) => setExperience(e.target.value)}
-            className="w-full p-3 rounded-lg bg-gray-900 border border-gray-700 text-gray-100 focus:border-yellow-500 focus:ring focus:ring-yellow-400"
+            className="w-full p-3 rounded-lg bg-gray-900 border border-gray-700 text-gray-100"
           >
             <option value="">Select Experience</option>
             <option value="1">1+ Years</option>
@@ -107,10 +129,6 @@ export default function FilterPage() {
             onChange={(e) => setDistance(Number(e.target.value))}
             className="w-full accent-yellow-500"
           />
-          <div className="flex justify-between text-sm text-gray-400 mt-1">
-            <span>1 km</span>
-            <span>50 km</span>
-          </div>
           <p className="text-sm mt-2 text-yellow-400 text-center">
             Selected: {distance} km
           </p>
@@ -126,6 +144,7 @@ export default function FilterPage() {
               <button
                 key={skill}
                 onClick={() => toggleSkill(skill)}
+                type="button"
                 className={`px-5 py-2 rounded-full text-sm font-medium transition ${
                   skills.includes(skill)
                     ? "bg-yellow-500 text-gray-900 shadow-md"
