@@ -27,9 +27,6 @@ export default function FilterPage() {
         <h1 className="text-3xl font-bold text-gray-900 tracking-wide">
           Find Your Perfect Handyman
         </h1>
-        <p className="text-gray-800 mt-2 text-sm">
-          Use filters below to customize your search
-        </p>
       </section>
 
       {/* Filter Card */}
