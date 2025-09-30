@@ -2,10 +2,12 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import path from "path";
+import { fileURLToPath } from "url";
 
 import RouterUser from './routes/RouteUser.js';       // User routes
 import RouterHandyman from './routes/handyRoutes.js'; // Handyman routes
-import RouterService from './routes/serviceRoutes.js'; // ✅ Our new service route
+import RouterService from './routes/serviceRoutes.js'; // ✅ New service routes
 
 dotenv.config();
 
@@ -20,10 +22,15 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// ✅ Serve uploaded images
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 // Routes
 app.use('/api/users', RouterUser);
 app.use('/api/handymen', RouterHandyman);
-app.use('/api/services', RouterService); // ✅ NEW
+app.use('/api/services', RouterService);  // ✅ New route added
 
 // Default test route
 app.get('/', (req, res) => {
