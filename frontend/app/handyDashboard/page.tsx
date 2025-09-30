@@ -119,10 +119,10 @@ export default function PortfolioPage() {
                   {/*  Create Profile page */}
                   <li>
                     <Link
-                      href="/create-profile"
+                      href="/Add-profile"
                       className="block px-4 py-3 hover:bg-yellow-600 hover:text-gray-900 transition"
                     >
-                      Create Profile
+                      Add profile
                     </Link>
                   </li>
                   <li>
