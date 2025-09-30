@@ -89,7 +89,7 @@ export default function FilterPage() {
           />
           <div className="flex justify-between text-sm text-gray-400 mt-1">
             <span>1 km</span>
-            <span>10 km</span>
+            <span>50 km</span>
           </div>
           <p className="text-sm mt-2 text-yellow-400 text-center">
             Selected: {distance} km
