@@ -36,7 +36,7 @@ export default function CreateService() {
   };
 
   // submit form
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const newErrors: { [key: string]: string } = {};
     if (!title) newErrors.title = "Title is required";
     if (!category) newErrors.category = "Category is required";
@@ -45,8 +45,40 @@ export default function CreateService() {
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-    } else {
-      setPopup("Service Submitted Successfully ✅");
+      return;
+    }
+
+    try {
+      // create FormData for file + fields
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("category", category);
+      formData.append("priceType", priceType);
+      formData.append("price", price);
+      if (image) {
+        formData.append("image", image);
+      }
+
+      // call backend API
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/services`, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (res.ok) {
+        setPopup("Service Submitted Successfully ✅");
+        setTitle("");
+        setCategory("");
+        setPrice("");
+        setImage(null);
+        setImagePreview(null);
+      } else {
+        const data = await res.json();
+        setPopup(data.message || "Failed to submit service ❌");
+      }
+    } catch (err) {
+      console.error("Error submitting service:", err);
+      setPopup("Error submitting service ❌");
     }
   };
 
