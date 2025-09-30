@@ -28,7 +28,7 @@ export default function LandingPage() {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://localhost:5000/api/users/signup", {
+      const res = await axios.post("http://localhost:7000/api/users/signup", {
         username,
         email,
         password,
@@ -53,7 +53,7 @@ export default function LandingPage() {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://localhost:5000/api/users/login", {
+      const res = await axios.post("http://localhost:7000/api/users/login", {
         email: loginEmail,
         password: loginPassword,
       });
@@ -254,8 +254,8 @@ export default function LandingPage() {
         <h4 id="contact" className="text-lg font-semibold mb-4 text-[#FFCC66]">
           Contact
         </h4>
-        <p className="text-sm">📍 Calgary, AB</p>
-        <p className="text-sm">📞 +1 825-123-4567</p>
+        <p className="text-sm"> Calgary, AB</p>
+        <p className="text-sm"> +1 825-123-4567</p>
         <p className="text-sm">✉ support@handyman.com</p>
       </div>
     </div>
