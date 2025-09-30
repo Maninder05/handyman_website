@@ -12,12 +12,31 @@ export default function FilterPage() {
     "Floor Cleaning",
     "Disinfection",
     "Dusting & Vacuuming",
+    "Plumbing",
+    "Electrical Work",
+    "Carpentry",
+    "Painting",
+    "Furniture Assembly",
+    "Appliance Repair",
   ];
 
   const toggleSkill = (skill: string) => {
     setSkills((prev) =>
       prev.includes(skill) ? prev.filter((s) => s !== skill) : [...prev, skill]
     );
+  };
+
+  const applyFilters = () => {
+    const filters = {
+      rate,
+      distance,
+      experience,
+      skills,
+    };
+    console.log("✅ Applied Filters:", filters);
+
+    // 👉 You can replace console.log with API call or state update
+    // axios.post("/api/filters", filters).then(...)
   };
 
   return (
@@ -71,6 +90,7 @@ export default function FilterPage() {
             <option value="1">1+ Years</option>
             <option value="3">3+ Years</option>
             <option value="5">5+ Years</option>
+            <option value="10">10+ Years</option>
           </select>
         </div>
 
@@ -131,7 +151,10 @@ export default function FilterPage() {
           >
             Reset
           </button>
-          <button className="px-8 py-3 bg-yellow-500 text-gray-900 rounded-xl font-semibold shadow-md hover:bg-yellow-400 transition">
+          <button
+            onClick={applyFilters}
+            className="px-8 py-3 bg-yellow-500 text-gray-900 rounded-xl font-semibold shadow-md hover:bg-yellow-400 transition"
+          >
             Apply Filters →
           </button>
         </div>
