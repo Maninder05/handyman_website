@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 
 import RouterUser from './routes/RouteUser.js';       // User routes
 import RouterHandyman from './routes/handyRoutes.js'; // Handyman routes
+import RouterService from './routes/serviceRoutes.js'; // ✅ Our new service route
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.use('/api/users', RouterUser);
 app.use('/api/handymen', RouterHandyman);
+app.use('/api/services', RouterService); // ✅ NEW
 
 // Default test route
 app.get('/', (req, res) => {
