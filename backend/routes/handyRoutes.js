@@ -1,9 +1,12 @@
-import express from 'express';
-import { createHandyman, getHandymen } from '../controllers/handymanController.js';
+import express from "express";
+import { createHandyman, getHandymen } from "../controllers/handymanController.js";
 
 const router = express.Router();
 
-router.post('/', createHandyman);
-router.get('/', getHandymen);
+// Create a handyman profile
+router.post("/", createHandyman);
+
+// Get all handyman profiles
+router.get("/", getHandymen);
 
 export default router;
