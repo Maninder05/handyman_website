@@ -1,5 +1,5 @@
 import express from 'express';
-import { createHandyman, getHandymen } from '../controllers/handyControllerAddprofile.js';
+import { createHandyman, getHandymen } from '../controllers/ControllerHandyProfile.js';
 
 const router = express.Router();
 
