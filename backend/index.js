@@ -11,37 +11,38 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 7000;
 
-// Middleware
+// ✅ CORS Middleware
 app.use(cors({
-  origin: process.env.CLIENT_URL, // frontend URL
+  origin: process.env.CLIENT_URL || "http://localhost:3000", // fallback for safety
   credentials: true,
 }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-// Routes
+// ✅ Body parsers
+app.use(express.json({ limit: "10mb" })); // allow image base64 payloads
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+
+// ✅ Routes
 app.use('/api/users', RouterUser);
 app.use('/api/handymen', RouterHandyman);
 
-// Default test route
+// ✅ Health check
 app.get('/', (req, res) => {
   res.send('Backend is running!');
 });
 
-// Connect to MongoDB and start server
-mongoose.connect(process.env.MONGO_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}).then(() => {
-  console.log('Connected to MongoDB successfully!');
-  app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+// ✅ Mongo connection
+mongoose.connect(process.env.MONGO_URL)
+  .then(() => {
+    console.log('Connected to MongoDB successfully!');
+    app.listen(PORT, () => {
+      console.log(`Server is running on http://localhost:${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error('Database connection error:', err);
   });
-}).catch((err) => {
-  console.error('Database connection error:', err);
-});
 
-// Optional: global error handler
+// ✅ Global error handler
 app.use((err, req, res, next) => {
   console.error('Unhandled error:', err);
   res.status(500).json({ error: 'Something went wrong!' });
