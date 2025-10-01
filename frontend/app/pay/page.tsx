@@ -193,7 +193,7 @@ function CheckoutForm({
                     <path d="M20 6L9 17l-5-5" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-semibold text-zinc-100">Payment successful 🎉</h3>
+                <h3 className="text-lg font-semibold text-zinc-100">Payment successful</h3>
                 <p className="mt-1 text-sm text-zinc-400">
                   Your subscription is now active{paidAt ? ` • ${paidAt}` : ""}.
                 </p>
