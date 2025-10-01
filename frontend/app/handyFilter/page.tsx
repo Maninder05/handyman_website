@@ -234,7 +234,7 @@ export default function FilterPage() {
 
       {/* Filter Card */}
       <section className="bg-white-100 text-gray-100 mt-12 p-8 rounded-2xl shadow-2xl w-full max-w-4xl">
-        <h2 className="text-2xl font-bold text-yellow-400 mb-10 text-center">
+        <h2 className="text-2xl font-bold text-gray-900 mb-10 text-center">
           Filters
         </h2>
 
@@ -251,24 +251,24 @@ export default function FilterPage() {
             onChange={(e) => setRate(Number(e.target.value))}
             className="w-full accent-yellow-500"
           />
-          <div className="flex justify-between text-sm text-gray-400 mt-1">
+          <div className="flex justify-between text-sm text-gray-900 mt-1">
             <span>$50</span>
             <span>$1000</span>
           </div>
-          <p className="text-sm mt-2 text-yellow-400 text-center">
+          <p className="text-sm mt-2 text-gray-800 text-center">
             Selected: ${rate}
           </p>
         </div>
 
         {/* Experience Dropdown */}
         <div className="mb-10">
-          <label className="block font-semibold mb-3 text-gray-200">
+          <label className="block font-semibold mb-3 text-gray-900">
             Experience
           </label>
           <select
             value={experience}
             onChange={(e) => setExperience(e.target.value)}
-            className="w-full p-3 rounded-lg bg-gray-900 border border-gray-700 text-gray-100 focus:border-yellow-500 focus:ring focus:ring-yellow-400"
+            className="w-full p-3 rounded-lg bg-white-900 border border-gray-900 text-gray-900 focus:border-yellow-500 focus:ring focus:ring-yellow-400"
           >
             <option value="">Select Experience</option>
             <option value="1">1+ Years</option>
@@ -280,7 +280,7 @@ export default function FilterPage() {
 
         {/* Address Section */}
         <div className="mb-10">
-          <label className="block font-semibold mb-3 text-gray-200">
+          <label className="block font-semibold mb-3 text-gray-900">
             Address
           </label>
           <input
@@ -288,27 +288,27 @@ export default function FilterPage() {
             placeholder="Street name / House no"
             value={address1}
             onChange={(e) => setAddress1(e.target.value)}
-            className="w-full p-3 mb-4 rounded-lg bg-gray-900 border border-gray-700 text-gray-100 focus:border-yellow-500 focus:ring focus:ring-yellow-400"
+            className="w-full p-3 mb-4 rounded-lg bg-white-900 border border-gray-900 text-gray-900 focus:border-yellow-500 focus:ring focus:ring-yellow-400"
           />
           <input
             type="text"
             placeholder="City"
             value={city}
             onChange={(e) => setCity(e.target.value)}
-            className="w-full p-3 mb-4 rounded-lg bg-gray-900 border border-gray-700 text-gray-100 focus:border-yellow-500 focus:ring focus:ring-yellow-400"
+            className="w-full p-3 mb-4 rounded-lg bg-white-900 border border-gray-900 text-gray-900 focus:border-yellow-500 focus:ring focus:ring-yellow-400"
           />
           <input
             type="text"
             placeholder="Province"
             value={province}
             onChange={(e) => setProvince(e.target.value)}
-            className="w-full p-3 rounded-lg bg-gray-900 border border-gray-700 text-gray-100 focus:border-yellow-500 focus:ring focus:ring-yellow-400"
+            className="w-full p-3 rounded-lg bg-white-900 border border-gray-900 text-gray-900 focus:border-yellow-500 focus:ring focus:ring-yellow-400"
           />
         </div>
 
         {/* Skills */}
         <div className="mb-10">
-          <label className="block font-semibold mb-3 text-gray-200">
+          <label className="block font-semibold mb-3 text-gray-900">
             Skills
           </label>
           <div className="flex flex-wrap gap-3">
@@ -340,7 +340,7 @@ export default function FilterPage() {
               setCity("");
               setProvince("");
             }}
-            className="px-8 py-3 bg-gray-700 text-gray-200 rounded-xl font-semibold hover:bg-gray-600 transition"
+            className="px-8 py-3 bg-White-700 text-gray-900 rounded-xl font-semibold hover:bg-gray-200 transition"
           >
             Reset
           </button>
