@@ -111,7 +111,7 @@ function CheckoutForm() {
       </button>
       {message && <p className="text-sm text-center text-zinc-300">{message}</p>}
       <p className="text-[11px] text-center text-zinc-500">
-        By confirming your subscription, you allow Handyman Inc to charge your
+        By confirming your subscription, you allow Handyman to charge your
         card according to our Terms.
       </p>
     </div>
