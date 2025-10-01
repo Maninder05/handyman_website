@@ -116,7 +116,7 @@ export default function FilterPage() {
     <main className="bg-gray-900 min-h-screen text-gray-100 flex flex-col items-center ">
       {/* HEADER */}
       <header className="bg-gradient-to-r from-[#FFCC66] to-[#FF7E5F] shadow-md relative w-full">
-        <div className="w-full flex items-center justify-between px-6 py-6">
+        <div className="w-full flex items-center justify-between px-20 py-6">
           {/* Title */}
           <h1 className="text-2xl font-extrabold text-gray-900 tracking-wide">
             Handyman Portal
