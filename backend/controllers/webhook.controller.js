@@ -1,3 +1,6 @@
+/**Author: Navindu 
+ * 
+*/
 import Payment from "../models/Payment.js";
 import { constructEvent } from "../services/stripe.service.js";
 
