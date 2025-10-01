@@ -240,7 +240,7 @@ export default function FilterPage() {
 
         {/* Hourly Rate */}
         <div className="mb-10">
-          <label className="block font-semibold mb-3 text-gray-200">
+          <label className="block font-semibold mb-3 color-black-200">
             Hourly Rate
           </label>
           <input
