@@ -116,6 +116,15 @@ export default function PortfolioPage() {
                       Add Service
                     </Link>
                   </li>
+                  {/*  Create Profile page */}
+                  <li>
+                    <Link
+                      href="/Add-profile"
+                      className="block px-4 py-3 hover:bg-yellow-600 hover:text-gray-900 transition"
+                    >
+                      Add profile
+                    </Link>
+                  </li>
                   <li>
                     <Link
                       href="/handyAccount"
@@ -314,4 +323,3 @@ export default function PortfolioPage() {
     </div>
   );
 }
-

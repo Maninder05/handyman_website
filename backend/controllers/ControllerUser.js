@@ -1,4 +1,4 @@
-import User from "../models/ModelUser.js";
+import User from "../modals/ModalUser.js";
 
 // Signup
 export const signupUser = async (req, res) => {
