@@ -304,7 +304,6 @@ export default function PayPage() {
       setLoadErr(null);
       setClientSecret(null);
       try {
-        // generate a new booking id whenever plan/billing changes so it matches the intent
         const newId = `B-${Date.now()}`;
         setBookingID(newId);
 
