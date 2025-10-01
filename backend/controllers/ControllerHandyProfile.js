@@ -1,4 +1,4 @@
-import Handyman from '../modals/HandyAddProfile.js';
+import Handyman from '../models/HandyAddProfile.js';
 
 // Create a new handyman profile
 export const createHandyman = async (req, res) => {

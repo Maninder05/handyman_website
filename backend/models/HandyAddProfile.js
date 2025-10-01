@@ -9,6 +9,6 @@ const handymanSchema = new mongoose.Schema({
   skills: { type: [String], default: [] },
   profileImage: { type: String },
 }, { timestamps: true });
-
+// models/HandyAddProfile.js
 const Handyman = mongoose.model('Handyman', handymanSchema);
 export default Handyman;
