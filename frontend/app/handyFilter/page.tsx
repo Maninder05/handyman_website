@@ -113,7 +113,7 @@ export default function FilterPage() {
   };
 
   return (
-    <main className="bg-amber-100 min-h-screen text-gray-100 flex flex-col items-center ">
+    <main className="bg-amber-50 min-h-screen text-gray-100 flex flex-col items-center ">
       {/* HEADER */}
       <header className="bg-gradient-to-r from-[#FFCC66] to-[#FF7E5F] shadow-md relative w-full">
         <div className="w-full flex items-center justify-between px-20 py-6">
@@ -233,7 +233,7 @@ export default function FilterPage() {
       </header>
 
       {/* Filter Card */}
-      <section className="bg-gray-800 text-gray-100 mt-12 p-8 rounded-2xl shadow-2xl w-full max-w-4xl">
+      <section className="bg-white-100 text-gray-100 mt-12 p-8 rounded-2xl shadow-2xl w-full max-w-4xl">
         <h2 className="text-2xl font-bold text-yellow-400 mb-10 text-center">
           Filters
         </h2>
