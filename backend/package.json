@@ -17,11 +17,7 @@
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
-<<<<<<< HEAD
     "express-validator": "^7.2.1",
-=======
-
->>>>>>> d770d3e4fc2c5f6f8b87183e619eaf5beadff75e
     "mongoose": "^8.18.1"
   },
   "devDependencies": {
