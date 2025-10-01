@@ -140,7 +140,6 @@ function CheckoutForm({
 
   const openReceipt = () => {
     setView("loadingReceipt");
-    // Simulate a short load; replace with a real fetch if you later generate a receipt server-side
     setTimeout(() => setView("receipt"), 900);
   };
 
