@@ -2,6 +2,10 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Menu, X } from "lucide-react";
+import { FiUser } from "react-icons/fi";
 
 export default function CreateService() {
   // form fields
@@ -15,6 +19,27 @@ export default function CreateService() {
   // errors + popup
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [popup, setPopup] = useState<string | null>(null);
+
+  // dropdown menus
+  const [showMenu, setShowMenu] = useState(false);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const router = useRouter();
+
+  // logout
+  const handleLogout = () => {
+    router.push("/");
+  };
+
+  // toggle menus
+  const toggleMenu = () => {
+    setShowMenu(!showMenu);
+    setShowProfileMenu(false);
+  };
+
+  const toggleProfile = () => {
+    setShowProfileMenu(!showProfileMenu);
+    setShowMenu(false);
+  };
 
   // upload image
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,7 +74,6 @@ export default function CreateService() {
     }
 
     try {
-      // create FormData for file + fields
       const formData = new FormData();
       formData.append("title", title);
       formData.append("category", category);
@@ -59,7 +83,6 @@ export default function CreateService() {
         formData.append("image", image);
       }
 
-      // call backend API
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/services`,
         {
@@ -87,9 +110,118 @@ export default function CreateService() {
 
   return (
     <div className="min-h-screen bg-amber-50 flex flex-col">
-      {/* Header */}
-      <header className="bg-amber-200 p-6 shadow-md text-center">
-        <h1 className="text-3xl font-bold text-amber-900">Create Service</h1>
+      {/* Header with dropdowns */}
+      <header className="bg-amber-200 p-6 shadow-md relative">
+        <div className="max-w-5xl mx-auto flex items-center justify-between">
+          <h1 className="text-3xl font-bold text-amber-900">Create Service</h1>
+
+          {/* Right side icons (profile + menu) */}
+          <div className="flex items-center gap-4 relative">
+            {/* Profile Icon */}
+            <button
+              onClick={toggleProfile}
+              className="p-2 rounded-full hover:bg-amber-300 transition"
+            >
+              <FiUser size={22} className="text-amber-900" />
+            </button>
+
+            {/* Profile dropdown */}
+            {showProfileMenu && (
+              <div className="absolute right-14 top-14 bg-white rounded-xl shadow-lg border w-48 z-50">
+                <ul className="text-sm divide-y">
+                  <li>
+                    <Link
+                      href="/handyAccount"
+                      className="block px-4 py-3 hover:bg-amber-100 transition"
+                    >
+                      View Account
+                    </Link>
+                  </li>
+                  <li>
+                    <button
+                      onClick={handleLogout}
+                      className="w-full text-left px-4 py-3 text-red-500 hover:bg-red-50 transition"
+                    >
+                      Logout
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            )}
+
+            {/* Menu button */}
+            <button
+              onClick={toggleMenu}
+              className="p-2 rounded-md hover:bg-amber-300 bg-amber-400 text-amber-900 transition"
+            >
+              {showMenu ? <X size={26} /> : <Menu size={26} />}
+            </button>
+
+            {/* Hamburger dropdown */}
+            {showMenu && (
+              <div className="absolute right-0 top-14 bg-white shadow-xl rounded-xl border w-56 text-sm z-50 overflow-hidden">
+                <ul className="divide-y">
+                  <li>
+                    <Link
+                      href="/create-service"
+                      className="block px-4 py-3 hover:bg-amber-100 transition"
+                    >
+                      Add Service
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/Add-profile"
+                      className="block px-4 py-3 hover:bg-amber-100 transition"
+                    >
+                      Add profile
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/handyAccount"
+                      className="block px-4 py-3 hover:bg-amber-100 transition"
+                    >
+                      My Account
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/order"
+                      className="block px-4 py-3 hover:bg-amber-100 transition"
+                    >
+                      Track Order
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/membership"
+                      className="block px-4 py-3 hover:bg-amber-100 transition"
+                    >
+                      Membership Plan
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/help"
+                      className="block px-4 py-3 hover:bg-amber-100 transition"
+                    >
+                      FAQ
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/settings"
+                      className="block px-4 py-3 hover:bg-amber-100 transition"
+                    >
+                      Account Settings
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+            )}
+          </div>
+        </div>
       </header>
 
       {/* Main content area */}
