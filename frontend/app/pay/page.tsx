@@ -189,7 +189,7 @@ export default function PayPage() {
         <div className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="h-6 w-6 rounded-md bg-yellow-400" />
-            <p className="text-sm text-zinc-300">Handyman Inc</p>
+            <p className="text-sm text-zinc-300">Handyman</p>
           </div>
         </div>
       </header>
