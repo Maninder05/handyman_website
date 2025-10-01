@@ -1,6 +1,7 @@
 // controllers/CreateServiceController.js
 import Service from "../models/CreateService.js";
 
+// Create a service
 export const createService = async (req, res) => {
   try {
     const { title, category, priceType, price } = req.body;
@@ -14,7 +15,7 @@ export const createService = async (req, res) => {
       title,
       category,
       priceType,
-      price: Number(price), // ensure it's a number
+      price: Number(price),
       image: imagePath,
     });
 
@@ -23,5 +24,16 @@ export const createService = async (req, res) => {
   } catch (error) {
     console.error("Error creating service:", error.message);
     res.status(500).json({ message: "Failed to create service ❌", error: error.message });
+  }
+};
+
+// Get all services
+export const getServices = async (req, res) => {
+  try {
+    const services = await Service.find();
+    res.status(200).json(services);
+  } catch (error) {
+    console.error("Error fetching services:", error.message);
+    res.status(500).json({ message: "Failed to fetch services ❌", error: error.message });
   }
 };
