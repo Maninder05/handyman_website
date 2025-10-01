@@ -254,10 +254,10 @@ function CheckoutForm({
                       {paidAt ?? new Date().toLocaleString()}
                     </span>
                   </div>
-                  {/* Add more fields later if you store them server-side:
-                      - Payment method brand/last4
+                  {/* Add more fields later store them server-side:
+                      - Payment method 
                       - Tax, subtotal
-                      - Invoice number / Stripe receipt URL
+                      - Invoice number
                   */}
                 </div>
 
