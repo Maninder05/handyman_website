@@ -4,7 +4,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 
 import RouterUser from './routes/RouteUser.js';       // User routes
-import RouterHandyman from './routes/handyRoutes.js'; // Handyman routes
+import RouterHandyman from './routes/handyRoutesAddProfile.js'; // Handyman routes
 
 dotenv.config();
 
