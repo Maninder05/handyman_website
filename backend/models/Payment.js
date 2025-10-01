@@ -1,3 +1,6 @@
+/**Author: Navindu 
+ * 
+*/
 import mongoose from "mongoose";
 const { Schema, model } = mongoose;
 
