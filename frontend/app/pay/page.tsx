@@ -1,4 +1,4 @@
-// app/pay/page.tsx
+// Author: Navi
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
