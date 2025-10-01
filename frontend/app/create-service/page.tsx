@@ -96,7 +96,7 @@ export default function CreateService() {
       <main className="flex-1 flex justify-center items-start py-10 px-4">
         {/* Form card */}
         <div className="w-full max-w-4xl bg-white rounded-xl shadow-lg p-10 space-y-8">
-          {/* Title */}
+          {/* the field to enter the title of the service */}
           <div>
             <label className="block mb-2 font-semibold text-neutral-800">
               Service Title
@@ -113,7 +113,7 @@ export default function CreateService() {
             )}
           </div>
 
-          {/* Category */}
+          {/* the field to choose the category */}
           <div>
             <label className="block mb-2 font-semibold text-neutral-800">
               Category
@@ -134,7 +134,7 @@ export default function CreateService() {
             )}
           </div>
 
-          {/* Image upload */}
+          {/* the field to upload the image */}
           <div>
             <label className="block mb-2 font-semibold text-neutral-800">
               Image
@@ -166,7 +166,7 @@ export default function CreateService() {
             )}
           </div>
 
-          {/* Price */}
+          {/* The field to select the price type */}
           <div>
             <label className="block mb-2 font-semibold text-neutral-800">
               Price
@@ -193,7 +193,7 @@ export default function CreateService() {
             )}
           </div>
 
-          {/* Buttons */}
+          {/* Both buttons are defined here */}
           <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
             <button
               onClick={() => setPopup("Draft Saved Successfully 📝")}
@@ -211,7 +211,7 @@ export default function CreateService() {
         </div>
       </main>
 
-      {/* Popup */}
+      {/* Function for popup */}
       {popup && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-xl shadow text-center w-80 text-neutral-800">
