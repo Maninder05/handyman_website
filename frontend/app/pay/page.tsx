@@ -42,7 +42,7 @@ function Summary({
     <aside className="bg-zinc-900/60 border border-zinc-800 rounded-2xl p-6 md:p-8 text-zinc-100">
       <div className="flex items-center gap-2 mb-6">
         <div className="h-7 w-7 rounded-lg bg-yellow-400" />
-        <span className="text-sm text-zinc-400">Handyman Inc</span>
+        <span className="text-sm text-zinc-400">Handyman</span>
       </div>
 
       <h2 className="text-xl font-semibold">Subscribe to {planName}</h2>
