@@ -113,7 +113,7 @@ export default function FilterPage() {
   };
 
   return (
-    <main className="bg-gray-900 min-h-screen text-gray-100 flex flex-col items-center ">
+    <main className="bg-amber-100 min-h-screen text-gray-100 flex flex-col items-center ">
       {/* HEADER */}
       <header className="bg-gradient-to-r from-[#FFCC66] to-[#FF7E5F] shadow-md relative w-full">
         <div className="w-full flex items-center justify-between px-20 py-6">
