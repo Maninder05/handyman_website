@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { loadStripe } from "@stripe/stripe-js";
 import {
   Elements,
@@ -73,16 +73,14 @@ function Summary({
   );
 }
 
-// ✅ UPDATED CheckoutForm with loading + success popup
+// ✅ UPDATED CheckoutForm with spinner + success popup + "View Receipt"
 function CheckoutForm() {
   const stripe = useStripe();
   const elements = useElements();
-  const router = useRouter();
 
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [piId, setPiId] = useState<string | null>(null);
 
   const handlePay = async () => {
     if (!stripe || !elements) return;
@@ -103,7 +101,6 @@ function CheckoutForm() {
     }
 
     if (paymentIntent?.status === "succeeded") {
-      setPiId(paymentIntent.id || null);
       setShowSuccess(true);
       return;
     }
@@ -150,7 +147,7 @@ function CheckoutForm() {
         </p>
       </div>
 
-      {/* ✅ Success Modal */}
+      {/* ✅ Success Popup */}
       {showSuccess && (
         <div
           role="dialog"
@@ -163,7 +160,7 @@ function CheckoutForm() {
             onClick={() => setShowSuccess(false)}
           />
 
-          {/* Dialog */}
+          {/* Popup */}
           <div className="relative z-10 w-[min(92vw,28rem)] rounded-2xl border border-zinc-800 bg-zinc-900 p-6 shadow-2xl text-center">
             <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-500/15">
               <svg
@@ -178,10 +175,10 @@ function CheckoutForm() {
             </div>
 
             <h3 className="text-lg font-semibold text-zinc-100">
-              Payment successful
+              Payment successful 🎉
             </h3>
             <p className="mt-1 text-sm text-zinc-400">
-              Your subscription is now active. {piId ? `Ref: ${piId}` : ""}
+              Your subscription is now active.
             </p>
 
             <div className="mt-6 flex flex-col sm:flex-row gap-3">
@@ -192,10 +189,10 @@ function CheckoutForm() {
                 Close
               </button>
               <button
-                onClick={() => router.push("/")}
+                onClick={() => window.location.href = "/receipt"} // 👈 Change this route later if needed
                 className="flex-1 rounded-xl bg-yellow-400 py-2.5 text-zinc-900 font-medium hover:bg-yellow-500"
               >
-                Go to Dashboard
+                View Receipt
               </button>
             </div>
           </div>
@@ -228,7 +225,7 @@ export default function PayPage() {
       setLoadErr(null);
       setClientSecret(null);
       try {
-        const bookingID = `B-${Date.now()}`; // replace with your real ID if needed
+        const bookingID = `B-${Date.now()}`;
         const amountCents =
           (billing === "monthly" ? plan.monthly : plan.yearly) * 100;
 
