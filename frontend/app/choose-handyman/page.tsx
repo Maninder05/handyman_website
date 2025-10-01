@@ -1,7 +1,8 @@
 "use client";
-// Page to choose a handyman for a selected service 
+// Page to choose a handyman for a selected service
 import { useSearchParams, useRouter } from "next/navigation";
 import { Bell, Home, MessageCircle, Settings, Users } from "lucide-react";
+import Image from "next/image";
 
 export default function ChooseHandymanPage() {
   const searchParams = useSearchParams();
@@ -10,81 +11,131 @@ export default function ChooseHandymanPage() {
   const service = searchParams.get("service"); // e.g. "Plumbing"
 
   const handymen = [
-    { name: "Kenji Teneka", rating: 5.0, reviews: 13, price: 55, image: "/images/kenji.jpg" },
-    { name: "Luke Moretti", rating: 4.7, reviews: 11, price: 40, image: "/images/luke.jpg" },
-    { name: "Johnny Consey", rating: 4.5, reviews: 8, price: 35, image: "/images/johnny.jpg" },
+    {
+      name: "Kenji Teneka",
+      rating: 5.0,
+      reviews: 13,
+      price: 55,
+      image: "/images/kenji.jpg",
+    },
+    {
+      name: "Luke Moretti",
+      rating: 4.7,
+      reviews: 11,
+      price: 40,
+      image: "/images/luke.jpg",
+    },
+    {
+      name: "Johnny Consey",
+      rating: 4.5,
+      reviews: 8,
+      price: 35,
+      image: "/images/johnny.jpg",
+    },
   ];
 
   // Function to handle choosing a handyman
   const handleChoose = (person: typeof handymen[0]) => {
-    router.push(`/hire-handyman?name=${encodeURIComponent(person.name)}&price=${person.price}&service=${encodeURIComponent(service || '')}`
+    router.push(
+      `/hire-handyman?name=${encodeURIComponent(
+        person.name
+      )}&price=${person.price}&service=${encodeURIComponent(service || "")}`
     );
   };
 
   return (
-    <div className="min-h-screen w-full flex flex-col bg-gray-200">
+    <div className="min-h-screen w-full flex flex-col bg-gray-900 text-gray-100">
       {/* Header */}
-      <div className="bg-cyan-500 p-4 text-center">
-        <h1 className="text-xl font-bold text-white">
+      <header className="bg-gradient-to-r from-[#FFCC66] to-[#FF7E5F] shadow-md px-6 py-4 text-center">
+        <h1 className="text-xl font-extrabold text-gray-900">
           {service ? `Choose Handyman for ${service}` : "Choose Handyman"}
         </h1>
-        <p className="text-sm text-white mt-1">
-          Compare and choose the right handyman for your job <br />
-          — fast, trusted, and nearby.
+        <p className="text-sm text-gray-800 mt-1">
+          Compare and choose the right handyman for your job — fast, trusted,
+          and nearby.
         </p>
-      </div>
+      </header>
 
       {/* Handyman List */}
-      <div className="flex-1 p-4 space-y-4">
+      <main className="flex-1 p-6 space-y-5">
         {handymen.map((person, idx) => (
-          <div key={idx} className="bg-white rounded-xl shadow p-4 flex items-center gap-4">
-            <img
+          <div
+            key={idx}
+            className="bg-gray-800 rounded-2xl shadow-lg p-5 flex items-center gap-5 hover:shadow-xl transition"
+          >
+            <Image
               src={person.image}
               alt={person.name}
-              className="w-16 h-16 rounded-full object-cover"
+              width={64}
+              height={64}
+              className="rounded-full border-4 border-yellow-400 shadow-md"
             />
             <div className="flex-1">
-              <p className="font-bold">{person.name}</p>
+              <p className="font-bold text-lg text-yellow-400">
+                {person.name}
+              </p>
               <div className="flex items-center gap-2 mt-1">
-                <span className="bg-yellow-500 text-white px-2 rounded text-sm">
+                <span className="bg-yellow-500 text-gray-900 px-2 rounded text-sm font-semibold">
                   {person.rating.toFixed(1)}
                 </span>
-                <span className="text-yellow-500">
+                <span className="text-yellow-400">
                   {"⭐".repeat(Math.round(person.rating))}
                 </span>
-                <span className="text-gray-500 text-sm">[{person.reviews} reviews]</span>
+                <span className="text-gray-400 text-sm">
+                  [{person.reviews} reviews]
+                </span>
               </div>
-              <p className="mt-1 text-gray-700 font-medium">💵 {person.price} CAD/hr</p>
+              <p className="mt-1 text-gray-300 font-medium">
+                💵 {person.price} CAD/hr
+              </p>
             </div>
             <button
-              className="bg-cyan-500 text-white px-4 py-2 rounded-full font-semibold hover:bg-teal-600"
+              className="bg-yellow-400 text-gray-900 px-5 py-2 rounded-full font-semibold hover:bg-yellow-500 transition"
               onClick={() => handleChoose(person)}
             >
               Choose
             </button>
           </div>
         ))}
-      </div>
+      </main>
 
-      {/* Bottom Navigation */}
-      <div className="bg-cyan-500 flex justify-around items-center h-14">
-        <button onClick={() => router.push("/")} className="cursor-pointer hover:text-white transition">
-          <Home className="w-6 h-6 text-black" />
-        </button>
-        <button onClick={() => router.push("/messages")} className="cursor-pointer hover:text-white transition">
-          <MessageCircle className="w-6 h-6 text-black" />
-        </button>
-        <button onClick={() => router.push("/portfolio")} className="cursor-pointer hover:text-white transition">
-          <Users className="w-6 h-6 text-black" />
-        </button>
-        <button onClick={() => router.push("/notifications")} className="relative cursor-pointer hover:text-white transition">
-          <Bell className="w-6 h-6 text-black" />
-          <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full"></span>
-        </button>
-        <button onClick={() => router.push("/settings")} className="cursor-pointer hover:text-white transition">
-          <Settings className="w-6 h-6 text-black" />
-        </button>
-      </div>
+   {/* Bottom Navigation */}
+<footer className="bg-gray-800 text-gray-300">
+  <div className="max-w-5xl mx-auto flex justify-around items-center h-14 text-sm">
+    <button
+      onClick={() => router.push("/")}
+      className="flex flex-col items-center gap-1 hover:text-yellow-400 transition"
+    >
+      <Home className="w-5 h-5" /> Home
+    </button>
+    <button
+      onClick={() => router.push("/messages")}
+      className="flex flex-col items-center gap-1 hover:text-yellow-400 transition"
+    >
+      <MessageCircle className="w-5 h-5" /> Messages
+    </button>
+    <button
+      onClick={() => router.push("/portfolio")}
+      className="flex flex-col items-center gap-1 hover:text-yellow-400 transition"
+    >
+      <Users className="w-5 h-5" /> Portfolio
+    </button>
+    <button
+      onClick={() => router.push("/notifications")}
+      className="relative flex flex-col items-center gap-1 hover:text-yellow-400 transition"
+    >
+      <Bell className="w-5 h-5" /> Notifications
+      <span className="absolute top-0 right-2 w-2.5 h-2.5 bg-red-500 rounded-full"></span>
+    </button>
+    <button
+      onClick={() => router.push("/settings")}
+      className="flex flex-col items-center gap-1 hover:text-yellow-400 transition"
+    >
+      <Settings className="w-5 h-5" /> Settings
+    </button>
+  </div>
+</footer>
+
     </div>
   );
 }

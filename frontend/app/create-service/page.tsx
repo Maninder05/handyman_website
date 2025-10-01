@@ -36,7 +36,7 @@ export default function CreateService() {
   };
 
   // submit form
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const newErrors: { [key: string]: string } = {};
     if (!title) newErrors.title = "Title is required";
     if (!category) newErrors.category = "Category is required";
@@ -45,8 +45,43 @@ export default function CreateService() {
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-    } else {
-      setPopup("Service Submitted Successfully ✅");
+      return;
+    }
+
+    try {
+      // create FormData for file + fields
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("category", category);
+      formData.append("priceType", priceType);
+      formData.append("price", price);
+      if (image) {
+        formData.append("image", image);
+      }
+
+      // call backend API
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/services`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      if (res.ok) {
+        setPopup("Service Submitted Successfully ✅");
+        setTitle("");
+        setCategory("");
+        setPrice("");
+        setImage(null);
+        setImagePreview(null);
+      } else {
+        const data = await res.json();
+        setPopup(data.message || "Failed to submit service ❌");
+      }
+    } catch (err) {
+      console.error("Error submitting service:", err);
+      setPopup("Error submitting service ❌");
     }
   };
 
@@ -63,7 +98,9 @@ export default function CreateService() {
         <div className="w-full max-w-4xl bg-white rounded-xl shadow-lg p-10 space-y-8">
           {/* Title */}
           <div>
-            <label className="block mb-2 font-semibold text-neutral-800">Service Title</label>
+            <label className="block mb-2 font-semibold text-neutral-800">
+              Service Title
+            </label>
             <input
               type="text"
               value={title}
@@ -71,12 +108,16 @@ export default function CreateService() {
               className="w-full rounded-lg p-4 border border-gray-300 bg-neutral-50 text-neutral-800 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
               placeholder="Enter service title"
             />
-            {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title}</p>}
+            {errors.title && (
+              <p className="text-red-500 text-sm mt-1">{errors.title}</p>
+            )}
           </div>
 
           {/* Category */}
           <div>
-            <label className="block mb-2 font-semibold text-neutral-800">Category</label>
+            <label className="block mb-2 font-semibold text-neutral-800">
+              Category
+            </label>
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
@@ -88,30 +129,48 @@ export default function CreateService() {
               <option>HVAC</option>
               <option>Carpentry</option>
             </select>
-            {errors.category && <p className="text-red-500 text-sm mt-1">{errors.category}</p>}
+            {errors.category && (
+              <p className="text-red-500 text-sm mt-1">{errors.category}</p>
+            )}
           </div>
 
           {/* Image upload */}
           <div>
-            <label className="block mb-2 font-semibold text-neutral-800">Image</label>
+            <label className="block mb-2 font-semibold text-neutral-800">
+              Image
+            </label>
             <div className="flex items-center gap-4">
               <label className="flex-1 flex justify-between items-center px-4 py-3 border border-gray-300 rounded-lg bg-neutral-50 cursor-pointer hover:bg-gray-100 transition">
                 {image ? image.name : "No file chosen"}
                 <span className="ml-2 text-gray-500">▼</span>
-                <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleImageUpload}
+                />
               </label>
               {imagePreview && (
                 <div className="w-24 h-24 relative border rounded-lg overflow-hidden shadow">
-                  <Image src={imagePreview} alt="Preview" fill className="object-cover" />
+                  <Image
+                    src={imagePreview}
+                    alt="Preview"
+                    fill
+                    className="object-cover"
+                  />
                 </div>
               )}
             </div>
-            {errors.image && <p className="text-red-500 text-sm mt-1">{errors.image}</p>}
+            {errors.image && (
+              <p className="text-red-500 text-sm mt-1">{errors.image}</p>
+            )}
           </div>
 
           {/* Price */}
           <div>
-            <label className="block mb-2 font-semibold text-neutral-800">Price</label>
+            <label className="block mb-2 font-semibold text-neutral-800">
+              Price
+            </label>
             <div className="flex gap-4">
               <select
                 value={priceType}
@@ -129,7 +188,9 @@ export default function CreateService() {
                 placeholder="Enter price"
               />
             </div>
-            {errors.price && <p className="text-red-500 text-sm mt-1">{errors.price}</p>}
+            {errors.price && (
+              <p className="text-red-500 text-sm mt-1">{errors.price}</p>
+            )}
           </div>
 
           {/* Buttons */}

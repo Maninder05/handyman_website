@@ -1,131 +1,281 @@
- "use client";
+"use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import Image from "next/image";
-import { Bell, Home, MessageCircle, Settings, Users } from "lucide-react";
- 
-export default function PortfolioPage() {
-  const [isBuyer, setIsBuyer] = useState(false);
- 
+import { useRouter } from "next/navigation";
+import { Menu, X } from "lucide-react";
+import {
+  FiHome,
+  FiMessageCircle,
+  FiHelpCircle,
+  FiBell,
+  FiSettings,
+  FiUser,
+} from "react-icons/fi";
+
+export default function ClientDashboard() {
+  const [showMenu, setShowMenu] = useState(false);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+
+  const router = useRouter();
+
+  // logout
+  const handleLogout = () => {
+    router.push("/");
+  };
+
+  // toggle hamburger dropdown
+  const toggleMenu = () => {
+    setShowMenu(!showMenu);
+    setShowProfileMenu(false); // close profile if menu is opened
+  };
+
+  // toggle profile dropdown
+  const toggleProfile = () => {
+    setShowProfileMenu(!showProfileMenu);
+    setShowMenu(false); // close menu if profile is opened
+  };
+
   return (
-    <div className="min-h-screen w-full flex flex-col bg-gray-100 ">
-        <div>
-      {/* Header */}
-      <div className="bg-blue-400 p-6 relative mb-2">
-        {/* Menu Button */}
-        <button className="absolute right-4 top-6 text-white text-3xl">☰</button>
- 
-        {/* Profile Info */}
-        <div className="flex flex-col items-center mt-6">
-          <Image
-            src="/images/client1.jpg"
-            alt="Profile"
-            className="w-20 h-20 rounded-full border-4 border-white shadow-md"
-          />
-          <h2 className="text-lg font-bold text-black mt-3">Kenji Teneka</h2>
-          <p className="text-sm text-black">kenjiteneka@gmail.com</p>
+    <div className="min-h-screen bg-gray-900 flex flex-col text-gray-100">
+      {/* HEADER */}
+      <header className="bg-gradient-to-r from-[#FFCC66] to-[#FF7E5F] shadow-md relative">
+        <div className="max-w-5xl mx-auto flex items-center justify-between px-6 py-4">
+          {/* Title */}
+          <h1 className="text-2xl font-extrabold text-gray-900 tracking-wide">
+            Client Portal
+          </h1>
+
+          {/* Right side buttons */}
+          <div className="flex items-center gap-4 relative">
+            {/* Profile Icon */}
+            <button
+              onClick={toggleProfile}
+              className="p-2 rounded-full hover:bg-yellow-500 transition"
+            >
+              <FiUser size={22} className="text-gray-900" />
+            </button>
+
+            {/* Profile dropdown */}
+            {showProfileMenu && (
+              <div className="absolute right-14 top-14 bg-gray-800 rounded-xl shadow-lg border w-48 z-50">
+                <ul className="text-sm divide-y">
+                  <li>
+                    <Link
+                      href="/clientAccount"
+                      className="block px-4 py-3 hover:bg-yellow-600 hover:text-gray-900 transition"
+                    >
+                      View Account
+                    </Link>
+                  </li>
+                  <li>
+                    <button
+                      onClick={handleLogout}
+                      className="w-full text-left px-4 py-3 text-red-500 hover:bg-red-50 transition"
+                    >
+                      Logout
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            )}
+
+            {/* Menu button */}
+            <button
+              onClick={toggleMenu}
+              className="p-2 rounded-md hover:bg-yellow-500 bg-yellow-400 text-gray-900 transition"
+            >
+              {showMenu ? <X size={26} /> : <Menu size={26} />}
+            </button>
+
+            {/* Hamburger dropdown */}
+            {showMenu && (
+              <div className="absolute right-0 top-14 bg-gray-800 shadow-xl rounded-xl border w-56 text-sm z-50 overflow-hidden">
+                <ul className="divide-y">
+                  <li>
+                    <Link
+                      href="/browse-services"
+                      className="block px-4 py-3 hover:bg-yellow-600 hover:text-gray-900 transition"
+                    >
+                      View Services
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/handyServices"
+                      className="block px-4 py-3 hover:bg-yellow-600 hover:text-gray-900 transition"
+                    >
+                      Book Services
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/book-services"
+                      className="block px-4 py-3 hover:bg-yellow-600 hover:text-gray-900 transition"
+                    >
+                      Track Booking
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/membership"
+                      className="block px-4 py-3 hover:bg-yellow-600 hover:text-gray-900 transition"
+                    >
+                      Membership Plan
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/faq"
+                      className="block px-4 py-3 hover:bg-yellow-600 hover:text-gray-900 transition"
+                    >
+                      FAQ
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/settings"
+                      className="block px-4 py-3 hover:bg-yellow-600 hover:text-gray-900 transition"
+                    >
+                      Account Settings
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+            )}
+          </div>
         </div>
- 
-        {/* Stats */}
-        <div className="flex justify-around text-center mt-6 mb-1 text-black font-semibold">
-          <div>
-            <p className="text-xl">15</p>
-            <p className="text-sm">Job Done</p>
+      </header>
+
+      {/* PROFILE SECTION */}
+      <main className="flex-1 overflow-y-auto">
+        <section className="bg-gray-700 text-white py-10">
+          <div className="max-w-5xl mx-auto text-center">
+            {/* profile image */}
+            <Image
+              src="/images/client-profile.jpg"
+              alt="Profile"
+              width={120}
+              height={120}
+              className="rounded-full border-4 border-yellow-400 mx-auto shadow-lg"
+            />
+            <h2 className="text-2xl font-bold mt-4 text-yellow-400">
+              Alex Johnson
+            </h2>
+            <p className="text-sm text-gray-300">alex.johnson@email.com</p>
+
+            {/* numbers for bookings, ongoing, rating */}
+            <div className="flex justify-center gap-10 mt-6 text-gray-100">
+              <div>
+                <p className="text-xl font-bold">12</p>
+                <p className="text-sm">Services Booked</p>
+              </div>
+              <div>
+                <p className="text-xl font-bold">2</p>
+                <p className="text-sm">Ongoing</p>
+              </div>
+              <div>
+                <p className="text-xl font-bold">4.8</p>
+                <p className="text-sm">Avg. Rating</p>
+              </div>
+            </div>
           </div>
-          <div>
-            <p className="text-xl">3</p>
-            <p className="text-sm">Job In Progress</p>
+        </section>
+
+        {/* CONTENT CARDS */}
+        <section className="max-w-5xl mx-auto px-6 py-10 space-y-8">
+          {/* spending and orders */}
+          <div className="grid grid-cols-2 gap-6">
+            <div className="bg-gray-800 rounded-xl shadow p-6 text-center">
+              <p className="text-2xl font-bold text-yellow-400">$1,250</p>
+              <p className="text-sm text-gray-300">Total Spent</p>
+            </div>
+            <div className="bg-gray-800 rounded-xl shadow p-6 text-center">
+              <p className="text-2xl font-bold text-yellow-400">5</p>
+              <p className="text-sm text-gray-300">Active Bookings</p>
+            </div>
           </div>
-          <div>
-            <p className="text-xl">5 ⭐</p>
-            <p className="text-sm">Rating</p>
+
+          {/* recent bookings */}
+          <div className="bg-gray-800 rounded-xl shadow p-6">
+            <h3 className="font-semibold mb-4 text-yellow-400">
+              Recent Bookings
+            </h3>
+            <ul className="space-y-3">
+              <li className="p-4 border rounded-lg hover:shadow transition">
+                <p className="font-medium text-yellow-400">🛠 Furniture Assembly</p>
+                <p className="text-sm text-gray-300">
+                  Confirmed with Kenji Teneka yesterday.
+                </p>
+              </li>
+              <li className="p-4 border rounded-lg hover:shadow transition">
+                <p className="font-medium text-yellow-400">🌿 Gardening Service</p>
+                <p className="text-sm text-gray-300">
+                  Scheduled with Anna Lee next week.
+                </p>
+              </li>
+            </ul>
           </div>
+
+          {/* favorite services */}
+          <div className="bg-gray-800 rounded-xl shadow p-6">
+            <h3 className="font-semibold mb-4 text-yellow-400">
+              Favorite Services
+            </h3>
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div className="p-4 border rounded-lg hover:shadow transition">
+                <p className="font-bold text-yellow-400">Cleaning</p>
+                <p className="text-sm text-gray-300">
+                  Weekly housekeeping services
+                </p>
+              </div>
+              <div className="p-4 border rounded-lg hover:shadow transition">
+                <p className="font-bold text-yellow-400">Electrical Repair</p>
+                <p className="text-sm text-gray-300">
+                  Fast fixes for household issues
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      {/* FOOTER */}
+      <footer className="bg-gray-800 text-gray-300 mt-10">
+        <div className="max-w-5xl mx-auto flex justify-around py-5 text-sm">
+          <Link
+            href="/"
+            className="flex flex-col items-center gap-1 hover:text-yellow-400 transition"
+          >
+            <FiHome size={20} /> Home
+          </Link>
+          <Link
+            href="/messages"
+            className="flex flex-col items-center gap-1 hover:text-yellow-400 transition"
+          >
+            <FiMessageCircle size={20} /> Messages
+          </Link>
+          <Link
+            href="/help"
+            className="flex flex-col items-center gap-1 hover:text-yellow-400 transition"
+          >
+            <FiHelpCircle size={20} /> Help
+          </Link>
+          <Link
+            href="/notifications"
+            className="flex flex-col items-center gap-1 hover:text-[#FF7E5F] transition"
+          >
+            <FiBell size={20} /> Notifications
+          </Link>
+          <Link
+            href="/settings"
+            className="flex flex-col items-center gap-1 hover:text-[#FF7E5F] transition"
+          >
+            <FiSettings size={20} /> Settings
+          </Link>
         </div>
-      </div>
-      </div>
- 
-      {/* Switch to Buyer */}
-<div className="px-20 mb-2 ">
-  <div className="bg-white flex justify-between items-center px-5 py-4 rounded-xl shadow-md">
-    <p className="font-medium">Switch To Buyer</p>
-    <label className="inline-flex items-center cursor-pointer">
-      <input
-        type="checkbox"
-        checked={isBuyer}
-        onChange={() => setIsBuyer(!isBuyer)}
-        className="sr-only"
-      />
-      <div className="w-12 h-6 bg-gray-300 rounded-full p-1 flex items-center">
-        <div
-          className={`w-5 h-5 rounded-full bg-blue-400 transition-transform ${
-            isBuyer ? "translate-x-6" : ""
-          }`}
-        />
-      </div>
-    </label>
-  </div>
-</div>
-     
- 
-     
- 
- 
-      {/* Earnings */}
-      <div className="p-6 bg-gray-200">
-        <div className="flex justify-between items-center">
-          <h3 className="font-semibold">Your Earning</h3>
-          <a href="#" className="text-sm text-teal-600 hover:underline">
-            View All
-          </a>
-        </div>
- 
-        <div className="grid grid-cols-2 gap-4 mt-4">
-          <div className="bg-purple-100 p-4 rounded-xl text-center">
-            <p className="text-2xl font-bold">$800</p>
-            <p className="text-sm text-gray-700">Your this month</p>
-          </div>
-          <div className="bg-purple-100 p-4 rounded-xl text-center">
-            <p className="text-2xl font-bold">3</p>
-            <p className="text-sm text-gray-700">Active Order</p>
-          </div>
-        </div>
-      </div>
- 
-      {/* Recent Orders */}
-      <div className="p-6 bg-gray-200">
-        <h3 className="font-semibold mb-3">Recent Orders</h3>
-        <div className="bg-purple-100 p-4 rounded-xl flex items-center gap-3">
-          <div className="w-12 h-12 bg-white flex items-center justify-center rounded-full shadow">
-            🏠
-          </div>
-          <div>
-            <p className="font-bold">ELECTRICAL REPAIR 👨‍🔧</p>
-            <p className="text-sm text-gray-600">
-              John Patronsky recently booked for the “electrical repair” service.
-            </p>
-          </div>
-        </div>
-      </div>
- 
-      {/* Bottom Navigation */}
-      <div className="mt-auto bg-blue-400 flex justify-around items-center py-3">
-        <button>
-          <Home className="w-7 h-7 text-white" />
-        </button>
-        <button>
-          <MessageCircle className="w-7 h-7 text-white" />
-        </button>
-        <button>
-          <Users className="w-7 h-7 text-white" />
-        </button>
-        <button className="relative">
-          <Bell className="w-7 h-7 text-white" />
-          <span className="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full"></span>
-        </button>
-        <button>
-          <Settings className="w-7 h-7 text-white" />
-        </button>
-      </div>
+      </footer>
     </div>
   );
 }
