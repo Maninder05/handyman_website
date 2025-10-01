@@ -111,7 +111,7 @@ export default function CreateService() {
   return (
     <div className="min-h-screen bg-amber-50 flex flex-col">
       {/* Header with dropdowns */}
-      <header className="bg-amber-200 p-6 shadow-md relative">
+      <header className="bg-gradient-to-r from-[#FFCC66] to-[#FF7E5F] shadow-md relative py-4 px-4">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <h1 className="text-3xl font-bold text-amber-900">Create Service</h1>
 
