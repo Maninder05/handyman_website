@@ -7,7 +7,8 @@ import { fileURLToPath } from "url";
 
 import RouterUser from './routes/RouteUser.js';       // User routes
 import RouterHandyman from './routes/handyRoutes.js'; // Handyman routes
-import RouterService from './routes/serviceRoutes.js'; // ✅ New service routes
+import RouterService from './routes/CreateServiceRoutes.js';
+
 
 dotenv.config();
 
