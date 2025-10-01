@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { loadStripe } from "@stripe/stripe-js";
 import {
   Elements,
@@ -20,9 +20,9 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:7000";
 
 // Display-only; server still computes the real amount
 const PLANS = [
-  { name: "Basic",    monthly: 10, yearly: 96,  tagline: "Great for individuals starting out." },
+  { name: "Basic", monthly: 10, yearly: 96, tagline: "Great for individuals starting out." },
   { name: "Seasonal", monthly: 12, yearly: 108, tagline: "For weekend warriors & seasonal pros." },
-  { name: "Pro",      monthly: 15, yearly: 144, tagline: "For full-time contractors who want more." },
+  { name: "Pro", monthly: 15, yearly: 144, tagline: "For full-time contractors who want more." },
 ] as const;
 
 type Billing = "monthly" | "yearly";
@@ -73,14 +73,20 @@ function Summary({
   );
 }
 
+// ✅ UPDATED CheckoutForm with loading + success popup
 function CheckoutForm() {
   const stripe = useStripe();
   const elements = useElements();
+  const router = useRouter();
+
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [piId, setPiId] = useState<string | null>(null);
 
   const handlePay = async () => {
     if (!stripe || !elements) return;
+
     setSubmitting(true);
     setMessage(null);
 
@@ -93,28 +99,109 @@ function CheckoutForm() {
 
     if (error) {
       setMessage(error.message || "Payment failed");
+      return;
+    }
+
+    if (paymentIntent?.status === "succeeded") {
+      setPiId(paymentIntent.id || null);
+      setShowSuccess(true);
+      return;
+    }
+
+    if (paymentIntent?.status === "processing") {
+      setMessage("Your payment is processing. You’ll get an update shortly.");
+    } else if (paymentIntent?.status === "requires_action") {
+      setMessage("Additional authentication required. Please try again.");
+    } else if (paymentIntent) {
+      setMessage(`Payment status: ${paymentIntent.status}`);
     } else {
-      setMessage(`Payment status: ${paymentIntent?.status}`);
-      // e.g., router.push(`/pay/success?pi=${paymentIntent?.id}`)
+      setMessage("Something unexpected happened.");
     }
   };
 
   return (
-    <div className="space-y-4">
-      <PaymentElement />
-      <button
-        onClick={handlePay}
-        disabled={submitting || !stripe || !elements}
-        className="w-full rounded-xl bg-yellow-400 text-zinc-900 font-medium py-3 hover:bg-yellow-500 disabled:opacity-60"
-      >
-        {submitting ? "Processing…" : "Subscribe"}
-      </button>
-      {message && <p className="text-sm text-center text-zinc-300">{message}</p>}
-      <p className="text-[11px] text-center text-zinc-500">
-        By confirming your subscription, you allow Handyman to charge your
-        card according to our Terms.
-      </p>
-    </div>
+    <>
+      <div className="space-y-4">
+        <PaymentElement />
+        <button
+          onClick={handlePay}
+          disabled={submitting || !stripe || !elements}
+          className="w-full rounded-xl bg-yellow-400 text-zinc-900 font-medium py-3 hover:bg-yellow-500 disabled:opacity-60 flex items-center justify-center gap-2"
+        >
+          {submitting && (
+            <svg
+              className="h-4 w-4 animate-spin"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" opacity="0.25" />
+              <path d="M22 12a10 10 0 0 1-10 10" stroke="currentColor" strokeWidth="4" fill="none" />
+            </svg>
+          )}
+          {submitting ? "Processing…" : "Subscribe"}
+        </button>
+
+        {message && (
+          <p className="text-sm text-center text-zinc-300">{message}</p>
+        )}
+
+        <p className="text-[11px] text-center text-zinc-500">
+          By confirming your subscription, you allow Handyman to charge your card according to our Terms.
+        </p>
+      </div>
+
+      {/* ✅ Success Modal */}
+      {showSuccess && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 flex items-center justify-center"
+        >
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/60"
+            onClick={() => setShowSuccess(false)}
+          />
+
+          {/* Dialog */}
+          <div className="relative z-10 w-[min(92vw,28rem)] rounded-2xl border border-zinc-800 bg-zinc-900 p-6 shadow-2xl text-center">
+            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-500/15">
+              <svg
+                className="h-6 w-6 text-green-400"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path d="M20 6L9 17l-5-5" />
+              </svg>
+            </div>
+
+            <h3 className="text-lg font-semibold text-zinc-100">
+              Payment successful
+            </h3>
+            <p className="mt-1 text-sm text-zinc-400">
+              Your subscription is now active. {piId ? `Ref: ${piId}` : ""}
+            </p>
+
+            <div className="mt-6 flex flex-col sm:flex-row gap-3">
+              <button
+                onClick={() => setShowSuccess(false)}
+                className="flex-1 rounded-xl border border-zinc-700 bg-zinc-800 py-2.5 text-zinc-200 hover:bg-zinc-700"
+              >
+                Close
+              </button>
+              <button
+                onClick={() => router.push("/")}
+                className="flex-1 rounded-xl bg-yellow-400 py-2.5 text-zinc-900 font-medium hover:bg-yellow-500"
+              >
+                Go to Dashboard
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
@@ -141,8 +228,7 @@ export default function PayPage() {
       setLoadErr(null);
       setClientSecret(null);
       try {
-        // Your backend requires bookingID + amount (in cents)
-        const bookingID = `B-${Date.now()}`; // replace with your real ID if you have one
+        const bookingID = `B-${Date.now()}`; // replace with your real ID if needed
         const amountCents =
           (billing === "monthly" ? plan.monthly : plan.yearly) * 100;
 
@@ -151,7 +237,7 @@ export default function PayPage() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             bookingID,
-            amount: amountCents, // cents
+            amount: amountCents,
           }),
         });
 
@@ -193,19 +279,20 @@ export default function PayPage() {
           </div>
         </div>
       </header>
+
       <section className="mx-auto max-w-6xl px-6 py-8">
         <div className="grid grid-cols-1 md:grid-cols-[1fr_1.2fr] gap-6 md:gap-8">
           {/* Left: Summary */}
           <div className="lg:sticky lg:top-24 self-start">
-          <Summary
-            planName={plan.name}
-            billing={billing}
-            displayAmount={displayAmount}
-            tagline={plan.tagline}
-          />
-        </div>
+            <Summary
+              planName={plan.name}
+              billing={billing}
+              displayAmount={displayAmount}
+              tagline={plan.tagline}
+            />
+          </div>
 
-          {/* Right: Elements checkout */}
+          {/* Right: Checkout */}
           <div className="bg-zinc-900/60 border border-zinc-800 rounded-2xl p-6 md:p-8">
             <h2 className="text-xl font-semibold mb-4">Payment method</h2>
 
