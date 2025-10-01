@@ -209,7 +209,7 @@ export default function AddProfilePage() {
                   <button
                     type="button"
                     onClick={addService}
-                    className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 px-4 py-2 rounded-lg flex items-center gap-1"
+                    className="bg-yellow-400 hover:bg-ember-500 text-gray-900 px-4 py-2 rounded-lg flex items-center gap-1"
                   >
                     <FiPlus /> Add
                   </button>
@@ -221,7 +221,7 @@ export default function AddProfilePage() {
                 <label className="block text-gray-700 font-medium mb-2">Skills</label>
                 <div className="flex flex-wrap gap-2 mb-2">
                   {formData.skills.map((s, i) => (
-                    <div key={i} className="flex items-center gap-1 bg-green-400 text-gray-900 px-3 py-1 rounded-full">
+                    <div key={i} className="flex items-center gap-1 bg-ember-500 text-gray-900 px-3 py-1 rounded-full">
                       {s}
                       <button type="button" onClick={() => removeSkill(s)}>
                         <FiTrash2 size={16} />
@@ -240,7 +240,7 @@ export default function AddProfilePage() {
                   <button
                     type="button"
                     onClick={addSkill}
-                    className="bg-green-400 hover:bg-green-500 text-gray-900 px-4 py-2 rounded-lg flex items-center gap-1"
+                    className="bg-green-400 hover:bg-ember-500 text-gray-900 px-4 py-2 rounded-lg flex items-center gap-1"
                   >
                     <FiPlus /> Add
                   </button>
