@@ -1,133 +1,158 @@
 "use client";
-//Prompt: Add Comments in the code , Reference: chatgpt.com
+
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Bell, Home, MessageCircle, Settings, Users } from "lucide-react";
+import {
+  FiHome,
+  FiMessageCircle,
+  FiHelpCircle,
+  FiBell,
+  FiSettings,
+  FiUser,
+} from "react-icons/fi";
 
 export default function PortfolioPage() {
   const router = useRouter();
   const [isBuyer, setIsBuyer] = useState(false);
 
   return (
-    <div className="min-h-screen w-full flex flex-col bg-gray-100">
-      {/* Header */}
-      <div className="bg-cyan-500 p-6 relative">
-        {/* Menu Button */}
-        <button className="absolute right-4 top-6 text-white text-3xl">☰</button>
-
-        {/* Profile Info */}
-        <div className="flex flex-col items-center mt-6">
-          <img src="../images/kenji.jpg"
-            alt="Profile"
-            className="w-20 h-20 rounded-full border-4 border-white shadow-md"
-          />
-          <h2 className="text-lg font-bold text-black mt-3">Kenji Teneka</h2>
-          <p className="text-sm text-black">kenjiteneka@gmail.com</p>
+    <div className="min-h-screen bg-gray-900 flex flex-col text-gray-100">
+      {/* HEADER */}
+      <header className="bg-gradient-to-r from-[#FFCC66] to-[#FF7E5F] shadow-md relative">
+        <div className="flex items-center justify-between px-4 py-3">
+          <h1 className="text-xl font-extrabold text-gray-900 tracking-wide">
+            Handyman Portfolio
+          </h1>
+          <button
+            className="p-2 rounded-full hover:bg-yellow-500 transition"
+            onClick={() => router.push("/handyAccount")}
+          >
+            <FiUser size={20} className="text-gray-900" />
+          </button>
         </div>
+      </header>
 
-        {/* Stats */}
-        <div className="flex justify-around text-center mt-6 mb-1 text-black font-semibold">
-          <div>
-            <p className="text-xl">15</p>
-            <p className="text-sm">Job Done</p>
-          </div>
-          <div>
-            <p className="text-xl">3</p>
-            <p className="text-sm">Job In Progress</p>
-          </div>
-          <div>
-            <p className="text-xl">5 ⭐</p>
-            <p className="text-sm">Rating</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Switch to Handyman */}
-      <div className="px-6 mb-2">
-        <div className="bg-white flex justify-between items-center px-5 py-4 rounded-xl shadow-md">
-          <p className="font-medium">Switch To Handyman</p>
-          <label className="inline-flex items-center cursor-pointer">
-            <input
-              type="checkbox"
-              checked={isBuyer}
-              onChange={() => {
-                setIsBuyer(!isBuyer);
-                if (!isBuyer) {
-                  router.push("/handyDashboard"); // Redirect to Handyman Dashboard
-                }
-              }}
-              className="sr-only"
+      {/* PROFILE SECTION */}
+      <main className="flex-1 overflow-y-auto">
+        <section className="bg-gray-700 text-white py-8">
+          <div className="flex flex-col items-center">
+            <img
+              src="/images/kenji.jpg"
+              alt="Profile"
+              className="w-24 h-24 rounded-full border-4 border-yellow-400 shadow-lg object-cover"
             />
-            <div className="w-12 h-6 bg-gray-300 rounded-full p-1 flex items-center">
+            <h2 className="text-lg font-bold mt-3 text-yellow-400">
+              Kenji Teneka
+            </h2>
+            <p className="text-xs text-gray-300">kenjiteneka@gmail.com</p>
+
+            {/* stats */}
+            <div className="flex justify-center gap-6 mt-4 text-gray-100 text-sm">
+              <div>
+                <p className="text-base font-bold">15</p>
+                <p>Jobs Done</p>
+              </div>
+              <div>
+                <p className="text-base font-bold">3</p>
+                <p>In Progress</p>
+              </div>
+              <div>
+                <p className="text-base font-bold">5.0 ⭐</p>
+                <p>Rating</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* CONTENT CARDS */}
+        <section className="px-4 py-6 space-y-6">
+          {/* Switch */}
+          <div className="bg-gray-800 rounded-lg shadow p-4 flex items-center justify-between">
+            <span className="font-medium text-yellow-400">
+              Switch To Buyer Mode
+            </span>
+            <button
+              onClick={() => {
+                setIsBuyer(!isBuyer);
+                if (!isBuyer) router.push("/clientDashboard");
+              }}
+              className={`w-12 h-6 flex items-center rounded-full p-1 transition ${
+                isBuyer ? "bg-yellow-500" : "bg-gray-600"
+              }`}
+            >
               <div
-                className={`w-5 h-5 rounded-full bg-cyan-500 transition-transform ${
-                  isBuyer ? "translate-x-6" : ""
+                className={`w-5 h-5 bg-white rounded-full shadow transform ${
+                  isBuyer ? "translate-x-6" : "translate-x-0"
                 }`}
               />
-            </div>
-          </label>
-        </div>
-      </div>
-
-      {/* Scrollable Main Content */}
-      <div className="flex-1 overflow-y-auto p-6 bg-gray-200">
-        {/* Earnings */}
-        <div className="mb-6">
-          <div className="flex justify-between items-center">
-            <h3 className="font-semibold">Your Earning</h3>
-            <a href="#" className="text-sm text-cyan-600 hover:underline">
-              View All
-            </a>
+            </button>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 mt-4">
-            <div className="bg-purple-100 p-4 rounded-xl text-center">
-              <p className="text-2xl font-bold">$800</p>
-              <p className="text-sm text-gray-700">Your this month</p>
+          {/* Earnings */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-gray-800 rounded-lg shadow p-4 text-center">
+              <p className="text-lg font-bold text-yellow-400">$800</p>
+              <p className="text-xs text-gray-300">This Month</p>
             </div>
-            <div className="bg-purple-100 p-4 rounded-xl text-center">
-              <p className="text-2xl font-bold">3</p>
-              <p className="text-sm text-gray-700">Active Order</p>
+            <div className="bg-gray-800 rounded-lg shadow p-4 text-center">
+              <p className="text-lg font-bold text-yellow-400">3</p>
+              <p className="text-xs text-gray-300">Active Orders</p>
             </div>
           </div>
-        </div>
 
-        {/* Recent Orders */}
-        <div>
-          <h3 className="font-semibold mb-3">Recent Orders</h3>
-          <div className="bg-purple-100 p-4 rounded-xl flex items-center gap-3">
-            <div className="w-12 h-12 bg-white flex items-center justify-center rounded-full shadow">
-              🏠
-            </div>
-            <div>
-              <p className="font-bold">ELECTRICAL REPAIR 👨‍🔧</p>
-              <p className="text-sm text-gray-600">
-                John Patronsky recently booked for the “electrical repair” service.
+          {/* Recent Orders */}
+          <div className="bg-gray-800 rounded-lg shadow p-4">
+            <h3 className="font-semibold mb-3 text-yellow-400 text-sm">
+              Recent Orders
+            </h3>
+            <div className="p-3 border rounded-lg hover:shadow transition">
+              <p className="font-bold text-yellow-400 text-sm">
+                ELECTRICAL REPAIR 👨‍🔧
+              </p>
+              <p className="text-xs text-gray-300">
+                John Patronsky booked this service recently.
               </p>
             </div>
           </div>
-        </div>
-      </div>
+        </section>
+      </main>
 
-      {/* Bottom Navigation */}
-      <div className="bg-cyan-500 flex justify-around items-center h-14">
-        <button onClick={() => router.push("/")} className="cursor-pointer hover:text-white transition">
-          <Home className="w-6 h-6 text-black" />
-        </button>
-        <button onClick={() => router.push("/messages")} className="cursor-pointer hover:text-white transition">
-          <MessageCircle className="w-6 h-6 text-black" />
-        </button>
-        <button onClick={() => router.push("/portfolio")} className="cursor-pointer hover:text-white transition">
-          <Users className="w-6 h-6 text-black" />
-        </button>
-        <button onClick={() => router.push("/notifications")} className="relative cursor-pointer hover:text-white transition">
-          <Bell className="w-6 h-6 text-black" />
-          <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full"></span>
-        </button>
-        <button onClick={() => router.push("/settings")} className="cursor-pointer hover:text-white transition">
-          <Settings className="w-6 h-6 text-black" />
-        </button>
-      </div>
+      {/* FOOTER */}
+      <footer className="bg-gray-800 text-gray-300">
+        <div className="flex justify-around py-3 text-xs">
+          <button
+            onClick={() => router.push("/")}
+            className="flex flex-col items-center gap-0.5 hover:text-yellow-400 transition"
+          >
+            <FiHome size={18} /> Home
+          </button>
+          <button
+            onClick={() => router.push("/messages")}
+            className="flex flex-col items-center gap-0.5 hover:text-yellow-400 transition"
+          >
+            <FiMessageCircle size={18} /> Messages
+          </button>
+          <button
+            onClick={() => router.push("/portfolio")}
+            className="flex flex-col items-center gap-0.5 hover:text-yellow-400 transition"
+          >
+            <FiUser size={18} /> Portfolio
+          </button>
+          <button
+            onClick={() => router.push("/notifications")}
+            className="relative flex flex-col items-center gap-0.5 hover:text-yellow-400 transition"
+          >
+            <FiBell size={18} /> Notifications
+            <span className="absolute top-0 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+          </button>
+          <button
+            onClick={() => router.push("/settings")}
+            className="flex flex-col items-center gap-0.5 hover:text-yellow-400 transition"
+          >
+            <FiSettings size={18} /> Settings
+          </button>
+        </div>
+      </footer>
     </div>
   );
 }
