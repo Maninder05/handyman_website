@@ -1,13 +1,14 @@
 import mongoose from 'mongoose';
 
-const HandymanSchema = new mongoose.Schema({
+const handymanSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
-  phone: { type: String, default: '' },
-  bio: { type: String, default: '' },
+  phone: { type: String },
+  bio: { type: String, required: true },
   services: { type: [String], default: [] },
   skills: { type: [String], default: [] },
-  profileImage: { type: String, default: '' },
+  profileImage: { type: String },
 }, { timestamps: true });
 
-export default mongoose.model('Handyman', HandymanSchema);
+const Handyman = mongoose.model('Handyman', handymanSchema);
+export default Handyman;
