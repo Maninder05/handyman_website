@@ -1,3 +1,6 @@
+/**Author: Navindu 
+ * 
+*/
 import express from "express";
 import { createIntent, getPayment } from "../controllers/payment.controller.js";
 
