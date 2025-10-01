@@ -86,17 +86,17 @@ export default function CreateService() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-100 flex flex-col">
+    <div className="min-h-screen bg-amber-50 flex flex-col">
       {/* Header */}
-      <header className="bg-yellow-500 p-6 shadow-md text-center">
-        <h1 className="text-3xl font-bold text-white">Create Service</h1>
+      <header className="bg-amber-200 p-6 shadow-md text-center">
+        <h1 className="text-3xl font-bold text-amber-900">Create Service</h1>
       </header>
 
       {/* Main content area */}
       <main className="flex-1 flex justify-center items-start py-10 px-4">
         {/* Form card */}
         <div className="w-full max-w-4xl bg-white rounded-xl shadow-lg p-10 space-y-8">
-          {/* the field to enter the title of the service */}
+          {/* Service Title */}
           <div>
             <label className="block mb-2 font-semibold text-neutral-800">
               Service Title
@@ -105,7 +105,7 @@ export default function CreateService() {
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full rounded-lg p-4 border border-gray-300 bg-neutral-50 text-neutral-800 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
+              className="w-full rounded-lg p-4 border border-gray-300 bg-neutral-50 text-neutral-800 focus:outline-none focus:ring-2 focus:ring-amber-400 transition"
               placeholder="Enter service title"
             />
             {errors.title && (
@@ -113,7 +113,7 @@ export default function CreateService() {
             )}
           </div>
 
-          {/* the field to choose the category */}
+          {/* Category */}
           <div>
             <label className="block mb-2 font-semibold text-neutral-800">
               Category
@@ -121,7 +121,7 @@ export default function CreateService() {
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full rounded-lg p-4 border border-gray-300 bg-neutral-50 text-neutral-800 focus:outline-none focus:ring-2 focus:ring-yellow-400 appearance-none pr-8 transition cursor-pointer"
+              className="w-full rounded-lg p-4 border border-gray-300 bg-neutral-50 text-neutral-800 focus:outline-none focus:ring-2 focus:ring-amber-400 appearance-none pr-8 transition cursor-pointer"
             >
               <option value="">Select Category</option>
               <option>Electrical Repair</option>
@@ -134,7 +134,7 @@ export default function CreateService() {
             )}
           </div>
 
-          {/* the field to upload the image */}
+          {/* Image Upload */}
           <div>
             <label className="block mb-2 font-semibold text-neutral-800">
               Image
@@ -166,7 +166,7 @@ export default function CreateService() {
             )}
           </div>
 
-          {/* The field to select the price type */}
+          {/* Price */}
           <div>
             <label className="block mb-2 font-semibold text-neutral-800">
               Price
@@ -175,7 +175,7 @@ export default function CreateService() {
               <select
                 value={priceType}
                 onChange={(e) => setPriceType(e.target.value)}
-                className="rounded-lg p-4 border border-gray-300 bg-neutral-50 text-neutral-800 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition cursor-pointer"
+                className="rounded-lg p-4 border border-gray-300 bg-neutral-50 text-neutral-800 focus:outline-none focus:ring-2 focus:ring-amber-400 transition cursor-pointer"
               >
                 <option>Hourly</option>
                 <option>Fixed</option>
@@ -184,7 +184,7 @@ export default function CreateService() {
                 type="text"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
-                className="flex-1 rounded-lg p-4 border border-gray-300 bg-neutral-50 text-neutral-800 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
+                className="flex-1 rounded-lg p-4 border border-gray-300 bg-neutral-50 text-neutral-800 focus:outline-none focus:ring-2 focus:ring-amber-400 transition"
                 placeholder="Enter price"
               />
             </div>
@@ -193,17 +193,17 @@ export default function CreateService() {
             )}
           </div>
 
-          {/* Both buttons are defined here */}
+          {/* Buttons */}
           <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
             <button
               onClick={() => setPopup("Draft Saved Successfully 📝")}
-              className="bg-gray-600 text-white px-5 py-2 rounded-lg hover:bg-gray-700 transition shadow"
+              className="bg-amber-300 text-amber-900 px-5 py-2 rounded-lg hover:bg-amber-400 transition shadow"
             >
               Save Draft
             </button>
             <button
               onClick={handleSubmit}
-              className="bg-yellow-500 text-white px-5 py-2 rounded-lg hover:bg-yellow-600 transition shadow"
+              className="bg-amber-500 text-white px-5 py-2 rounded-lg hover:bg-amber-600 transition shadow"
             >
               Submit Now →
             </button>
@@ -211,14 +211,14 @@ export default function CreateService() {
         </div>
       </main>
 
-      {/* Function for popup */}
+      {/* Popup */}
       {popup && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-xl shadow text-center w-80 text-neutral-800">
             <h2 className="text-lg font-bold mb-4">{popup}</h2>
             <button
               onClick={() => setPopup(null)}
-              className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition"
+              className="bg-amber-500 text-white px-4 py-2 rounded-lg hover:bg-amber-600 transition"
             >
               Close
             </button>
