@@ -88,7 +88,8 @@ export default function FilterPage() {
       {/* Header */}
       <section className="bg-yellow-600 w-full py-10 shadow-md text-center">
         <h1 className="text-3xl font-bold text-gray-900 tracking-wide">
-          Find Your Perfect Handyman
+          {" "}
+          Advance Filter
         </h1>
       </section>
 
