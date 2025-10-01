@@ -95,12 +95,15 @@ export default function AddProfilePage() {
 
       const payload = { ...formData, profileImage };
 
-      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/handymen`, payload, { withCredentials: true });
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/handymen`,
+        payload
+      );
 
       alert("Profile created successfully!");
       router.push("/handyAccount");
     } catch (err: unknown) {
-      console.error(err);
+      console.error("Error creating profile:", err);
       alert("Error: Could not create profile. Check console for details.");
     }
   };
@@ -108,7 +111,7 @@ export default function AddProfilePage() {
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
       {/* Header */}
-      <header className="bg-yellow-400 shadow-md py-4 px-6 flex justify-center items-center">
+      <header className="bg-amber-500 shadow-md py-4 px-6 flex justify-center items-center">
         <h1 className="text-2xl font-bold text-gray-900 tracking-wide">Handyman Profile</h1>
       </header>
 
@@ -119,7 +122,7 @@ export default function AddProfilePage() {
         >
           {/* LEFT PANEL */}
           <div className="w-1/3 bg-gray-50 flex flex-col items-center p-6 gap-4 overflow-y-auto">
-            <div className="relative w-28 h-28 rounded-full overflow-hidden border-4 border-yellow-400 shadow-md">
+            <div className="relative w-28 h-28 rounded-full overflow-hidden border-4 border-amber-500 shadow-md">
               {profilePic ? (
                 <Image src={URL.createObjectURL(profilePic)} alt="Profile" fill className="object-cover" />
               ) : (
@@ -127,7 +130,7 @@ export default function AddProfilePage() {
                   <FiUser size={50} />
                 </div>
               )}
-              <label className="absolute bottom-0 right-0 bg-yellow-400 p-2 rounded-full cursor-pointer hover:bg-yellow-500 transition">
+              <label className="absolute bottom-0 right-0 bg-amber-500 p-2 rounded-full cursor-pointer hover:bg-amber-600 transition">
                 <FiCamera size={20} />
                 <input type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
               </label>
@@ -141,7 +144,7 @@ export default function AddProfilePage() {
                 placeholder="Full Name"
                 className={`w-full p-3 rounded-lg border ${
                   errors.name ? "border-red-500" : "border-gray-300"
-                } focus:border-yellow-400 outline-none transition`}
+                } focus:border-amber-500 outline-none transition`}
                 required
               />
               {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
@@ -154,7 +157,7 @@ export default function AddProfilePage() {
                 placeholder="Email"
                 className={`w-full p-3 rounded-lg border ${
                   errors.email ? "border-red-500" : "border-gray-300"
-                } focus:border-yellow-400 outline-none transition`}
+                } focus:border-amber-500 outline-none transition`}
                 required
               />
               {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
@@ -165,7 +168,7 @@ export default function AddProfilePage() {
                 value={formData.phone}
                 onChange={handleChange}
                 placeholder="Phone (Optional)"
-                className="w-full p-3 rounded-lg border border-gray-300 focus:border-yellow-400 outline-none transition"
+                className="w-full p-3 rounded-lg border border-gray-300 focus:border-amber-500 outline-none transition"
               />
             </div>
           </div>
@@ -180,7 +183,7 @@ export default function AddProfilePage() {
                 placeholder="Write a short bio..."
                 className={`w-full p-3 rounded-lg border ${
                   errors.bio ? "border-red-500" : "border-gray-300"
-                } focus:border-yellow-400 outline-none transition resize-none h-24`}
+                } focus:border-amber-500 outline-none transition resize-none h-24`}
                 required
               />
               {errors.bio && <p className="text-red-500 text-sm">{errors.bio}</p>}
@@ -190,7 +193,7 @@ export default function AddProfilePage() {
                 <label className="block text-gray-700 font-medium mb-2">Services Offered</label>
                 <div className="flex flex-wrap gap-2 mb-2">
                   {formData.services.map((s, i) => (
-                    <div key={i} className="flex items-center gap-1 bg-yellow-400 text-gray-900 px-3 py-1 rounded-full">
+                    <div key={i} className="flex items-center gap-1 bg-amber-500 text-gray-900 px-3 py-1 rounded-full">
                       {s}
                       <button type="button" onClick={() => removeService(s)}>
                         <FiTrash2 size={16} />
@@ -204,12 +207,12 @@ export default function AddProfilePage() {
                     value={newService}
                     onChange={(e) => setNewService(e.target.value)}
                     placeholder="Add a service..."
-                    className="flex-1 p-3 rounded-lg border border-gray-300 focus:border-yellow-400 outline-none transition"
+                    className="flex-1 p-3 rounded-lg border border-gray-300 focus:border-amber-500 outline-none transition"
                   />
                   <button
                     type="button"
                     onClick={addService}
-                    className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 px-4 py-2 rounded-lg flex items-center gap-1"
+                    className="bg-amber-500 hover:bg-amber-600 text-gray-900 px-4 py-2 rounded-lg flex items-center gap-1"
                   >
                     <FiPlus /> Add
                   </button>
@@ -221,7 +224,7 @@ export default function AddProfilePage() {
                 <label className="block text-gray-700 font-medium mb-2">Skills</label>
                 <div className="flex flex-wrap gap-2 mb-2">
                   {formData.skills.map((s, i) => (
-                    <div key={i} className="flex items-center gap-1 bg-green-400 text-gray-900 px-3 py-1 rounded-full">
+                    <div key={i} className="flex items-center gap-1 bg-amber-500 text-gray-900 px-3 py-1 rounded-full">
                       {s}
                       <button type="button" onClick={() => removeSkill(s)}>
                         <FiTrash2 size={16} />
@@ -235,12 +238,12 @@ export default function AddProfilePage() {
                     value={newSkill}
                     onChange={(e) => setNewSkill(e.target.value)}
                     placeholder="Add a skill..."
-                    className="flex-1 p-3 rounded-lg border border-gray-300 focus:border-green-400 outline-none transition"
+                    className="flex-1 p-3 rounded-lg border border-gray-300 focus:border-amber-500 outline-none transition"
                   />
                   <button
                     type="button"
                     onClick={addSkill}
-                    className="bg-green-400 hover:bg-green-500 text-gray-900 px-4 py-2 rounded-lg flex items-center gap-1"
+                    className="bg-amber-500 hover:bg-amber-600 text-gray-900 px-4 py-2 rounded-lg flex items-center gap-1"
                   >
                     <FiPlus /> Add
                   </button>
@@ -250,7 +253,7 @@ export default function AddProfilePage() {
 
             <button
               type="submit"
-              className="mt-4 w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold py-3 rounded-lg transition"
+              className="mt-4 w-full bg-amber-500 hover:bg-amber-600 text-gray-900 font-semibold py-3 rounded-lg transition"
             >
               Create Profile
             </button>
