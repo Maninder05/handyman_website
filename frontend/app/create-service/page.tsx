@@ -127,7 +127,7 @@ export default function CreateService() {
 
             {/* Profile dropdown */}
             {showProfileMenu && (
-              <div className="absolute right-14 top-14 bg-white rounded-xl shadow-lg border w-48 z-50">
+              <div className="absolute right-14 top-14 bg-gray-800 rounded-xl shadow-lg border w-48 z-50">
                 <ul className="text-sm divide-y">
                   <li>
                     <Link
@@ -159,7 +159,7 @@ export default function CreateService() {
 
             {/* Hamburger dropdown */}
             {showMenu && (
-              <div className="absolute right-0 top-14 bg-white shadow-xl rounded-xl border w-56 text-sm z-50 overflow-hidden">
+              <div className="absolute right-0 top-14 bg-gray-800 shadow-xl rounded-xl border w-56 text-sm z-50 overflow-hidden">
                 <ul className="divide-y">
                   <li>
                     <Link
