@@ -3,9 +3,13 @@ import React, { useState } from "react";
 
 export default function FilterPage() {
   const [rate, setRate] = useState(50);
-  const [distance, setDistance] = useState(1);
   const [experience, setExperience] = useState("");
   const [skills, setSkills] = useState<string[]>([]);
+
+  // New address states
+  const [address1, setAddress1] = useState("");
+  const [city, setCity] = useState("");
+  const [province, setProvince] = useState("");
 
   const skillOptions = [
     "House Cleaning",
@@ -36,9 +40,13 @@ export default function FilterPage() {
 
       const filters = {
         hourlyRate: rate,
-        distanceRadiusKm: distance,
         experience: Number(experience),
         skills,
+        address: {
+          address1,
+          city,
+          province,
+        },
         attributes: { updatedAt: new Date().toISOString() },
       };
 
@@ -80,7 +88,8 @@ export default function FilterPage() {
       {/* Header */}
       <section className="bg-yellow-600 w-full py-10 shadow-md text-center">
         <h1 className="text-3xl font-bold text-gray-900 tracking-wide">
-          Find Your Perfect Handyman
+          {" "}
+          Advance Filter
         </h1>
       </section>
 
@@ -130,26 +139,32 @@ export default function FilterPage() {
           </select>
         </div>
 
-        {/* Distance */}
+        {/* Address Section */}
         <div className="mb-10">
           <label className="block font-semibold mb-3 text-gray-200">
-            Distance
+            Address
           </label>
           <input
-            type="range"
-            min="1"
-            max="50"
-            value={distance}
-            onChange={(e) => setDistance(Number(e.target.value))}
-            className="w-full accent-yellow-500"
+            type="text"
+            placeholder="Street name / House no"
+            value={address1}
+            onChange={(e) => setAddress1(e.target.value)}
+            className="w-full p-3 mb-4 rounded-lg bg-gray-900 border border-gray-700 text-gray-100 focus:border-yellow-500 focus:ring focus:ring-yellow-400"
           />
-          <div className="flex justify-between text-sm text-gray-400 mt-1">
-            <span>1 km</span>
-            <span>50 km</span>
-          </div>
-          <p className="text-sm mt-2 text-yellow-400 text-center">
-            Selected: {distance} km
-          </p>
+          <input
+            type="text"
+            placeholder="City"
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
+            className="w-full p-3 mb-4 rounded-lg bg-gray-900 border border-gray-700 text-gray-100 focus:border-yellow-500 focus:ring focus:ring-yellow-400"
+          />
+          <input
+            type="text"
+            placeholder="Province"
+            value={province}
+            onChange={(e) => setProvince(e.target.value)}
+            className="w-full p-3 rounded-lg bg-gray-900 border border-gray-700 text-gray-100 focus:border-yellow-500 focus:ring focus:ring-yellow-400"
+          />
         </div>
 
         {/* Skills */}
@@ -180,9 +195,11 @@ export default function FilterPage() {
           <button
             onClick={() => {
               setRate(50);
-              setDistance(1);
               setExperience("");
               setSkills([]);
+              setAddress1("");
+              setCity("");
+              setProvince("");
             }}
             className="px-8 py-3 bg-gray-700 text-gray-200 rounded-xl font-semibold hover:bg-gray-600 transition"
           >
@@ -192,7 +209,7 @@ export default function FilterPage() {
             onClick={applyFilters}
             className="px-8 py-3 bg-yellow-500 text-gray-900 rounded-xl font-semibold shadow-md hover:bg-yellow-400 transition"
           >
-            Apply Filters →
+            Save
           </button>
         </div>
       </section>

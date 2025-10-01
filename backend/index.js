@@ -7,7 +7,7 @@ import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
 
-import RouterUser from "./routes/RouteUser.js";       // User routes
+import RouterUser from "./routes/RouteUser.js"; // User routes
 import RouterHandyman from "./routes/handyRoutes.js"; // Handyman routes
 import RouterService from "./routes/CreateServiceRoutes.js";// ✅ New service routes
 
@@ -17,10 +17,12 @@ import RouterService from "./routes/CreateServiceRoutes.js";// ✅ New service r
 const app = express();
 const PORT = process.env.PORT || 7000;
 
-app.use(cors({
-  origin: process.env.CLIENT_URL,
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL,
+    credentials: true,
+  })
+);
 
 // // Stripe webhook route must come BEFORE express.json()
 // app.post(
@@ -40,28 +42,28 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-app.use('/api/users', RouterUser);
-app.use('/api/handymen', RouterHandyman);
-app.use('/api/services', RouterService);
-// app.use('/api/payments', paymentRouter);
 
-app.get('/', (req, res) => {
-  res.send('Backend is running!');
+
+app.get("/", (req, res) => {
+  res.send("Backend is running!");
 });
 
-mongoose.connect(process.env.MONGO_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}).then(() => {
-  console.log('Connected to MongoDB successfully!');
-  app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+mongoose
+  .connect(process.env.MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("Connected to MongoDB successfully!");
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("Database connection error:", err);
   });
-}).catch((err) => {
-  console.error('Database connection error:', err);
-});
 
 app.use((err, req, res, next) => {
-  console.error('Unhandled error:', err);
-  res.status(500).json({ error: 'Something went wrong!' });
+  console.error("Unhandled error:", err);
+  res.status(500).json({ error: "Something went wrong!" });
 });
