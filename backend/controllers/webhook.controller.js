@@ -1,40 +1,67 @@
-/**Author: Navindu 
- * 
-*/
-import Payment from "../models/Payment.js";
-import { constructEvent } from "../services/stripe.service.js";
+// backend/controllers/webhook.controller.js
+import { verifyStripeEvent, stripe } from "../services/stripe.client.js";
+import Subscription from "../models/subscription.model.js";
 
-// POST /api/webhooks/stripe  (raw body is set in index.js before json middleware)
-export async function handleStripeWebhook(req, res, next) {
+const toDate = (unix) => (unix ? new Date(unix * 1000) : undefined);
+
+const upsert = async (sub, meta = {}) => {
+  // sub is a Stripe Subscription object
+  await Subscription.findOneAndUpdate(
+    { stripeSubscriptionId: sub.id },
+    {
+      planName: meta.planName ?? undefined,
+      billingInterval: meta.billing ?? undefined,
+      stripeCustomerId: typeof sub.customer === "string" ? sub.customer : sub.customer?.id,
+      stripeSubscriptionId: sub.id,
+      status: sub.status,
+      currentPeriodStart: toDate(sub.current_period_start),
+      currentPeriodEnd: toDate(sub.current_period_end),
+      bookingId: meta.bookingId ?? undefined,
+    },
+    { upsert: true, new: true, setDefaultsOnInsert: true }
+  );
+};
+
+export async function handleStripeWebhook(req, res) {
+  let event;
   try {
-    const sig = req.headers["stripe-signature"];
-    const event = constructEvent(sig, req.rawBody);
+    event = verifyStripeEvent(req);
+  } catch (e) {
+    return res.status(400).send(`Webhook Error: ${e.message}`);
+  }
 
+  try {
     switch (event.type) {
-      case "payment_intent.succeeded": {
-        const intent = event.data.object;
-        const chargeId = intent.charges?.data?.[0]?.id;
-        await Payment.findOneAndUpdate(
-          { stripePaymentIntentId: intent.id },
-          { status: "succeeded", ...(chargeId ? { stripeChargeId: chargeId } : {}) }
-        );
+      case "checkout.session.completed": {
+        const session = event.data.object;
+        if (session.mode === "subscription" && session.subscription) {
+          const sub = await stripe.subscriptions.retrieve(session.subscription);
+          await upsert(sub, session.metadata || {});
+        }
         break;
       }
-      case "payment_intent.processing": {
-        const intent = event.data.object;
-        await Payment.findOneAndUpdate(
-          { stripePaymentIntentId: intent.id },
-          { status: "processing" }
-        );
+
+      case "invoice.payment_succeeded": {
+        const invoice = event.data.object;
+        if (invoice.subscription) {
+          const sub = await stripe.subscriptions.retrieve(invoice.subscription);
+          await upsert(sub); // metadata not needed here; we keep existing plan/billing
+        }
         break;
       }
-      default:
-        // ignore others
+
+      case "customer.subscription.updated":
+      case "customer.subscription.deleted": {
+        const sub = event.data.object; // already a subscription object
+        await upsert(sub);
         break;
+      }
+      // other events are ignored
     }
 
     res.json({ received: true });
   } catch (err) {
-    next(err);
+    console.error("[webhook] handler error:", err);
+    res.status(500).json({ error: "Webhook handler failed" });
   }
 }
