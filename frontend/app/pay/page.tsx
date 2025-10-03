@@ -1,11 +1,34 @@
 // frontend/app/pay/page.tsx
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
+// ----------------- Config -----------------
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:7000";
 
+// PayPal (client env)
+const PAYPAL_ENV = (process.env.NEXT_PUBLIC_PAYPAL_ENV || "sandbox").toLowerCase();
+const PAYPAL_CLIENT_ID = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID!;
+const PAYPAL_CURRENCY = process.env.NEXT_PUBLIC_PAYPAL_CURRENCY || "CAD";
+
+// Map your PayPal plan IDs from .env.local
+const PAYPAL_PLANS: Record<string, { monthly?: string; yearly?: string }> = {
+  Basic: {
+    monthly: process.env.NEXT_PUBLIC_PAYPAL_PLAN_BASIC_MONTHLY,
+    yearly: process.env.NEXT_PUBLIC_PAYPAL_PLAN_BASIC_YEARLY,
+  },
+  Seasonal: {
+    monthly: process.env.NEXT_PUBLIC_PAYPAL_PLAN_SEASONAL_MONTHLY,
+    yearly: process.env.NEXT_PUBLIC_PAYPAL_PLAN_SEASONAL_YEARLY,
+  },
+  Pro: {
+    monthly: process.env.NEXT_PUBLIC_PAYPAL_PLAN_PRO_MONTHLY,
+    yearly: process.env.NEXT_PUBLIC_PAYPAL_PLAN_PRO_YEARLY,
+  },
+};
+
+// Display-only; server verifies/records the real amount
 const PLANS = [
   { name: "Basic",    monthly: 10, yearly: 96,  tagline: "Great for individuals starting out." },
   { name: "Seasonal", monthly: 12, yearly: 108, tagline: "For weekend warriors & seasonal pros." },
@@ -14,6 +37,7 @@ const PLANS = [
 
 type Billing = "monthly" | "yearly";
 
+// ----------------- UI Bits -----------------
 function Summary({
   planName, billing, displayAmount, tagline,
 }: { planName: string; billing: Billing; displayAmount: string; tagline?: string }) {
@@ -50,6 +74,28 @@ function Summary({
   );
 }
 
+// load external script (PayPal SDK)
+function useScript(src: string) {
+  const [loaded, setLoaded] = useState(false);
+  useEffect(() => {
+    const s = document.createElement("script");
+    s.src = src;
+    s.async = true;
+    s.onload = () => setLoaded(true);
+    s.onerror = () => setLoaded(false);
+    document.body.appendChild(s);
+    return () => {
+      try { document.body.removeChild(s); } catch {}
+    };
+  }, [src]);
+  return loaded;
+}
+
+declare global {
+  interface Window { paypal: any }
+}
+
+// ----------------- Page -----------------
 export default function PayPage() {
   const search = useSearchParams();
 
@@ -67,14 +113,17 @@ export default function PayPage() {
   const [bookingId] = useState<string>(() => `B-${Date.now()}`);
   const [creating, setCreating] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  const [info, setInfo] = useState<string | null>(null);
   const [saveMsg, setSaveMsg] = useState<string | null>(null);
   const [confirming, setConfirming] = useState(false);
 
-  // Redirect to Stripe Checkout
+  // -------- STRIPE (Hosted Checkout redirect) --------
   const handleSubscribe = async () => {
     try {
       setCreating(true);
       setErr(null);
+      setInfo(null);
+      setSaveMsg(null);
 
       const res = await fetch(`${API_URL}/api/subscriptions/checkout-session`, {
         method: "POST",
@@ -95,7 +144,7 @@ export default function PayPage() {
     }
   };
 
-  // Confirm automatically after redirect
+  // Auto-confirm after Stripe redirect back
   useEffect(() => {
     (async () => {
       if (!success || !sessionId) return;
@@ -118,7 +167,6 @@ export default function PayPage() {
     })();
   }, [success, sessionId]);
 
-  // Manual fallback (if auto confirm didn't run)
   const manualConfirm = async () => {
     if (!sessionId) return;
     try {
@@ -135,6 +183,71 @@ export default function PayPage() {
     }
   };
 
+  // -------- PAYPAL (Subscriptions) --------
+  const planId = PAYPAL_PLANS[plan.name]?.[billing];
+  const paypalContainerRef = useRef<HTMLDivElement>(null);
+
+  // Disable extra funding methods (card/venmo) to avoid SDK errors for subs
+  const sdkUrl = `${
+    PAYPAL_ENV === "live" ? "https://www.paypal.com" : "https://www.sandbox.paypal.com"
+  }/sdk/js?client-id=${encodeURIComponent(PAYPAL_CLIENT_ID)}&vault=true&intent=subscription&currency=${encodeURIComponent(
+    PAYPAL_CURRENCY
+  )}&disable-funding=card,venmo`;
+
+  const paypalLoaded = useScript(sdkUrl);
+
+  useEffect(() => {
+    if (!paypalLoaded || !window.paypal || !planId || !paypalContainerRef.current) return;
+
+    // clear previous renders (if plan/billing changes)
+    paypalContainerRef.current.innerHTML = "";
+
+    window.paypal.Buttons({
+      style: { shape: "pill", tagline: false },
+      createSubscription: (_data: any, actions: any) => {
+        return actions.subscription.create({
+          plan_id: planId,
+          custom_id: bookingId,
+          application_context: { brand_name: "Handyman" },
+        });
+      },
+      onApprove: async (data: any) => {
+        try {
+          setErr(null);
+          setInfo("Finalizing your PayPal subscription…");
+          setSaveMsg(null);
+
+          const res = await fetch(`${API_URL}/api/paypal/confirm-subscription`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              subscriptionId: data.subscriptionID,
+              planName: plan.name,
+              billing,
+              bookingId,
+            }),
+          });
+
+          const text = await res.text();
+          let result: any = {};
+          try { result = JSON.parse(text); } catch {}
+          if (!res.ok) throw new Error(result?.error || text || `Server ${res.status}`);
+
+          setInfo("PayPal subscription saved ✅");
+        } catch (e: any) {
+          setErr(e?.message || "Couldn’t save PayPal subscription");
+        }
+      },
+      onCancel: () => {
+        setInfo("PayPal checkout cancelled");
+      },
+      onError: (error: any) => {
+        setErr(error?.message || error?.toString?.() || "PayPal checkout error");
+      },
+    }).render(paypalContainerRef.current);
+  }, [paypalLoaded, planId, plan.name, billing, bookingId]);
+
+  // ----------------- Render -----------------
   return (
     <main className="min-h-screen bg-zinc-950 text-zinc-100">
       <header className="w-full border-b border-zinc-900 bg-zinc-950/80 sticky top-0 z-10">
@@ -158,32 +271,49 @@ export default function PayPage() {
           </div>
 
           <div className="bg-zinc-900/60 border border-zinc-800 rounded-2xl p-6 md:p-8">
-            <h2 className="text-xl font-semibold mb-4">Payment method</h2>
+            <h2 className="text-xl font-semibold mb-4">Choose a payment method</h2>
 
-            {err && <p className="mb-4 text-sm text-red-400">Couldn’t start checkout: {err}</p>}
+            {/* Messages */}
+            {err && <p className="mb-3 text-sm text-red-400">{err}</p>}
+            {info && <p className="mb-3 text-sm text-zinc-300">{info}</p>}
+            {saveMsg && <p className="mb-3 text-sm text-zinc-300">{saveMsg}</p>}
 
+            {/* Stripe */}
             <button
               onClick={handleSubscribe}
               disabled={creating}
-              className="w-full rounded-xl bg-yellow-400 text-zinc-900 font-medium py-3 hover:bg-yellow-500 disabled:opacity-60 flex items-center justify-center gap-2"
+              className="w-full rounded-xl bg-yellow-400 text-zinc-900 font-medium py-3 hover:bg-yellow-500 disabled:opacity-60"
             >
-              {creating ? "Redirecting…" : "Continue to Checkout"}
+              {creating ? "Redirecting…" : "Pay with Card (Stripe)"}
             </button>
 
-            {saveMsg && <p className="mt-4 text-sm text-zinc-300">{saveMsg}</p>}
+            <div className="my-4 flex items-center gap-3 text-xs text-zinc-500">
+              <div className="h-px flex-1 bg-zinc-800" />
+              or
+              <div className="h-px flex-1 bg-zinc-800" />
+            </div>
 
+            {/* PayPal */}
+            {!planId && (
+              <p className="text-sm text-red-400">
+                Missing PayPal plan id for {plan.name} / {billing}. Set it in .env.local.
+              </p>
+            )}
+            <div ref={paypalContainerRef} />
+
+            {/* Manual confirm (Stripe) */}
             {success && sessionId && (
               <button
                 onClick={manualConfirm}
                 disabled={confirming}
-                className="mt-3 w-full rounded-xl border border-zinc-700 bg-zinc-800 py-2.5 text-zinc-200 hover:bg-zinc-700"
+                className="mt-4 w-full rounded-xl border border-zinc-700 bg-zinc-800 py-2.5 text-zinc-200 hover:bg-zinc-700"
               >
                 {confirming ? "Confirming…" : "Finalize (if not saved yet)"}
               </button>
             )}
 
             <p className="text-[11px] text-center text-zinc-500 mt-3">
-              You’ll be redirected to a secure Stripe page to complete your subscription.
+              You’ll be redirected or shown a secure window to complete your subscription.
             </p>
           </div>
         </div>

@@ -4,7 +4,7 @@ const { Schema, model } = mongoose;
 
 const SubscriptionSchema = new Schema(
   {
-    // common app fields
+    // app fields
     userId: { type: Schema.Types.ObjectId, ref: "user", index: true },
     provider: { type: String, enum: ["stripe", "paypal"], default: "stripe", index: true },
     planName: { type: String },
@@ -12,25 +12,34 @@ const SubscriptionSchema = new Schema(
     bookingId: { type: String, index: true },
     status: { type: String },
 
-    // Stripe-only fields
+    // Stripe
     stripeCustomerId: { type: String, index: true },
     stripeSubscriptionId: { type: String },
 
-    // PayPal-only fields
+    // PayPal
     paypalSubscriptionId: { type: String },
     paypalPlanId: { type: String },
     payerId: { type: String },
     payerEmail: { type: String },
 
-    // period
+    // periods
     currentPeriodStart: { type: Date },
     currentPeriodEnd: { type: Date },
   },
   { timestamps: true }
 );
 
-// unique per provider id (sparse so the other provider can be null)
-SubscriptionSchema.index({ stripeSubscriptionId: 1 }, { unique: true, sparse: true });
-SubscriptionSchema.index({ paypalSubscriptionId: 1 }, { unique: true, sparse: true });
+// helpful compound
+SubscriptionSchema.index({ provider: 1, status: 1, updatedAt: -1 });
+
+// UNIQUE only when the field is present (string)
+SubscriptionSchema.index(
+  { stripeSubscriptionId: 1 },
+  { unique: true, partialFilterExpression: { stripeSubscriptionId: { $type: "string" } } }
+);
+SubscriptionSchema.index(
+  { paypalSubscriptionId: 1 },
+  { unique: true, partialFilterExpression: { paypalSubscriptionId: { $type: "string" } } }
+);
 
 export default model("Subscription", SubscriptionSchema);

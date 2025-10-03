@@ -5,21 +5,37 @@ import { getPaypalSubscription } from "../services/paypal.client.js";
 
 const router = express.Router();
 
-router.get("/health", (_req, res) => res.json({ ok: true }));
+router.get("/health", (_req, res) => {
+  res.json({
+    ok: true,
+    env: process.env.PAYPAL_ENV || "sandbox",
+    hasClientId: !!process.env.PAYPAL_CLIENT_ID,
+    hasSecret: !!process.env.PAYPAL_CLIENT_SECRET,
+  });
+});
 
 /**
  * Confirm a PayPal subscription and save into "subscriptions"
- * POST /api/paypal/confirm-subscription
  * body: { subscriptionId, planName, billing, bookingId, userId? }
  */
-router.post("/confirm-subscription", async (req, res, next) => {
+router.post("/confirm-subscription", async (req, res) => {
   try {
-    const { subscriptionId, planName, billing, bookingId, userId } = req.body;
+    const { subscriptionId, planName, billing, bookingId, userId } = req.body || {};
     if (!subscriptionId) return res.status(400).json({ error: "subscriptionId required" });
 
-    const sub = await getPaypalSubscription(subscriptionId);
+    console.log("[paypal] confirm body:", req.body);
 
-    const saved = await Subscription.findOneAndUpdate(
+    // Verify with PayPal
+    const sub = await getPaypalSubscription(subscriptionId);
+    console.log("[paypal] fetched:", {
+      id: sub?.id,
+      status: sub?.status,
+      plan_id: sub?.plan_id,
+      email: sub?.subscriber?.email_address,
+    });
+
+    // Upsert in shared subscriptions collection
+    const doc = await Subscription.findOneAndUpdate(
       { paypalSubscriptionId: sub.id },
       {
         provider: "paypal",
@@ -30,22 +46,23 @@ router.post("/confirm-subscription", async (req, res, next) => {
 
         paypalSubscriptionId: sub.id,
         paypalPlanId: sub.plan_id,
-        status: sub.status, // APPROVAL_PENDING, ACTIVE, etc.
+        status: sub.status,
         payerId: sub.subscriber?.payer_id,
         payerEmail: sub.subscriber?.email_address,
-
         currentPeriodStart: sub.start_time ? new Date(sub.start_time) : undefined,
       },
       { upsert: true, new: true, setDefaultsOnInsert: true }
-    ).lean();
+    );
 
-    res.json({ ok: true, provider: "paypal", subscriptionId: sub.id, status: sub.status, mongoId: saved?._id });
+    console.log("[paypal] upserted mongo:", doc?._id?.toString());
+    res.json({ ok: true, provider: "paypal", subscriptionId: sub.id, status: sub.status, mongoId: doc?._id });
   } catch (err) {
-    next(err);
+    console.error("[paypal] confirm error:", err);
+    res.status(500).json({ error: err?.message || String(err) });
   }
 });
 
-// (optional) debug during testing
+// Debug helper
 router.get("/debug/all", async (_req, res) => {
   const docs = await Subscription.find({ provider: "paypal" }).sort({ createdAt: -1 }).lean();
   res.json({ count: docs.length, docs });
