@@ -1,13 +1,18 @@
-//handyRoutesAddProfile.js
-import express from 'express';
-import { createHandyman, getHandymen } from '../controllers/ControllerHandyProfile.js';
+import express from "express";
+import {
+  createHandyProfile,
+  getAllHandyProfiles,
+  getHandyProfileById,
+  updateHandyProfile,
+  deleteHandyProfile,
+} from "../controllers/ControllerHandyProfile.js";
 
 const router = express.Router();
 
-// POST /api/handymen -> create profile
-router.post('/', createHandyman);
-
-// GET /api/handymen -> get all handymen
-router.get('/', getHandymen);
+router.post("/", createHandyProfile);
+router.get("/", getAllHandyProfiles);
+router.get("/:id", getHandyProfileById);
+router.put("/:id", updateHandyProfile);
+router.delete("/:id", deleteHandyProfile);
 
 export default router;

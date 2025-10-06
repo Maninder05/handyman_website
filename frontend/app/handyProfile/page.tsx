@@ -13,40 +13,10 @@ type ProfileFormData = {
   skills: string[];
 };
 
-type Service = {
-  title: string;
-  desc: string;
-};
-
-type Order = {
-  title: string;
-  desc: string;
-};
-
-type Profile = {
-  name: string;
-  email: string;
-  phone?: string;
-  bio?: string;
-  jobsDone: number;
-  inProgress: number;
-  rating: number;
-  earnings: number;
-  activeOrders: number;
-  services: Service[];
-  recentOrders: Order[];
-  skills?: string[];
-  profileImage?: string;
-};
-
-const LOCAL_KEY = "handyman_profile";
-
 export default function AddProfilePage() {
   const router = useRouter();
-
   const [profilePic, setProfilePic] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-
   const [formData, setFormData] = useState<ProfileFormData>({
     name: "",
     email: "",
@@ -65,8 +35,7 @@ export default function AddProfilePage() {
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0] ?? null;
     setProfilePic(f);
-    if (f) setPreviewUrl(URL.createObjectURL(f));
-    else setPreviewUrl(null);
+    setPreviewUrl(f ? URL.createObjectURL(f) : null);
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
@@ -75,9 +44,7 @@ export default function AddProfilePage() {
   const addService = () => {
     const s = newService.trim();
     if (!s) return;
-    if (!formData.services.includes(s)) {
-      setFormData({ ...formData, services: [...formData.services, s] });
-    }
+    if (!formData.services.includes(s)) setFormData({ ...formData, services: [...formData.services, s] });
     setNewService("");
   };
 
@@ -87,9 +54,7 @@ export default function AddProfilePage() {
   const addSkill = () => {
     const s = newSkill.trim();
     if (!s) return;
-    if (!formData.skills.includes(s)) {
-      setFormData({ ...formData, skills: [...formData.skills, s] });
-    }
+    if (!formData.skills.includes(s)) setFormData({ ...formData, skills: [...formData.skills, s] });
     setNewSkill("");
   };
 
@@ -110,10 +75,7 @@ export default function AddProfilePage() {
     new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onerror = () => reject("Failed to read file");
-      reader.onloadend = () => {
-        if (typeof reader.result === "string") resolve(reader.result);
-        else reject("No result");
-      };
+      reader.onloadend = () => typeof reader.result === "string" ? resolve(reader.result) : reject("No result");
       reader.readAsDataURL(file);
     });
 
@@ -127,24 +89,36 @@ export default function AddProfilePage() {
       let profileImage = "";
       if (profilePic) profileImage = await fileToDataUrl(profilePic);
 
-      const profileToSave: Profile = {
+      // FIXED: Convert services array to match schema format
+      const profileToSave = {
         name: formData.name.trim(),
         email: formData.email.trim(),
         phone: formData.phone.trim() || undefined,
         bio: formData.bio.trim(),
-        jobsDone: 0,
-        inProgress: 0,
-        rating: 0,
-        earnings: 0,
-        activeOrders: 0,
-        services: formData.services.map((s) => ({ title: s, desc: "" })),
-        recentOrders: [],
+        // CHANGED: Map services to objects with title and desc
+        services: formData.services.map(s => ({ title: s, desc: "" })),
         skills: formData.skills.length ? formData.skills : undefined,
         profileImage: profileImage || undefined,
       };
 
-      // Save to localStorage
-      localStorage.setItem(LOCAL_KEY, JSON.stringify(profileToSave));
+      console.log("Sending profile data:", profileToSave); // Debug log
+
+      // Send to backend
+      const res = await fetch("http://localhost:8000/api/handymen", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(profileToSave),
+      });
+
+      // ADDED: Better error handling with response details
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => null);
+        console.error("Server response:", errorData);
+        throw new Error(errorData?.message || "Failed to create profile");
+      }
+
+      const savedProfile = await res.json();
+      console.log("Profile created successfully:", savedProfile); // Debug log
 
       router.push("/handyDashboard");
     } catch (err) {
@@ -166,92 +140,95 @@ export default function AddProfilePage() {
           {/* LEFT PANEL */}
           <div className="w-1/3 bg-gray-50 flex flex-col items-center p-6 gap-4 overflow-y-auto">
             <div className="relative w-28 h-28 rounded-full overflow-hidden border-4 border-[#FFCC66] shadow-md">
-              {previewUrl ? (
-                <img src={previewUrl} alt="Profile preview" className="w-full h-full object-cover" />
-              ) : (
-                <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400">
-                  <FiUser size={50} />
-                </div>
-              )}
-
+              {previewUrl ? <img src={previewUrl} alt="Profile preview" className="w-full h-full object-cover" />
+                         : <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400"><FiUser size={50} /></div>}
               <label className="absolute bottom-0 right-0 bg-[#FFCC66] p-2 rounded-full cursor-pointer hover:brightness-95 transition">
-                <FiCamera size={18} />
+                <FiCamera size={18}/>
                 <input type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
               </label>
-            </div>
-
-            <div className="w-full flex flex-col gap-3">
-              <input name="name" value={formData.name} onChange={handleChange} placeholder="Full Name" className={`w-full p-3 rounded-lg border ${errors.name ? "border-red-500" : "border-gray-300"} focus:border-[#FFCC66] outline-none transition`} required />
-              {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
-
-              <input name="email" type="email" value={formData.email} onChange={handleChange} placeholder="Email" className={`w-full p-3 rounded-lg border ${errors.email ? "border-red-500" : "border-gray-300"} focus:border-[#FFCC66] outline-none transition`} required />
-              {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
-
-              <input name="phone" type="tel" value={formData.phone} onChange={handleChange} placeholder="Phone (Optional)" className="w-full p-3 rounded-lg border border-gray-300 focus:border-[#FFCC66] outline-none transition" />
             </div>
           </div>
 
           {/* RIGHT PANEL */}
           <div className="w-2/3 p-6 flex flex-col justify-between overflow-y-auto">
             <div className="space-y-4">
-              <textarea name="bio" value={formData.bio} onChange={handleChange} placeholder="Write a short bio..." className={`w-full p-3 rounded-lg border ${errors.bio ? "border-red-500" : "border-gray-300"} focus:border-[#FFCC66] outline-none transition resize-none h-24`} required />
+              <input name="name" value={formData.name} onChange={handleChange} placeholder="Full Name" className={`w-full p-3 rounded-lg border ${errors.name ? "border-red-500" : "border-gray-300"} focus:border-[#FFCC66] outline-none transition`} required/>
+              {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
+              
+              <input name="email" type="email" value={formData.email} onChange={handleChange} placeholder="Email" className={`w-full p-3 rounded-lg border ${errors.email ? "border-red-500" : "border-gray-300"} focus:border-[#FFCC66] outline-none transition`} required/>
+              {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+              
+              <input name="phone" type="tel" value={formData.phone} onChange={handleChange} placeholder="Phone (Optional)" className="w-full p-3 rounded-lg border border-gray-300 focus:border-[#FFCC66] outline-none transition"/>
+              
+              <textarea name="bio" value={formData.bio} onChange={handleChange} placeholder="Write a short bio..." className={`w-full p-3 rounded-lg border ${errors.bio ? "border-red-500" : "border-gray-300"} focus:border-[#FFCC66] outline-none transition resize-none h-24`} required/>
               {errors.bio && <p className="text-red-500 text-sm">{errors.bio}</p>}
+            </div>
 
-              {/* Services */}
-              <div>
-                <label className="block text-gray-700 font-medium mb-2">Services Offered</label>
-                <div className="flex flex-wrap gap-2 mb-2">
-                  {formData.services.map((s, i) => (
-                    <div key={i} className="flex items-center gap-1 bg-[#FFCC66] text-gray-900 px-3 py-1 rounded-full">
-                      <span className="text-sm">{s}</span>
-                      <button type="button" onClick={() => removeService(s)} className="ml-1">
-                        <FiTrash2 size={14} />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-                <div className="flex gap-2">
-                  <input type="text" value={newService} onChange={(e) => setNewService(e.target.value)} placeholder="Add a service..." className="flex-1 p-3 rounded-lg border border-gray-300 focus:border-[#FFCC66] outline-none transition" />
-                  <button type="button" onClick={addService} className="bg-[#B22222] hover:bg-[#8B0000] text-white px-4 py-2 rounded-lg flex items-center gap-1">
-                    <FiPlus /> Add
-                  </button>
-                </div>
+            {/* Services */}
+            <div className="mt-4">
+              <label className="block text-gray-700 font-medium mb-2">Services Offered</label>
+              <div className="flex flex-wrap gap-2 mb-2">
+                {formData.services.map((s,i)=>
+                  <div key={i} className="flex items-center gap-1 bg-[#FFCC66] text-gray-900 px-3 py-1 rounded-full">
+                    {s}
+                    <button type="button" onClick={()=>removeService(s)} className="hover:text-red-600">
+                      <FiTrash2 size={14}/>
+                    </button>
+                  </div>
+                )}
               </div>
-
-              {/* Skills */}
-              <div>
-                <label className="block text-gray-700 font-medium mb-2">Skills</label>
-                <div className="flex flex-wrap gap-2 mb-2">
-                  {formData.skills.map((s, i) => (
-                    <div key={i} className="flex items-center gap-1 bg-[#FFCC66] text-gray-900 px-3 py-1 rounded-full">
-                      <span className="text-sm">{s}</span>
-                      <button type="button" onClick={() => removeSkill(s)} className="ml-1">
-                        <FiTrash2 size={14} />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-                <div className="flex gap-2">
-                  <input type="text" value={newSkill} onChange={(e) => setNewSkill(e.target.value)} placeholder="Add a skill..." className="flex-1 p-3 rounded-lg border border-gray-300 focus:border-[#FFCC66] outline-none transition" />
-                  <button type="button" onClick={addSkill} className="bg-[#B22222] hover:bg-[#8B0000] text-white px-4 py-2 rounded-lg flex items-center gap-1">
-                    <FiPlus /> Add
-                  </button>
-                </div>
+              <div className="flex gap-2">
+                <input 
+                  type="text" 
+                  value={newService} 
+                  onChange={(e)=>setNewService(e.target.value)} 
+                  placeholder="Add a service..." 
+                  className="flex-1 p-3 rounded-lg border border-gray-300 focus:border-[#FFCC66] outline-none transition"
+                />
+                <button type="button" onClick={addService} className="bg-[#B22222] hover:bg-[#8B0000] text-white px-4 py-2 rounded-lg flex items-center gap-1">
+                  <FiPlus/> Add
+                </button>
               </div>
             </div>
 
-            {/* Submit + Cancel */}
-            <div className="mt-4 flex gap-3">
-              <button
-                type="submit"
-                disabled={saving}
-                className="flex-1 bg-[#B22222] hover:bg-[#8B0000] text-white font-semibold py-3 rounded-lg transition"
+            {/* Skills */}
+            <div className="mt-4">
+              <label className="block text-gray-700 font-medium mb-2">Skills</label>
+              <div className="flex flex-wrap gap-2 mb-2">
+                {formData.skills.map((s,i)=>
+                  <div key={i} className="flex items-center gap-1 bg-[#FFCC66] text-gray-900 px-3 py-1 rounded-full">
+                    {s}
+                    <button type="button" onClick={()=>removeSkill(s)} className="hover:text-red-600">
+                      <FiTrash2 size={14}/>
+                    </button>
+                  </div>
+                )}
+              </div>
+              <div className="flex gap-2">
+                <input 
+                  type="text" 
+                  value={newSkill} 
+                  onChange={(e)=>setNewSkill(e.target.value)} 
+                  placeholder="Add a skill..." 
+                  className="flex-1 p-3 rounded-lg border border-gray-300 focus:border-[#FFCC66] outline-none transition"
+                />
+                <button type="button" onClick={addSkill} className="bg-[#B22222] hover:bg-[#8B0000] text-white px-4 py-2 rounded-lg flex items-center gap-1">
+                  <FiPlus/> Add
+                </button>
+              </div>
+            </div>
+
+            <div className="mt-6 flex gap-3">
+              <button 
+                type="submit" 
+                disabled={saving} 
+                className="flex-1 bg-[#B22222] hover:bg-[#8B0000] text-white font-semibold py-3 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {saving ? "Saving..." : "Create Profile"}
               </button>
-              <button
-                type="button"
-                onClick={() => router.push("/handyDashboard")}
+              <button 
+                type="button" 
+                onClick={()=>router.push("/handyDashboard")} 
                 className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-3 rounded-lg transition"
               >
                 Cancel
