@@ -1,14 +1,5 @@
-HEAD
-import express from 'express';
-import mongoose from 'mongoose';
-import cors from 'cors';
-import dotenv from 'dotenv';
-
-import RouterUser from './routes/RouteUser.js';
-import RouterHandyman from './routes/handyRoutesAddProfile.js';
-
+// backend/index.js
 import dotenv from "dotenv";
-main
 dotenv.config();
 
 import express from "express";
@@ -16,42 +7,20 @@ import mongoose from "mongoose";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
+import Subscription from "./models/subscription.model.js";
 
-import RouterUser from "./routes/RouteUser.js"; // User routes
-import RouterHandyman from "./routes/handyRoutes.js"; // Handyman routes
-import RouterService from "./routes/CreateServiceRoutes.js";// ✅ New service routes
 
-// import paymentRouter from "./routes/payment.router.js";
-// import webhookRouter from "./routes/webhook.router.js";
+import RouterUser from "./routes/RouteUser.js";
+import RouterHandyman from "./routes/handyRoutes.js";
+import RouterService from "./routes/serviceRoutes.js";
+
+import subscriptionRouter from "./routes/subscription.routes.js";
+import webhookRouter from "./routes/webhook.router.js";
+import paypalRouter from "./routes/paypal.routes.js"; // <- keep this import
 
 const app = express();
 const PORT = process.env.PORT || 7000;
 
-HEAD
-// ✅ Middleware
-app.use(cors({
-  origin: process.env.CLIENT_URL || "http://localhost:3000",
-  credentials: true,
-}));
-app.use(express.json({ limit: "10mb" }));
-app.use(express.urlencoded({ extended: true, limit: "10mb" }));
-
-// ✅ Routes
-app.use('/api/users', RouterUser);
-app.use('/api/handymen', RouterHandyman);
-
-// ✅ Health check
-app.get('/', (req, res) => res.send('Backend is running!'));
-
-// ✅ MongoDB connection
-mongoose.connect(process.env.MONGO_URL)
-  .then(() => {
-    console.log('Connected to MongoDB successfully!');
-    app.listen(PORT, () => console.log(`Server is running on http://localhost:${PORT}`));
-  })
-  .catch(err => console.error('Database connection error:', err));
-
-// ✅ Global error handler
 app.use(
   cors({
     origin: process.env.CLIENT_URL,
@@ -59,47 +28,58 @@ app.use(
   })
 );
 
-// // Stripe webhook route must come BEFORE express.json()
-// app.post(
-//   "/api/webhooks/stripe",
-//   express.raw({ type: "application/json" }),
-//   (req, res, next) => {
-//     req.rawBody = req.body;
-//     next();
-//   },
-//   webhookRouter
-// );
+// 1) Stripe webhook FIRST, with raw body (no JSON parser here)
+app.post(
+  "/api/webhooks/stripe",
+  express.raw({ type: "application/json" }),
+  (req, _res, next) => {
+    req.rawBody = req.body; // keep raw buffer for signature verification
+    next();
+  },
+  webhookRouter
+);
 
+// 2) JSON parsers for EVERYTHING ELSE (PayPal + your APIs)
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// static files
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
+// 3) Mount app routers AFTER parsers
+app.use("/api/users", RouterUser);
+app.use("/api/handymen", RouterHandyman);
+app.use("/api/services", RouterService);
+app.use("/api/subscriptions", subscriptionRouter);
+app.use("/api/paypal", paypalRouter); // <-- moved BELOW express.json()
 
-
-app.get("/", (req, res) => {
+app.get("/", (_req, res) => {
   res.send("Backend is running!");
 });
 
+Subscription.syncIndexes()
+  .then(() => console.log("[mongo] Subscription indexes synced"))
+  .catch((e) => console.error("[mongo] index sync error", e));
+// Mongo
 mongoose
   .connect(process.env.MONGO_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 120000,
+    socketTimeoutMS: 120000,
+    retryWrites: true,
+    tls: true,
   })
   .then(() => {
     console.log("Connected to MongoDB successfully!");
-    app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
-    });
+    app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
   })
   .catch((err) => {
     console.error("Database connection error:", err);
   });
 
-main
-app.use((err, req, res, next) => {
+// Error handler
+app.use((err, _req, res, _next) => {
   console.error("Unhandled error:", err);
   res.status(500).json({ error: "Something went wrong!" });
 });
