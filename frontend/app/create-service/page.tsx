@@ -8,7 +8,6 @@ import { Menu, X } from "lucide-react";
 import { FiUser } from "react-icons/fi";
 
 export default function CreateService() {
-  // form fields
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [priceType, setPriceType] = useState("Hourly");
@@ -16,16 +15,13 @@ export default function CreateService() {
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  // errors + popup
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [popup, setPopup] = useState<string | null>(null);
 
-  // dropdown menus
   const [showMenu, setShowMenu] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const router = useRouter();
 
-  // logout
   const handleLogout = () => {
     router.push("/");
   };
