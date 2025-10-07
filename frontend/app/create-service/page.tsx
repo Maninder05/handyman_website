@@ -18,6 +18,7 @@ export default function CreateService() {
 
   // errors + popup
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [popup, setPopup] = useState<string | null>(null);
 
   // dropdown menus
   const [showMenu, setShowMenu] = useState(false);
@@ -90,7 +91,22 @@ export default function CreateService() {
         }
       );
 
-    
+      if (res.ok) {
+        setPopup("Service Submitted Successfully ✅");
+        setTitle("");
+        setCategory("");
+        setPrice("");
+        setImage(null);
+        setImagePreview(null);
+      } else {
+        const data = await res.json();
+        setPopup(data.message || "Failed to submit service ❌");
+      }
+    } catch (err) {
+      console.error("Error submitting service:", err);
+      setPopup("Error submitting service ❌");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#F4F4F4] flex flex-col">
@@ -309,13 +325,38 @@ export default function CreateService() {
             )}
           </div>
 
-          
+          {/* Buttons */}
+          <div className="flex justify-end gap-3 pt-4 border-t border-[#EAEAEA]">
+            <button
+              onClick={() => setPopup("Draft Saved Successfully 📝")}
+              className="bg-[#C5A96A] text-[#1C1C1C] px-5 py-2 rounded-lg hover:bg-[#B99655] transition shadow"
+            >
+              Save Draft
+            </button>
+            <button
+              onClick={handleSubmit}
+              className="bg-[#C8102E] text-white px-5 py-2 rounded-lg hover:bg-[#A60E27] transition shadow"
+            >
+              Submit Now →
+            </button>
+          </div>
         </div>
       </main>
 
-      
+      {/* Popup */}
+      {popup && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-xl shadow text-center w-80 text-[#1C1C1C]">
+            <h2 className="text-lg font-bold mb-4">{popup}</h2>
+            <button
+              onClick={() => setPopup(null)}
+              className="bg-[#C8102E] text-white px-4 py-2 rounded-lg hover:bg-[#A60E27] transition"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
-    }
-  }
+  );
 }
-
