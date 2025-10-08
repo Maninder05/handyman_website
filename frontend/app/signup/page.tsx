@@ -1,7 +1,6 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { signIn } from "next-auth/react";
 import axios from "axios";
 import Image from "next/image";
 
@@ -25,6 +24,8 @@ export default function Signup() {
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:7000";
+
   // ---------- Validation ----------
   const validateSignup = () => {
     const errs: Record<string, string> = {};
@@ -44,20 +45,35 @@ export default function Signup() {
     return Object.keys(errs).length === 0;
   };
 
+  // If OAuth returned token in query -> save and redirect
+  useEffect(() => {
+    const token = searchParams.get("token");
+    if (token) {
+      localStorage.setItem("token", token);
+      // You could also set a cookie here if desired
+      router.push("/handyDashboard");
+    }
+  }, [searchParams, router]);
+
   // ---------- API Calls ----------
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateSignup()) return;
 
     try {
-      const res = await axios.post("http://localhost:7000/api/users/signup", {
-        username,
-        email,
-        password,
-        userType,
-      });
-      alert(res.data.message);
-      router.push("/"); // go to landing after success
+      const res = await axios.post(
+        `${API_BASE}/api/users/signup`,
+        { username, email, password, userType },
+        { withCredentials: true }
+      );
+
+      alert(res.data.message || "Signup successful");
+      if (res.data.token) {
+        localStorage.setItem("token", res.data.token);
+      }
+      // close modal and redirect to dashboard
+      setShowSignup(false);
+      router.push("/handyDashboard");
     } catch (err: any) {
       alert(err.response?.data?.message || "Signup failed");
     }
@@ -67,12 +83,29 @@ export default function Signup() {
     e.preventDefault();
     if (!validateLogin()) return;
 
-    await signIn("credentials", {
-      email: loginEmail,
-      password: loginPassword,
-      redirect: true,
-      callbackUrl: "/",
-    });
+    try {
+      const res = await axios.post(
+        `${API_BASE}/api/users/login`,
+        { email: loginEmail, password: loginPassword },
+        { withCredentials: true }
+      );
+
+      if (res.data.token) {
+        localStorage.setItem("token", res.data.token);
+      }
+      setShowLogin(false);
+      router.push("/handyDashboard");
+    } catch (err: any) {
+      alert(err.response?.data?.message || "Login failed");
+    }
+  };
+
+  // OAuth redirects to backend. Backend will redirect back to this page with ?token=...
+  const oauthGoogle = () => {
+    window.location.href = `${API_BASE}/api/users/auth/google`;
+  };
+  const oauthFacebook = () => {
+    window.location.href = `${API_BASE}/api/users/auth/facebook`;
   };
 
   return (
@@ -82,7 +115,10 @@ export default function Signup() {
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
           <div className="relative bg-neutral-900 border border-neutral-700 rounded-2xl shadow-2xl w-full max-w-md p-8 scale-95 hover:scale-100 transition-transform">
             <button
-              onClick={() => setShowSignup(false)}
+              onClick={() => {
+                setShowSignup(false);
+                router.push("/"); // ✅ Close modal -> Landing
+              }}
               className="absolute top-3 right-3 text-neutral-400 hover:text-white"
             >
               ✕
@@ -179,14 +215,14 @@ export default function Signup() {
             </div>
             <div className="flex flex-col gap-3">
               <button
-                onClick={() => signIn("google")}
+                onClick={oauthGoogle}
                 className="flex items-center gap-2 justify-center px-4 py-2 rounded-lg bg-neutral-800 border border-neutral-700 text-sm cursor-pointer hover:border-[#FFCC66] transition"
               >
                 <Image src="/images/google-icon.png" alt="Google" width={30} height={30} />
                 <span>Sign up with Google</span>
               </button>
               <button
-                onClick={() => signIn("facebook")}
+                onClick={oauthFacebook}
                 className="flex items-center gap-2 justify-center px-4 py-2 rounded-lg bg-neutral-800 border border-neutral-700 text-sm cursor-pointer hover:border-[#FFCC66] transition"
               >
                 <Image src="/images/facebook-icon.png" alt="Facebook" width={30} height={30} />
@@ -215,7 +251,10 @@ export default function Signup() {
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
           <div className="relative bg-neutral-900 border border-neutral-700 rounded-2xl shadow-2xl w-full max-w-md p-8 scale-95 hover:scale-100 transition-transform">
             <button
-              onClick={() => setShowLogin(false)}
+              onClick={() => {
+                setShowLogin(false);
+                router.push("/"); // ✅ Close modal -> Landing
+              }}
               className="absolute top-3 right-3 text-neutral-400 hover:text-white"
             >
               ✕
@@ -263,14 +302,14 @@ export default function Signup() {
             </div>
             <div className="flex flex-col gap-3">
               <button
-                onClick={() => signIn("google")}
+                onClick={oauthGoogle}
                 className="flex items-center gap-2 justify-center px-4 py-2 rounded-lg bg-neutral-800 border border-neutral-700 text-sm cursor-pointer hover:border-[#FFCC66] transition"
               >
                 <Image src="/images/google-icon.png" alt="Google" width={30} height={30} />
                 <span>Login with Google</span>
               </button>
               <button
-                onClick={() => signIn("facebook")}
+                onClick={oauthFacebook}
                 className="flex items-center gap-2 justify-center px-4 py-2 rounded-lg bg-neutral-800 border border-neutral-700 text-sm cursor-pointer hover:border-[#FFCC66] transition"
               >
                 <Image src="/images/facebook-icon.png" alt="Facebook" width={30} height={30} />
@@ -296,3 +335,4 @@ export default function Signup() {
     </main>
   );
 }
+
