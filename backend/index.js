@@ -11,8 +11,8 @@ import passport from 'passport';
 import './config/passport.js';
 
 import RouterUser from './routes/RouteUser.js';       // User routes
-import RouterHandyman from './routes/handyRoutes.js'; // Handyman routes
-import RouterService from './routes/serviceRoutes.js'; //New service routes
+import RouterHandyman from './routes/handyRoutesAddProfile.js'; // Handyman routes
+import RouterService from './routes/CreateServiceRoutes.js'; //New service routes
 
 dotenv.config();
 
