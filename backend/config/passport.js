@@ -3,10 +3,12 @@ import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { Strategy as FacebookStrategy } from 'passport-facebook';
 import User from '../models/ModelUser.js';
 import dotenv from 'dotenv';
+import jwt from 'jsonwebtoken';
 
 dotenv.config();
 
 const API_URL = process.env.API_URL || "http://localhost:7000";
+const JWT_SECRET = process.env.JWT_SECRET || "mysecret";
 
 passport.use(
   new GoogleStrategy(
@@ -31,12 +33,15 @@ passport.use(
           });
           await user.save();
         } else {
-          // update provider info if needed
           user.authProvider = 'google';
           user.oauthId = profile.id;
           await user.save();
         }
-        return done(null, user);
+
+        // Generate JWT
+        const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '15m' });
+
+        return done(null, { user, token });
       } catch (err) {
         return done(err, null);
       }
@@ -72,7 +77,11 @@ passport.use(
           user.oauthId = profile.id;
           await user.save();
         }
-        return done(null, user);
+
+        // Generate JWT
+        const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '15m' });
+
+        return done(null, { user, token });
       } catch (err) {
         return done(err, null);
       }
@@ -80,5 +89,4 @@ passport.use(
   )
 );
 
-// no serialize/deserialize needed because we are not using sessions here (session: false)
 export default passport;
