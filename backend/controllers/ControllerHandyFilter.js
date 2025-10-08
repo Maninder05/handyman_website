@@ -1,7 +1,7 @@
 // controllers/controllerHandyFilter.js
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import Handyman from "../models/Handyman.js";
+import Handyman from "../models/ModelHandyFilter.js";
 
 const JWT_EXPIRES_IN = "7d"; // adjust as needed
 

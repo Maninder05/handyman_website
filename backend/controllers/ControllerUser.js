@@ -1,8 +1,7 @@
 
-import User from "../models/ModalUser.js";
+import User from "../models/ModelUser.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import User from "../models/ModelUser.js";
 
 const JWT_SECRET = process.env.JWT_SECRET || "mysecret";
 
