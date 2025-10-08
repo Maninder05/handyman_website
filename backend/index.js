@@ -1,4 +1,3 @@
-
 // backend/index.js
 
 import dotenv from "dotenv";
@@ -12,7 +11,7 @@ import Subscription from "./models/subscription.model.js";
 
 import RouterUser from "./routes/RouteUser.js"; // User routes
 import RouterHandyman from "./routes/handyRoutesAddProfile.js"; // Handyman routes
-import RouterService from "./routes/CreateServiceRoutes.js"; // ✅ fixed file name here
+import RouterService from "./routes/CreateServiceRoutes.js"; //  fixed file name here
 
 import subscriptionRouter from "./routes/subscription.routes.js";
 import webhookRouter from "./routes/webhook.router.js";
@@ -121,7 +120,7 @@ mongoose
   .catch((err) => {
     console.error("Database connection error:", err.message);
     process.exit(1); // Exit if DB connection fails
-// ✅ Serve uploaded images
+//  Serve uploaded images
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
@@ -163,5 +162,5 @@ app.use((err, req, res, next) => {
 // import authSession from '../middleware/authSession.js';
 // router.get("/dashboard", authSession, (req, res) => {
 //   res.json({ ok: true, user: req.user });
-// }); 
+});
 
