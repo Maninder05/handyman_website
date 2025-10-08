@@ -1,18 +1,15 @@
-import express from "express";
-import {
-  createHandyProfile,
-  getAllHandyProfiles,
-  getHandyProfileById,
-  updateHandyProfile,
-  deleteHandyProfile,
-} from "../controllers/ControllerHandyProfile.js";
+import express from 'express';
+import jwtAuthWithNext from '../middleware/jwtAuthWithNext.js';
+import { getMyProfile, createProfile } from '../controllers/ControllerHandyProfile.js';
 
 const router = express.Router();
 
-router.post("/", createHandyProfile);
-router.get("/", getAllHandyProfiles);
-router.get("/:id", getHandyProfileById);
-router.put("/:id", updateHandyProfile);
-router.delete("/:id", deleteHandyProfile);
+// Route to get logged-in handyman's profile
+// First runs jwtAuthWithNext to verify token, then runs getMyProfile
+router.get('/api/handymen/me', jwtAuthWithNext, getMyProfile);
+
+// Route to create a new handyman profile
+// First runs jwtAuthWithNext to verify token, then runs createProfile
+router.post('/api/handymen', jwtAuthWithNext, createProfile);
 
 export default router;
