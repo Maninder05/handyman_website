@@ -8,6 +8,7 @@ const HandymanSchema = new mongoose.Schema({
   services: { type: [String], default: [] },
   skills: { type: [String], default: [] },
   profileImage: { type: String, default: '' },
-}, { timestamps: true });
+}, 
+{ timestamps: true });
 
-export default mongoose.model('Handyman', HandymanSchema);
+export default mongoose.model('HandymanProfile', HandymanSchema);

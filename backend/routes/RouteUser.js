@@ -1,9 +1,15 @@
 import express from "express";
-import { signup, login } from "../controllers/ControllerUser.js";
+import { signup, login, logout } from "../controllers/ControllerUser.js";
 import { body } from "express-validator";
 import validate from "../middleware/validate.js";
+import passport from "passport";
+import jwt from "jsonwebtoken";
+import crypto from "crypto";
 
 const router = express.Router();
+const JWT_SECRET = process.env.JWT_SECRET || "mysecret";
+const SESSION_TTL_MS = 15 * 60 * 1000; // 15 minutes
+const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:3000";
 
 // Signup validation rules
 router.post(
@@ -35,6 +41,59 @@ router.post(
   ],
   validate,
   login
+);
+
+// Logout
+router.post("/logout", logout);
+
+// ----------------- OAuth routes (Google + Facebook) -----------------
+// Start Google OAuth
+router.get('/auth/google', passport.authenticate('google', { scope: ['profile','email'] }));
+
+// Google callback
+router.get('/auth/google/callback',
+  passport.authenticate('google', { session: false, failureRedirect: `${CLIENT_URL}/signup?oauth=fail` }),
+  async (req, res) => {
+    // req.user set by passport verify callback
+    try {
+      const user = req.user;
+      // assign session token and expiry
+      const sessionToken = crypto.randomBytes(32).toString("hex");
+      user.sessionToken = sessionToken;
+      user.sessionExpiresAt = new Date(Date.now() + SESSION_TTL_MS);
+      await user.save();
+
+      const token = jwt.sign({ id: user._id, sessionToken }, JWT_SECRET, { expiresIn: "15m" });
+      // redirect to frontend with token (frontend will capture it from query params)
+      return res.redirect(`${CLIENT_URL}/signup?token=${token}&mode=login`);
+    } catch (err) {
+      console.error("OAuth callback error:", err);
+      return res.redirect(`${CLIENT_URL}/signup?oauth=error`);
+    }
+  }
+);
+
+// Start Facebook OAuth
+router.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email'] }));
+
+// Facebook callback
+router.get('/auth/facebook/callback',
+  passport.authenticate('facebook', { session: false, failureRedirect: `${CLIENT_URL}/signup?oauth=fail` }),
+  async (req, res) => {
+    try {
+      const user = req.user;
+      const sessionToken = crypto.randomBytes(32).toString("hex");
+      user.sessionToken = sessionToken;
+      user.sessionExpiresAt = new Date(Date.now() + SESSION_TTL_MS);
+      await user.save();
+
+      const token = jwt.sign({ id: user._id, sessionToken }, JWT_SECRET, { expiresIn: "15m" });
+      return res.redirect(`${CLIENT_URL}/signup?token=${token}&mode=login`);
+    } catch (err) {
+      console.error("OAuth callback error:", err);
+      return res.redirect(`${CLIENT_URL}/signup?oauth=error`);
+    }
+  }
 );
 
 export default router;

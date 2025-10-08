@@ -4,10 +4,15 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import path from "path";
 import { fileURLToPath } from "url";
+import cookieParser from 'cookie-parser';
+import passport from 'passport';
+
+// register passport strategies
+import './config/passport.js';
 
 import RouterUser from './routes/RouteUser.js';       // User routes
 import RouterHandyman from './routes/handyRoutes.js'; // Handyman routes
-import RouterService from './routes/serviceRoutes.js'; // ✅ New service routes
+import RouterService from './routes/serviceRoutes.js'; //New service routes
 
 dotenv.config();
 
@@ -21,6 +26,10 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+
+// Initialize passport (used by OAuth routes)
+app.use(passport.initialize());
 
 // ✅ Serve uploaded images
 const __filename = fileURLToPath(import.meta.url);
@@ -30,7 +39,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // Routes
 app.use('/api/users', RouterUser);
 app.use('/api/handymen', RouterHandyman);
-app.use('/api/services', RouterService);  // ✅ New route added
+app.use('/api/services', RouterService);
 
 // Default test route
 app.get('/', (req, res) => {
@@ -55,3 +64,10 @@ app.use((err, req, res, next) => {
   console.error('Unhandled error:', err);
   res.status(500).json({ error: 'Something went wrong!' });
 });
+
+//Example of authSession implementation over routes for protecting sensitive pages after token expires over website
+// import authSession from '../middleware/authSession.js';
+// router.get("/dashboard", authSession, (req, res) => {
+//   res.json({ ok: true, user: req.user });
+// }); 
+
