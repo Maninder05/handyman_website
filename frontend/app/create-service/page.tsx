@@ -8,7 +8,6 @@ import { Menu, X } from "lucide-react";
 import { FiUser } from "react-icons/fi";
 
 export default function CreateService() {
-  // form fields
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [priceType, setPriceType] = useState("Hourly");
@@ -16,16 +15,13 @@ export default function CreateService() {
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  // errors + popup
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [popup, setPopup] = useState<string | null>(null);
 
-  // dropdown menus
   const [showMenu, setShowMenu] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const router = useRouter();
 
-  // logout
   const handleLogout = () => {
     router.push("/");
   };
@@ -109,30 +105,30 @@ export default function CreateService() {
   };
 
   return (
-    <div className="min-h-screen bg-amber-50 flex flex-col">
+    <div className="min-h-screen bg-[#F4F4F4] flex flex-col">
       {/* Header with dropdowns */}
-      <header className="bg-gradient-to-r from-[#FFCC66] to-[#FF7E5F] shadow-md relative py-4 px-4">
+      <header className="bg-[#1C1C1C] shadow-md relative py-4 px-4 border-b-4 border-[#C8102E]">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
-          <h1 className="text-3xl font-bold text-amber-900">Create Service</h1>
+          <h1 className="text-3xl font-bold text-[#FFFFFF]">Create Service</h1>
 
           {/* Right side icons (profile + menu) */}
           <div className="flex items-center gap-4 relative">
             {/* Profile Icon */}
             <button
               onClick={toggleProfile}
-              className="p-2 rounded-full hover:bg-amber-300 transition"
+              className="p-2 rounded-full hover:bg-[#C5A96A]/30 transition"
             >
-              <FiUser size={22} className="text-amber-900" />
+              <FiUser size={22} className="text-[#FFFFFF]" />
             </button>
 
             {/* Profile dropdown */}
             {showProfileMenu && (
-              <div className="absolute right-14 top-14 bg-gray-800 rounded-xl shadow-lg border w-48 z-50">
-                <ul className="text-sm divide-y">
+              <div className="absolute right-14 top-14 bg-[#1C1C1C] rounded-xl shadow-lg border border-[#C5A96A]/40 w-48 z-50">
+                <ul className="text-sm divide-y divide-[#333]">
                   <li>
                     <Link
                       href="/handyAccount"
-                      className="block px-4 py-3 hover:bg-amber-100 transition"
+                      className="block px-4 py-3 hover:bg-[#C8102E] hover:text-white transition text-[#FFFFFF]"
                     >
                       View Account
                     </Link>
@@ -140,7 +136,7 @@ export default function CreateService() {
                   <li>
                     <button
                       onClick={handleLogout}
-                      className="w-full text-left px-4 py-3 text-red-500 hover:bg-red-50 transition"
+                      className="w-full text-left px-4 py-3 text-[#C8102E] hover:bg-[#C8102E]/20 transition"
                     >
                       Logout
                     </button>
@@ -152,19 +148,19 @@ export default function CreateService() {
             {/* Menu button */}
             <button
               onClick={toggleMenu}
-              className="p-2 rounded-md hover:bg-amber-300 bg-amber-400 text-amber-900 transition"
+              className="p-2 rounded-md hover:bg-[#C5A96A]/30 bg-[#C8102E] text-white transition"
             >
               {showMenu ? <X size={26} /> : <Menu size={26} />}
             </button>
 
             {/* Hamburger dropdown */}
             {showMenu && (
-              <div className="absolute right-0 top-14 bg-gray-800 shadow-xl rounded-xl border w-56 text-sm z-50 overflow-hidden">
-                <ul className="divide-y">
+              <div className="absolute right-0 top-14 bg-[#1C1C1C] shadow-xl rounded-xl border border-[#C5A96A]/40 w-56 text-sm z-50 overflow-hidden">
+                <ul className="divide-y divide-[#333] text-[#FFFFFF]">
                   <li>
                     <Link
                       href="/create-service"
-                      className="block px-4 py-3 hover:bg-amber-100 transition"
+                      className="block px-4 py-3 hover:bg-[#C8102E] transition"
                     >
                       Add Service
                     </Link>
@@ -172,7 +168,7 @@ export default function CreateService() {
                   <li>
                     <Link
                       href="/Add-profile"
-                      className="block px-4 py-3 hover:bg-amber-100 transition"
+                      className="block px-4 py-3 hover:bg-[#C8102E] transition"
                     >
                       Add profile
                     </Link>
@@ -180,7 +176,7 @@ export default function CreateService() {
                   <li>
                     <Link
                       href="/handyAccount"
-                      className="block px-4 py-3 hover:bg-amber-100 transition"
+                      className="block px-4 py-3 hover:bg-[#C8102E] transition"
                     >
                       My Account
                     </Link>
@@ -188,7 +184,7 @@ export default function CreateService() {
                   <li>
                     <Link
                       href="/order"
-                      className="block px-4 py-3 hover:bg-amber-100 transition"
+                      className="block px-4 py-3 hover:bg-[#C8102E] transition"
                     >
                       Track Order
                     </Link>
@@ -196,7 +192,7 @@ export default function CreateService() {
                   <li>
                     <Link
                       href="/membership"
-                      className="block px-4 py-3 hover:bg-amber-100 transition"
+                      className="block px-4 py-3 hover:bg-[#C8102E] transition"
                     >
                       Membership Plan
                     </Link>
@@ -204,7 +200,7 @@ export default function CreateService() {
                   <li>
                     <Link
                       href="/help"
-                      className="block px-4 py-3 hover:bg-amber-100 transition"
+                      className="block px-4 py-3 hover:bg-[#C8102E] transition"
                     >
                       FAQ
                     </Link>
@@ -212,7 +208,7 @@ export default function CreateService() {
                   <li>
                     <Link
                       href="/settings"
-                      className="block px-4 py-3 hover:bg-amber-100 transition"
+                      className="block px-4 py-3 hover:bg-[#C8102E] transition"
                     >
                       Account Settings
                     </Link>
@@ -227,33 +223,33 @@ export default function CreateService() {
       {/* Main content area */}
       <main className="flex-1 flex justify-center items-start py-10 px-4">
         {/* Form card */}
-        <div className="w-full max-w-4xl bg-white rounded-xl shadow-lg p-10 space-y-8">
+        <div className="w-full max-w-4xl bg-[#FFFFFF] rounded-xl shadow-lg p-10 space-y-8 border-t-4 border-[#C8102E]">
           {/* Service Title */}
           <div>
-            <label className="block mb-2 font-semibold text-neutral-800">
+            <label className="block mb-2 font-semibold text-[#1C1C1C]">
               Service Title
             </label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full rounded-lg p-4 border border-gray-300 bg-neutral-50 text-neutral-800 focus:outline-none focus:ring-2 focus:ring-amber-400 transition"
+              className="w-full rounded-lg p-4 border border-[#B3B3B3] bg-[#F4F4F4] text-[#1C1C1C] focus:outline-none focus:ring-2 focus:ring-[#C8102E] transition"
               placeholder="Enter service title"
             />
             {errors.title && (
-              <p className="text-red-500 text-sm mt-1">{errors.title}</p>
+              <p className="text-[#C8102E] text-sm mt-1">{errors.title}</p>
             )}
           </div>
 
           {/* Category */}
           <div>
-            <label className="block mb-2 font-semibold text-neutral-800">
+            <label className="block mb-2 font-semibold text-[#1C1C1C]">
               Category
             </label>
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full rounded-lg p-4 border border-gray-300 bg-neutral-50 text-neutral-800 focus:outline-none focus:ring-2 focus:ring-amber-400 appearance-none pr-8 transition cursor-pointer"
+              className="w-full rounded-lg p-4 border border-[#B3B3B3] bg-[#F4F4F4] text-[#1C1C1C] focus:outline-none focus:ring-2 focus:ring-[#C8102E] appearance-none pr-8 transition cursor-pointer"
             >
               <option value="">Select Category</option>
               <option>Electrical Repair</option>
@@ -262,19 +258,19 @@ export default function CreateService() {
               <option>Carpentry</option>
             </select>
             {errors.category && (
-              <p className="text-red-500 text-sm mt-1">{errors.category}</p>
+              <p className="text-[#C8102E] text-sm mt-1">{errors.category}</p>
             )}
           </div>
 
           {/* Image Upload */}
           <div>
-            <label className="block mb-2 font-semibold text-neutral-800">
+            <label className="block mb-2 font-semibold text-[#1C1C1C]">
               Image
             </label>
             <div className="flex items-center gap-4">
-              <label className="flex-1 flex justify-between items-center px-4 py-3 border border-gray-300 rounded-lg bg-neutral-50 cursor-pointer hover:bg-gray-100 transition">
+              <label className="flex-1 flex justify-between items-center px-4 py-3 border border-[#B3B3B3] rounded-lg bg-[#F4F4F4] cursor-pointer hover:bg-[#EAEAEA] transition">
                 {image ? image.name : "No file chosen"}
-                <span className="ml-2 text-gray-500">▼</span>
+                <span className="ml-2 text-[#B3B3B3]">▼</span>
                 <input
                   type="file"
                   accept="image/*"
@@ -283,7 +279,7 @@ export default function CreateService() {
                 />
               </label>
               {imagePreview && (
-                <div className="w-24 h-24 relative border rounded-lg overflow-hidden shadow">
+                <div className="w-24 h-24 relative border border-[#B3B3B3] rounded-lg overflow-hidden shadow">
                   <Image
                     src={imagePreview}
                     alt="Preview"
@@ -294,20 +290,20 @@ export default function CreateService() {
               )}
             </div>
             {errors.image && (
-              <p className="text-red-500 text-sm mt-1">{errors.image}</p>
+              <p className="text-[#C8102E] text-sm mt-1">{errors.image}</p>
             )}
           </div>
 
           {/* Price */}
           <div>
-            <label className="block mb-2 font-semibold text-neutral-800">
+            <label className="block mb-2 font-semibold text-[#1C1C1C]">
               Price
             </label>
             <div className="flex gap-4">
               <select
                 value={priceType}
                 onChange={(e) => setPriceType(e.target.value)}
-                className="rounded-lg p-4 border border-gray-300 bg-neutral-50 text-neutral-800 focus:outline-none focus:ring-2 focus:ring-amber-400 transition cursor-pointer"
+                className="rounded-lg p-4 border border-[#B3B3B3] bg-[#F4F4F4] text-[#1C1C1C] focus:outline-none focus:ring-2 focus:ring-[#C8102E] transition cursor-pointer"
               >
                 <option>Hourly</option>
                 <option>Fixed</option>
@@ -316,26 +312,26 @@ export default function CreateService() {
                 type="text"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
-                className="flex-1 rounded-lg p-4 border border-gray-300 bg-neutral-50 text-neutral-800 focus:outline-none focus:ring-2 focus:ring-amber-400 transition"
+                className="flex-1 rounded-lg p-4 border border-[#B3B3B3] bg-[#F4F4F4] text-[#1C1C1C] focus:outline-none focus:ring-2 focus:ring-[#C8102E] transition"
                 placeholder="Enter price"
               />
             </div>
             {errors.price && (
-              <p className="text-red-500 text-sm mt-1">{errors.price}</p>
+              <p className="text-[#C8102E] text-sm mt-1">{errors.price}</p>
             )}
           </div>
 
           {/* Buttons */}
-          <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+          <div className="flex justify-end gap-3 pt-4 border-t border-[#EAEAEA]">
             <button
               onClick={() => setPopup("Draft Saved Successfully 📝")}
-              className="bg-amber-300 text-amber-900 px-5 py-2 rounded-lg hover:bg-amber-400 transition shadow"
+              className="bg-[#C5A96A] text-[#1C1C1C] px-5 py-2 rounded-lg hover:bg-[#B99655] transition shadow"
             >
               Save Draft
             </button>
             <button
               onClick={handleSubmit}
-              className="bg-amber-500 text-white px-5 py-2 rounded-lg hover:bg-amber-600 transition shadow"
+              className="bg-[#C8102E] text-white px-5 py-2 rounded-lg hover:bg-[#A60E27] transition shadow"
             >
               Submit Now →
             </button>
@@ -346,11 +342,11 @@ export default function CreateService() {
       {/* Popup */}
       {popup && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-xl shadow text-center w-80 text-neutral-800">
+          <div className="bg-white p-6 rounded-xl shadow text-center w-80 text-[#1C1C1C]">
             <h2 className="text-lg font-bold mb-4">{popup}</h2>
             <button
               onClick={() => setPopup(null)}
-              className="bg-amber-500 text-white px-4 py-2 rounded-lg hover:bg-amber-600 transition"
+              className="bg-[#C8102E] text-white px-4 py-2 rounded-lg hover:bg-[#A60E27] transition"
             >
               Close
             </button>
