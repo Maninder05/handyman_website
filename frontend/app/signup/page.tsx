@@ -356,7 +356,7 @@ export default function Signup() {
     if (token) {
       localStorage.setItem("token", token);
       // You could also set a cookie here if desired
-      router.push("/dashboard");
+      router.push("/handyDashboard");
     }
   }, [searchParams, router]);
 
@@ -378,7 +378,7 @@ export default function Signup() {
       }
       // close modal and redirect to dashboard
       setShowSignup(false);
-      router.push("/dashboard");
+      router.push("/handyDashboard");
     } catch (err: any) {
       alert(err.response?.data?.message || "Signup failed");
     }
@@ -399,7 +399,7 @@ export default function Signup() {
         localStorage.setItem("token", res.data.token);
       }
       setShowLogin(false);
-      router.push("/dashboard");
+      router.push("/handyDashboard");
     } catch (err: any) {
       alert(err.response?.data?.message || "Login failed");
     }
