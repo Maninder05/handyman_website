@@ -26,7 +26,6 @@ export default function CreateService() {
     router.push("/");
   };
 
-  // toggle menus
   const toggleMenu = () => {
     setShowMenu(!showMenu);
     setShowProfileMenu(false);
@@ -37,7 +36,6 @@ export default function CreateService() {
     setShowMenu(false);
   };
 
-  // upload image
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -56,7 +54,6 @@ export default function CreateService() {
     setImagePreview(URL.createObjectURL(file));
   };
 
-  // submit form
   const handleSubmit = async () => {
     const newErrors: { [key: string]: string } = {};
     if (!title) newErrors.title = "Title is required";
