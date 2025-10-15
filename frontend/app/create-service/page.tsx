@@ -102,30 +102,28 @@ export default function CreateService() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F4F4F4] flex flex-col">
-      {/* Header with dropdowns */}
-      <header className="bg-[#1C1C1C] shadow-md relative py-4 px-4 border-b-4 border-[#C8102E]">
+    <div className="min-h-screen bg-[#FFF9F5] flex flex-col">
+      {/* Header */}
+      <header className="bg-[#5C4033] shadow-md relative py-4 px-4 border-b-4 border-[#EED9C4]">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
-          <h1 className="text-3xl font-bold text-[#FFFFFF]">Create Service</h1>
+          <h1 className="text-3xl font-bold text-[#EED9C4]">Create Service</h1>
 
-          {/* Right side icons (profile + menu) */}
           <div className="flex items-center gap-4 relative">
             {/* Profile Icon */}
             <button
               onClick={toggleProfile}
-              className="p-2 rounded-full hover:bg-[#C5A96A]/30 transition"
+              className="p-2 rounded-full hover:bg-[#C4956A]/30 transition"
             >
-              <FiUser size={22} className="text-[#FFFFFF]" />
+              <FiUser size={22} className="text-[#EED9C4]" />
             </button>
 
-            {/* Profile dropdown */}
             {showProfileMenu && (
-              <div className="absolute right-14 top-14 bg-[#1C1C1C] rounded-xl shadow-lg border border-[#C5A96A]/40 w-48 z-50">
-                <ul className="text-sm divide-y divide-[#333]">
+              <div className="absolute right-14 top-14 bg-[#FFF8F2] rounded-xl shadow-lg border border-[#EED9C4] w-48 z-50">
+                <ul className="text-sm divide-y divide-[#EED9C4]">
                   <li>
                     <Link
                       href="/handyAccount"
-                      className="block px-4 py-3 hover:bg-[#C8102E] hover:text-white transition text-[#FFFFFF]"
+                      className="block px-4 py-3 hover:bg-[#EED9C4]/40 transition text-[#5C4033]"
                     >
                       View Account
                     </Link>
@@ -133,7 +131,7 @@ export default function CreateService() {
                   <li>
                     <button
                       onClick={handleLogout}
-                      className="w-full text-left px-4 py-3 text-[#C8102E] hover:bg-[#C8102E]/20 transition"
+                      className="w-full text-left px-4 py-3 text-[#C4956A] hover:bg-[#EED9C4]/40 transition"
                     >
                       Logout
                     </button>
@@ -142,74 +140,35 @@ export default function CreateService() {
               </div>
             )}
 
-            {/* Menu button */}
+            {/* Menu */}
             <button
               onClick={toggleMenu}
-              className="p-2 rounded-md hover:bg-[#C5A96A]/30 bg-[#C8102E] text-white transition"
+              className="p-2 rounded-md hover:bg-[#EED9C4]/40 bg-[#C4956A] text-white transition"
             >
               {showMenu ? <X size={26} /> : <Menu size={26} />}
             </button>
 
-            {/* Hamburger dropdown */}
             {showMenu && (
-              <div className="absolute right-0 top-14 bg-[#1C1C1C] shadow-xl rounded-xl border border-[#C5A96A]/40 w-56 text-sm z-50 overflow-hidden">
-                <ul className="divide-y divide-[#333] text-[#FFFFFF]">
-                  <li>
-                    <Link
-                      href="/create-service"
-                      className="block px-4 py-3 hover:bg-[#C8102E] transition"
-                    >
-                      Add Service
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/Add-profile"
-                      className="block px-4 py-3 hover:bg-[#C8102E] transition"
-                    >
-                      Add profile
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/handyAccount"
-                      className="block px-4 py-3 hover:bg-[#C8102E] transition"
-                    >
-                      My Account
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/order"
-                      className="block px-4 py-3 hover:bg-[#C8102E] transition"
-                    >
-                      Track Order
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/membership"
-                      className="block px-4 py-3 hover:bg-[#C8102E] transition"
-                    >
-                      Membership Plan
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/help"
-                      className="block px-4 py-3 hover:bg-[#C8102E] transition"
-                    >
-                      FAQ
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/settings"
-                      className="block px-4 py-3 hover:bg-[#C8102E] transition"
-                    >
-                      Account Settings
-                    </Link>
-                  </li>
+              <div className="absolute right-0 top-14 bg-[#FFF8F2] shadow-xl rounded-xl border border-[#EED9C4] w-56 text-sm z-50 overflow-hidden">
+                <ul className="divide-y divide-[#EED9C4] text-[#5C4033]">
+                  {[
+                    ["Add Service", "/create-service"],
+                    ["Add Profile", "/Add-profile"],
+                    ["My Account", "/handyAccount"],
+                    ["Track Order", "/order"],
+                    ["Membership Plan", "/membership"],
+                    ["FAQ", "/help"],
+                    ["Account Settings", "/settings"],
+                  ].map(([label, href]) => (
+                    <li key={href}>
+                      <Link
+                        href={href}
+                        className="block px-4 py-3 hover:bg-[#EED9C4]/50 transition"
+                      >
+                        {label}
+                      </Link>
+                    </li>
+                  ))}
                 </ul>
               </div>
             )}
@@ -217,36 +176,35 @@ export default function CreateService() {
         </div>
       </header>
 
-      {/* Main content area */}
+      {/* Main Content */}
       <main className="flex-1 flex justify-center items-start py-10 px-4">
-        {/* Form card */}
-        <div className="w-full max-w-4xl bg-[#FFFFFF] rounded-xl shadow-lg p-10 space-y-8 border-t-4 border-[#C8102E]">
+        <div className="w-full max-w-4xl bg-white rounded-xl shadow-lg p-10 space-y-8 border-t-4 border-[#EED9C4]">
           {/* Service Title */}
           <div>
-            <label className="block mb-2 font-semibold text-[#1C1C1C]">
+            <label className="block mb-2 font-semibold text-[#5C4033]">
               Service Title
             </label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full rounded-lg p-4 border border-[#B3B3B3] bg-[#F4F4F4] text-[#1C1C1C] focus:outline-none focus:ring-2 focus:ring-[#C8102E] transition"
+              className="w-full rounded-lg p-4 border border-[#EED9C4] bg-[#FFF8F2] text-[#5C4033] focus:outline-none focus:ring-2 focus:ring-[#C4956A] transition"
               placeholder="Enter service title"
             />
             {errors.title && (
-              <p className="text-[#C8102E] text-sm mt-1">{errors.title}</p>
+              <p className="text-[#C4956A] text-sm mt-1">{errors.title}</p>
             )}
           </div>
 
           {/* Category */}
           <div>
-            <label className="block mb-2 font-semibold text-[#1C1C1C]">
+            <label className="block mb-2 font-semibold text-[#5C4033]">
               Category
             </label>
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full rounded-lg p-4 border border-[#B3B3B3] bg-[#F4F4F4] text-[#1C1C1C] focus:outline-none focus:ring-2 focus:ring-[#C8102E] appearance-none pr-8 transition cursor-pointer"
+              className="w-full rounded-lg p-4 border border-[#EED9C4] bg-[#FFF8F2] text-[#5C4033] focus:outline-none focus:ring-2 focus:ring-[#C4956A] appearance-none pr-8 transition cursor-pointer"
             >
               <option value="">Select Category</option>
               <option>Electrical Repair</option>
@@ -255,19 +213,19 @@ export default function CreateService() {
               <option>Carpentry</option>
             </select>
             {errors.category && (
-              <p className="text-[#C8102E] text-sm mt-1">{errors.category}</p>
+              <p className="text-[#C4956A] text-sm mt-1">{errors.category}</p>
             )}
           </div>
 
           {/* Image Upload */}
           <div>
-            <label className="block mb-2 font-semibold text-[#1C1C1C]">
+            <label className="block mb-2 font-semibold text-[#5C4033]">
               Image
             </label>
             <div className="flex items-center gap-4">
-              <label className="flex-1 flex justify-between items-center px-4 py-3 border border-[#B3B3B3] rounded-lg bg-[#F4F4F4] cursor-pointer hover:bg-[#EAEAEA] transition">
+              <label className="flex-1 flex justify-between items-center px-4 py-3 border border-[#EED9C4] rounded-lg bg-[#FFF8F2] cursor-pointer hover:bg-[#FAF0E6] transition">
                 {image ? image.name : "No file chosen"}
-                <span className="ml-2 text-[#B3B3B3]">▼</span>
+                <span className="ml-2 text-[#C4956A]">▼</span>
                 <input
                   type="file"
                   accept="image/*"
@@ -276,7 +234,7 @@ export default function CreateService() {
                 />
               </label>
               {imagePreview && (
-                <div className="w-24 h-24 relative border border-[#B3B3B3] rounded-lg overflow-hidden shadow">
+                <div className="w-24 h-24 relative border border-[#EED9C4] rounded-lg overflow-hidden shadow">
                   <Image
                     src={imagePreview}
                     alt="Preview"
@@ -287,20 +245,20 @@ export default function CreateService() {
               )}
             </div>
             {errors.image && (
-              <p className="text-[#C8102E] text-sm mt-1">{errors.image}</p>
+              <p className="text-[#C4956A] text-sm mt-1">{errors.image}</p>
             )}
           </div>
 
           {/* Price */}
           <div>
-            <label className="block mb-2 font-semibold text-[#1C1C1C]">
+            <label className="block mb-2 font-semibold text-[#5C4033]">
               Price
             </label>
             <div className="flex gap-4">
               <select
                 value={priceType}
                 onChange={(e) => setPriceType(e.target.value)}
-                className="rounded-lg p-4 border border-[#B3B3B3] bg-[#F4F4F4] text-[#1C1C1C] focus:outline-none focus:ring-2 focus:ring-[#C8102E] transition cursor-pointer"
+                className="rounded-lg p-4 border border-[#EED9C4] bg-[#FFF8F2] text-[#5C4033] focus:outline-none focus:ring-2 focus:ring-[#C4956A] transition cursor-pointer"
               >
                 <option>Hourly</option>
                 <option>Fixed</option>
@@ -309,26 +267,26 @@ export default function CreateService() {
                 type="text"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
-                className="flex-1 rounded-lg p-4 border border-[#B3B3B3] bg-[#F4F4F4] text-[#1C1C1C] focus:outline-none focus:ring-2 focus:ring-[#C8102E] transition"
+                className="flex-1 rounded-lg p-4 border border-[#EED9C4] bg-[#FFF8F2] text-[#5C4033] focus:outline-none focus:ring-2 focus:ring-[#C4956A] transition"
                 placeholder="Enter price"
               />
             </div>
             {errors.price && (
-              <p className="text-[#C8102E] text-sm mt-1">{errors.price}</p>
+              <p className="text-[#C4956A] text-sm mt-1">{errors.price}</p>
             )}
           </div>
 
           {/* Buttons */}
-          <div className="flex justify-end gap-3 pt-4 border-t border-[#EAEAEA]">
+          <div className="flex justify-end gap-3 pt-4 border-t border-[#EED9C4]/60">
             <button
               onClick={() => setPopup("Draft Saved Successfully 📝")}
-              className="bg-[#C5A96A] text-[#1C1C1C] px-5 py-2 rounded-lg hover:bg-[#B99655] transition shadow"
+              className="bg-[#EED9C4] text-[#5C4033] px-5 py-2 rounded-lg hover:bg-[#E3C7A8] transition shadow"
             >
               Save Draft
             </button>
             <button
               onClick={handleSubmit}
-              className="bg-[#C8102E] text-white px-5 py-2 rounded-lg hover:bg-[#A60E27] transition shadow"
+              className="bg-[#C4956A] text-white px-5 py-2 rounded-lg hover:bg-[#B07E54] transition shadow"
             >
               Submit Now →
             </button>
@@ -338,12 +296,12 @@ export default function CreateService() {
 
       {/* Popup */}
       {popup && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-xl shadow text-center w-80 text-[#1C1C1C]">
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-[#FFF8F2] p-6 rounded-xl shadow text-center w-80 text-[#5C4033]">
             <h2 className="text-lg font-bold mb-4">{popup}</h2>
             <button
               onClick={() => setPopup(null)}
-              className="bg-[#C8102E] text-white px-4 py-2 rounded-lg hover:bg-[#A60E27] transition"
+              className="bg-[#C4956A] text-white px-4 py-2 rounded-lg hover:bg-[#B07E54] transition"
             >
               Close
             </button>
@@ -353,7 +311,3 @@ export default function CreateService() {
     </div>
   );
 }
-
-
-
-
