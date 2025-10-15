@@ -1,23 +1,150 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import Image from "next/image";
-import { FiHome, FiMessageCircle, FiHelpCircle, FiBell, FiSettings } from "react-icons/fi";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Menu, X } from "lucide-react";
+import { FiUser } from "react-icons/fi";
 
-export default function OrderDetailsPage() {
+export default function OrderPage() {
   const [popup, setPopup] = useState<"accepted" | "declined" | null>(null);
+  const [showMenu, setShowMenu] = useState(false);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const router = useRouter();
 
   const handleClose = () => {
     setPopup(null);
   };
 
+  const handleLogout = () => {
+    router.push("/");
+  };
+
+  const toggleMenu = () => {
+    setShowMenu(!showMenu);
+    setShowProfileMenu(false);
+  };
+
+  const toggleProfile = () => {
+    setShowProfileMenu(!showProfileMenu);
+    setShowMenu(false);
+  };
+
   return (
-    <div className="min-h-screen flex flex-col bg-[#F4F4F4] text-[#1C1C1C]">
-      {/* Header */}
-      <div className="bg-[#1C1C1C] p-4 relative shadow-md flex items-center justify-center border-b-4 border-[#C8102E]">
-        <h1 className="text-2xl font-extrabold text-white">Order Details</h1>
-      </div>
+    <div className="min-h-screen bg-[#F4F4F4] flex flex-col">
+      {/* ✅ Header (Copied from Create Service page) */}
+      <header className="bg-[#1C1C1C] shadow-md relative py-4 px-4 border-b-4 border-[#C8102E]">
+        <div className="max-w-5xl mx-auto flex items-center justify-between">
+          <h1 className="text-3xl font-bold text-[#FFFFFF]">My Orders</h1>
+
+          <div className="flex items-center gap-4 relative">
+            {/* Profile Icon */}
+            <button
+              onClick={toggleProfile}
+              className="p-2 rounded-full hover:bg-[#C5A96A]/30 transition"
+            >
+              <FiUser size={22} className="text-[#FFFFFF]" />
+            </button>
+
+            {/* Profile Dropdown */}
+            {showProfileMenu && (
+              <div className="absolute right-14 top-14 bg-[#1C1C1C] rounded-xl shadow-lg border border-[#C5A96A]/40 w-48 z-50">
+                <ul className="text-sm divide-y divide-[#333]">
+                  <li>
+                    <Link
+                      href="/handyAccount"
+                      className="block px-4 py-3 hover:bg-[#C8102E] hover:text-white transition text-[#FFFFFF]"
+                    >
+                      View Account
+                    </Link>
+                  </li>
+                  <li>
+                    <button
+                      onClick={handleLogout}
+                      className="w-full text-left px-4 py-3 text-[#C8102E] hover:bg-[#C8102E]/20 transition"
+                    >
+                      Logout
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            )}
+
+            {/* Hamburger Menu */}
+            <button
+              onClick={toggleMenu}
+              className="p-2 rounded-md hover:bg-[#C5A96A]/30 bg-[#C8102E] text-white transition"
+            >
+              {showMenu ? <X size={26} /> : <Menu size={26} />}
+            </button>
+
+            {/* Hamburger Dropdown */}
+            {showMenu && (
+              <div className="absolute right-0 top-14 bg-[#1C1C1C] shadow-xl rounded-xl border border-[#C5A96A]/40 w-56 text-sm z-50 overflow-hidden">
+                <ul className="divide-y divide-[#333] text-[#FFFFFF]">
+                  <li>
+                    <Link
+                      href="/create-service"
+                      className="block px-4 py-3 hover:bg-[#C8102E] transition"
+                    >
+                      Add Service
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/Add-profile"
+                      className="block px-4 py-3 hover:bg-[#C8102E] transition"
+                    >
+                      Add Profile
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/handyAccount"
+                      className="block px-4 py-3 hover:bg-[#C8102E] transition"
+                    >
+                      My Account
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/order"
+                      className="block px-4 py-3 hover:bg-[#C8102E] transition"
+                    >
+                      Track Order
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/membership"
+                      className="block px-4 py-3 hover:bg-[#C8102E] transition"
+                    >
+                      Membership Plan
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/help"
+                      className="block px-4 py-3 hover:bg-[#C8102E] transition"
+                    >
+                      FAQ
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/settings"
+                      className="block px-4 py-3 hover:bg-[#C8102E] transition"
+                    >
+                      Account Settings
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+            )}
+          </div>
+        </div>
+      </header>
 
       {/* main content of the page */}
       <div className="flex-1 p-6 space-y-6 max-w-6xl mx-auto w-full">
@@ -129,42 +256,7 @@ export default function OrderDetailsPage() {
           </div>
         </div>
       )}
+      </div>
 
-      {/* footer */}
-      <footer className="bg-[#FFFFFF] text-[#1C1C1C] mt-10 border-t-4 border-[#C8102E]">
-        <div className="max-w-6xl mx-auto flex justify-around py-5 text-sm">
-          <Link
-            href="/"
-            className="flex flex-col items-center gap-1 hover:text-[#C8102E] transition"
-          >
-            <FiHome size={20} /> Home
-          </Link>
-          <Link
-            href="/messages"
-            className="flex flex-col items-center gap-1 hover:text-[#C8102E] transition"
-          >
-            <FiMessageCircle size={20} /> Messages
-          </Link>
-          <Link
-            href="/help"
-            className="flex flex-col items-center gap-1 hover:text-[#C8102E] transition"
-          >
-            <FiHelpCircle size={20} /> Help
-          </Link>
-          <Link
-            href="/notifications"
-            className="flex flex-col items-center gap-1 hover:text-[#C8102E] transition"
-          >
-            <FiBell size={20} /> Notifications
-          </Link>
-          <Link
-            href="/settings"
-            className="flex flex-col items-center gap-1 hover:text-[#C8102E] transition"
-          >
-            <FiSettings size={20} /> Settings
-          </Link>
-        </div>
-      </footer>
-    </div>
   );
 }
