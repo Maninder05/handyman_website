@@ -44,7 +44,7 @@ export const signup = async (req, res) => {
 
     await newUser.save();
 
-    // create JWT (short-lived) - FIXED: Added email
+    // create JWT (short-lived) 
     const token = jwt.sign({ 
       id: newUser._id, 
       email: newUser.email, 
