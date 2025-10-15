@@ -1,35 +1,62 @@
 "use client";
+
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
 
 export default function MyServicesPage() {
-  const services = [
-    {
-      name: "Residential Wiring Repair",
-      image: "/images/wiring-fix.jpg",
-      rating: 5,
-      price: 55,
-    },
-    {
-      name: "Load Repair",
-      image: "/images/load-fixation.jpg",
-      rating: 4,
-      price: 50,
-    },
-    {
-      name: "Voltage Maintenance",
-      image: "/images/voltage-testing.jpg",
-      rating: 3,
-      price: 45,
-    },
-    {
-      name: "Appliance Installation",
-      image: "/images/outlet-repair.jpg",
-      rating: 5,
-      price: 60,
-    },
-  ];
+  // ✅ Define the service type
+  interface Service {
+    _id: string;
+    title: string;
+    category: string;
+    priceType: string;
+    price: number;
+    image?: string;
+    createdAt?: string;
+    updatedAt?: string;
+  }
+
+  const [services, setServices] = useState<Service[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [isClient, setIsClient] = useState(false); // ✅ For hydration fix
+
+  // ✅ Prevent hydration mismatch (only render once on client)
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // ✅ Fetch all services from backend
+  useEffect(() => {
+    if (!isClient) return; // run only on client
+
+    const fetchServices = async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/services`
+        );
+        if (!res.ok) throw new Error("Failed to fetch services");
+
+        const data = await res.json();
+        setServices(data);
+      } catch (err) {
+        if (err instanceof Error) {
+          console.error("Error fetching services:", err.message);
+        } else {
+          console.error("Unknown error fetching services:", err);
+        }
+        setError("Failed to load services ❌");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchServices();
+  }, [isClient]);
+
+  // ✅ Render nothing until on client to avoid hydration issues
+  if (!isClient) return null;
 
   return (
     <main className="bg-[#F4F4F4] min-h-screen text-[#1C1C1C] flex flex-col">
@@ -66,35 +93,55 @@ export default function MyServicesPage() {
           Handyman Services Offered
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {services.map((service, index) => (
-            <div
-              key={index}
-              className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col hover:shadow-2xl hover:scale-105 hover:bg-[#C5A96A]/20 transition-transform duration-300"
-            >
-              <div className="relative w-full h-40">
-                <Image
-                  src={service.image}
-                  alt={service.name}
-                  fill
-                  className="object-cover"
-                />
+        {/* Loading and error handling */}
+        {loading ? (
+          <p className="text-center text-[#C5A96A] text-lg font-semibold">
+            Loading services...
+          </p>
+        ) : error ? (
+          <p className="text-center text-[#C8102E] text-lg font-semibold">
+            {error}
+          </p>
+        ) : services.length === 0 ? (
+          <p className="text-center text-[#1C1C1C] text-lg font-semibold">
+            No services added yet.
+          </p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {services.map((service) => (
+              <div
+                key={service._id}
+                className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col hover:shadow-2xl hover:scale-105 hover:bg-[#C5A96A]/20 transition-transform duration-300"
+              >
+                <div className="relative w-full h-40">
+                  <Image
+                    src={
+                      service.image
+                        ? `${process.env.NEXT_PUBLIC_API_URL}${service.image}`
+                        : "/images/default-service.jpg"
+                    }
+                    alt={service.title}
+                    fill
+                    className="object-cover"
+                    unoptimized // ✅ helps with localhost images during dev
+                  />
+                </div>
+                <div className="p-4 flex flex-col gap-1">
+                  <h3 className="text-lg font-bold text-[#C8102E]">
+                    {service.title}
+                  </h3>
+                  <p className="text-[#555]">{service.category}</p>
+                  <p className="text-[#C5A96A] font-semibold">
+                    {service.priceType}
+                  </p>
+                  <p className="text-[#1C1C1C] font-semibold">
+                    ${service.price} CAD
+                  </p>
+                </div>
               </div>
-              <div className="p-4 flex flex-col gap-1">
-                <h3 className="text-lg font-bold text-[#C8102E]">
-                  {service.name}
-                </h3>
-                <p className="text-[#555]">By Kenji Teneka</p>
-                <p className="text-[#C5A96A] font-semibold">
-                  Rating: {service.rating}/5
-                </p>
-                <p className="text-[#1C1C1C] font-semibold">
-                  ${service.price} CAD/HR
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </section>
     </main>
   );
