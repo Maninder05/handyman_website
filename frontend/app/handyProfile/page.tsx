@@ -266,7 +266,7 @@ export default function AddProfilePage() {
                   value={newService} 
                   onChange={(e)=>setNewService(e.target.value)} 
                   onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addService())}
-                  placeholder="" 
+                  placeholder="e.g., Plumbing, Electrical, Carpentry..." 
                   className="flex-1 p-3 rounded-lg border-2 border-gray-300 focus:border-[#D4A574] outline-none transition"
                 />
                 <button 

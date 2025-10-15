@@ -44,8 +44,12 @@ export const signup = async (req, res) => {
 
     await newUser.save();
 
-    // create JWT (short-lived)
-    const token = jwt.sign({ id: newUser._id, sessionToken }, JWT_SECRET, { expiresIn: "15m" });
+    // create JWT (short-lived) - FIXED: Added email
+    const token = jwt.sign({ 
+      id: newUser._id, 
+      email: newUser.email, 
+      sessionToken 
+    }, JWT_SECRET, { expiresIn: "15m" });
 
     res.status(201).json({
       message: "Signup successful",
@@ -81,8 +85,12 @@ export const login = async (req, res) => {
     user.sessionExpiresAt = new Date(Date.now() + SESSION_TTL_MS);
     await user.save();
 
-    // create JWT token (short-lived)
-    const token = jwt.sign({ id: user._id, sessionToken }, JWT_SECRET, { expiresIn: "15m" });
+    // create JWT token (short-lived) - FIXED: Added email
+    const token = jwt.sign({ 
+      id: user._id, 
+      email: user.email, 
+      sessionToken 
+    }, JWT_SECRET, { expiresIn: "15m" });
 
     res.json({
       message: "Login successful",
