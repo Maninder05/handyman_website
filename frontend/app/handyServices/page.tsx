@@ -82,7 +82,6 @@ export default function MyServicesPage() {
       try {
         updatedService = await res.json();
       } catch {
-        // if backend returns message only, re-fetch the updated one
         const refetch = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/api/services/${editingService._id}`
         );
