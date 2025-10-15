@@ -7,9 +7,9 @@ import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
 
-import RouterUser from "./routes/RouteUser.js";   
-import RouterHandyman from "./routes/handyRoutes.js"; 
-import RouterService from "./routes/CreateServiceRoutes.js";
+import RouterUser from "./routes/RouteUser.js";       // User routes
+import RouterHandyman from "./routes/handyRoutes.js"; // Handyman routes
+import RouterService from "./routes/CreateServiceRoutes.js";// ✅ New service routes
 
 // import paymentRouter from "./routes/payment.router.js";
 // import webhookRouter from "./routes/webhook.router.js";
