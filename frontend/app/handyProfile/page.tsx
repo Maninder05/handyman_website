@@ -139,9 +139,18 @@ export default function AddProfilePage() {
 
       if (!res.ok) {
         const errorData = await res.json().catch(() => null);
+        
+        // If profile already exists, that's fine - just go to dashboard
+        if (res.status === 400 && errorData?.message?.includes("already have a profile")) {
+          router.push("/handyDashboard");
+          return;
+        }
+        
+        console.log(" Backend Status:", res.status);
+        console.log(" Backend Error:", errorData);
         throw new Error(errorData?.message || "Failed to create profile");
       }
-
+      
       router.push("/handyDashboard");
     } catch (err) {
       alert("Error: Could not create profile. See console for details.");
@@ -257,7 +266,7 @@ export default function AddProfilePage() {
                   value={newService} 
                   onChange={(e)=>setNewService(e.target.value)} 
                   onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addService())}
-                  placeholder="e.g., Plumbing, Electrical, Carpentry..." 
+                  placeholder="" 
                   className="flex-1 p-3 rounded-lg border-2 border-gray-300 focus:border-[#D4A574] outline-none transition"
                 />
                 <button 
