@@ -356,3 +356,12 @@ export default function CreateService() {
     </div>
   );
 }
+
+
+
+
+
+//ChatGPT (https://chat.openai.com - For explanations, debugging help, and understanding coding concepts.
+//W3Schools (https://www.w3schools.com - To learn HTML, CSS, JavaScript, and React syntax.
+//MDN Web Docs (https://developer.mozilla.org - For detailed documentation and best practices in web development.
+//Stack Overflow (https://stackoverflow.com - To find solutions to coding errors and implementation issues.
