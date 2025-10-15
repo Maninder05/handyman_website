@@ -78,7 +78,6 @@ export default function MyServicesPage() {
 
       if (!res.ok) throw new Error("Failed to update service");
 
-      // Try to get the updated service directly from response
       let updatedService;
       try {
         updatedService = await res.json();
