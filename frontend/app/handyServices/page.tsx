@@ -19,12 +19,8 @@ export default function MyServicesPage() {
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  // Popup state
   const [editingService, setEditingService] = useState<Service | null>(null);
   const [showPopup, setShowPopup] = useState(false);
-
-  // Form fields for editing
   const [formData, setFormData] = useState({
     title: "",
     category: "",
@@ -32,7 +28,6 @@ export default function MyServicesPage() {
     price: "",
   });
 
-  // ✅ Fetch services from backend
   useEffect(() => {
     const fetchServices = async () => {
       try {
@@ -47,11 +42,9 @@ export default function MyServicesPage() {
         setLoading(false);
       }
     };
-
     fetchServices();
   }, []);
 
-  // =================== UPDATE LOGIC ===================
   const handleEditClick = (service: Service) => {
     setEditingService(service);
     setFormData({
@@ -77,10 +70,8 @@ export default function MyServicesPage() {
       );
 
       if (!res.ok) throw new Error("Failed to update service");
-
       const updated = await res.json();
 
-      // Update frontend list immediately
       setServices((prev) =>
         prev.map((s) => (s._id === updated._id ? updated : s))
       );
@@ -93,21 +84,17 @@ export default function MyServicesPage() {
     }
   };
 
-  // =================== DELETE LOGIC ===================
   const handleDeleteService = async (id: string) => {
     if (!confirm("Are you sure you want to delete this service?")) return;
 
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/services/${id}`,
-        {
-          method: "DELETE",
-        }
+        { method: "DELETE" }
       );
 
       if (!res.ok) throw new Error("Failed to delete service");
 
-      // Remove from frontend
       setServices((prev) => prev.filter((s) => s._id !== id));
     } catch (err) {
       console.error("Error deleting service:", err);
@@ -115,12 +102,11 @@ export default function MyServicesPage() {
     }
   };
 
-  // =================== UI ===================
   return (
     <main className="bg-[#F4F4F4] min-h-screen text-[#1C1C1C] flex flex-col">
-      {/* ================= HEADER ================= */}
+      {/* HEADER */}
       <section className="bg-[#1C1C1C] pb-8 text-center shadow-md border-b-4 border-[#C8102E]">
-        <h1 className="text-2xl md:text-3xl font-bold text-white pt-6 mb-4">
+        <h1 className="text-3xl md:text-4xl font-bold text-white pt-6 mb-4">
           My Services
         </h1>
         <div className="flex justify-center gap-4">
@@ -145,9 +131,9 @@ export default function MyServicesPage() {
         </div>
       </section>
 
-      {/* ================= SERVICES GRID ================= */}
-      <section className="px-4 py-10 max-w-7xl mx-auto">
-        <h2 className="text-3xl font-bold mb-8 text-[#C8102E]">
+      {/* SERVICES GRID */}
+      <section className="px-6 py-12 max-w-7xl mx-auto">
+        <h2 className="text-3xl font-bold mb-8 text-[#C8102E] text-center">
           Handyman Services Offered
         </h2>
 
@@ -164,14 +150,16 @@ export default function MyServicesPage() {
             No services added yet.
           </p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
             {services.map((service) => (
               <div
                 key={service._id}
-                className="bg-white rounded-3xl shadow-md border border-gray-100 hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col group"
+                className="relative bg-gradient-to-br from-[#f9fafb] via-white to-[#f0f0f0] rounded-3xl shadow-[0_10px_25px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)] hover:-translate-y-3 transition-all duration-500 overflow-hidden group"
               >
-                {/* Image Section */}
-                <div className="relative w-full h-48 overflow-hidden">
+                <span className="absolute inset-0 bg-gradient-to-tr from-[#C8102E]/10 via-transparent to-[#C5A96A]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></span>
+
+                {/* Image */}
+                <div className="relative w-full h-56">
                   <Image
                     src={
                       service.image
@@ -180,41 +168,43 @@ export default function MyServicesPage() {
                     }
                     alt={service.title}
                     fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out"
+                    className="object-cover rounded-t-3xl"
                     unoptimized
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                 </div>
 
-                {/* Service Details */}
-                <div className="p-5 flex flex-col justify-between flex-1">
-                  <div>
-                    <h3 className="text-xl font-semibold text-[#C8102E] mb-1">
-                      {service.title}
-                    </h3>
-                    <p className="text-gray-600 text-sm mb-1">
-                      {service.category}
-                    </p>
-                    <p className="text-[#C5A96A] font-semibold text-sm">
+                {/* Content */}
+                <div className="relative p-6 z-10">
+                  <h3 className="text-xl font-bold text-[#C8102E] mb-1">
+                    {service.title}
+                  </h3>
+                  <p className="text-[#555] text-sm mb-2 italic">
+                    {service.category}
+                  </p>
+
+                  <div className="flex justify-between items-center mt-2 mb-4">
+                    <p className="text-[#C5A96A] font-semibold">
                       {service.priceType}
                     </p>
-                    <p className="text-[#1C1C1C] font-semibold mt-1">
+                    <p className="text-[#1C1C1C] font-semibold text-lg">
                       ${service.price} CAD
                     </p>
                   </div>
 
                   {/* Buttons */}
-                  <div className="mt-4 flex gap-2">
+                  <div className="flex gap-3 mt-4">
                     <button
                       onClick={() => handleEditClick(service)}
-                      className="flex-1 bg-[#C5A96A] text-[#1C1C1C] py-2 rounded-lg font-medium hover:bg-[#b08c4a] transition"
+                      className="flex-1 bg-gradient-to-r from-[#f6d365] to-[#fda085] text-[#1C1C1C] py-2 rounded-xl font-semibold hover:scale-[1.03] hover:shadow-md transition-all"
                     >
-                      Update
+                      ✏️ Update
                     </button>
                     <button
                       onClick={() => handleDeleteService(service._id)}
-                      className="flex-1 bg-[#C8102E] text-white py-2 rounded-lg font-medium hover:bg-[#a40f25] transition"
+                      className="flex-1 bg-gradient-to-r from-[#ff416c] to-[#ff4b2b] text-white py-2 rounded-xl font-semibold hover:scale-[1.03] hover:shadow-md transition-all"
                     >
-                      Delete
+                      🗑 Delete
                     </button>
                   </div>
                 </div>
@@ -224,15 +214,15 @@ export default function MyServicesPage() {
         )}
       </section>
 
-      {/* ================= POPUP FORM ================= */}
+      {/* POPUP FORM */}
       {showPopup && (
-        <div className="fixed inset-0 bg-black/60 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-2xl w-96 shadow-lg">
-            <h2 className="text-xl font-bold mb-4 text-[#C8102E]">
+        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 backdrop-blur-sm">
+          <div className="bg-white p-8 rounded-3xl shadow-2xl w-96 relative">
+            <h2 className="text-2xl font-bold mb-5 text-[#C8102E] text-center">
               Edit Service
             </h2>
 
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-4">
               <input
                 type="text"
                 placeholder="Title"
@@ -240,7 +230,7 @@ export default function MyServicesPage() {
                 onChange={(e) =>
                   setFormData({ ...formData, title: e.target.value })
                 }
-                className="border rounded-lg p-2"
+                className="border border-gray-300 rounded-lg p-2 focus:border-[#C8102E] outline-none"
               />
               <input
                 type="text"
@@ -249,7 +239,7 @@ export default function MyServicesPage() {
                 onChange={(e) =>
                   setFormData({ ...formData, category: e.target.value })
                 }
-                className="border rounded-lg p-2"
+                className="border border-gray-300 rounded-lg p-2 focus:border-[#C8102E] outline-none"
               />
               <input
                 type="text"
@@ -258,7 +248,7 @@ export default function MyServicesPage() {
                 onChange={(e) =>
                   setFormData({ ...formData, priceType: e.target.value })
                 }
-                className="border rounded-lg p-2"
+                className="border border-gray-300 rounded-lg p-2 focus:border-[#C8102E] outline-none"
               />
               <input
                 type="number"
@@ -267,19 +257,19 @@ export default function MyServicesPage() {
                 onChange={(e) =>
                   setFormData({ ...formData, price: e.target.value })
                 }
-                className="border rounded-lg p-2"
+                className="border border-gray-300 rounded-lg p-2 focus:border-[#C8102E] outline-none"
               />
 
-              <div className="flex justify-end gap-2 mt-4">
+              <div className="flex justify-end gap-3 mt-6">
                 <button
                   onClick={() => setShowPopup(false)}
-                  className="bg-gray-300 text-black px-3 py-1 rounded-lg hover:bg-gray-400 transition"
+                  className="bg-gray-300 text-black px-4 py-2 rounded-lg font-semibold hover:bg-gray-400 transition"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleUpdateService}
-                  className="bg-[#C8102E] text-white px-3 py-1 rounded-lg hover:bg-[#a40f25] transition"
+                  className="bg-[#C8102E] text-white px-4 py-2 rounded-lg font-semibold hover:bg-[#a40f25] transition"
                 >
                   Save
                 </button>
