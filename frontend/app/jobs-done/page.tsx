@@ -1,10 +1,10 @@
 "use client";
-
+ 
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FiArrowLeft, FiCheckCircle } from "react-icons/fi";
-
+ 
 type Job = {
   _id: string;
   title: string;
@@ -16,7 +16,7 @@ type Job = {
   totalPayment?: number;
   jobImage?: string;
 };
-
+ 
 export default function ProjectsPage() {
   const [inProgressJobs, setInProgressJobs] = useState<Job[]>([]);
   const [completedJobs, setCompletedJobs] = useState<Job[]>([]);
@@ -24,7 +24,7 @@ export default function ProjectsPage() {
   const [completingJob, setCompletingJob] = useState<string | null>(null);
   const [hoursWorked, setHoursWorked] = useState<{ [key: string]: string }>({});
   const router = useRouter();
-
+ 
   const fetchJobs = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -32,13 +32,13 @@ export default function ProjectsPage() {
         router.push("/handyLogin");
         return;
       }
-
+ 
       const response = await fetch("http://localhost:8000/api/jobs/my-jobs", {
         headers: {
           "Authorization": `Bearer ${token}`,
         },
       });
-
+ 
       if (response.ok) {
         const data: Job[] = await response.json();
         setInProgressJobs(data.filter((job) => job.status === "in_progress"));
@@ -50,26 +50,26 @@ export default function ProjectsPage() {
       setLoading(false);
     }
   };
-
+ 
   useEffect(() => {
     fetchJobs();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
+ 
   const handleCompleteJob = async (jobId: string) => {
     const hours = parseFloat(hoursWorked[jobId] || "0");
-    
+   
     if (!hours || hours <= 0) {
       alert("Please enter valid hours worked");
       return;
     }
-
+ 
     if (!confirm(`Complete this job with ${hours} hours worked?`)) {
       return;
     }
-
+ 
     setCompletingJob(jobId);
-
+ 
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(`http://localhost:8000/api/jobs/${jobId}/complete`, {
@@ -80,7 +80,7 @@ export default function ProjectsPage() {
         },
         body: JSON.stringify({ hoursWorked: hours }),
       });
-
+ 
       if (response.ok) {
         const data = await response.json();
         alert(`Job completed! You earned $${data.earnings}`);
@@ -97,7 +97,7 @@ export default function ProjectsPage() {
       setCompletingJob(null);
     }
   };
-
+ 
   if (loading) {
     return (
       <div className="min-h-screen bg-[#F5F5F0] flex items-center justify-center">
@@ -108,7 +108,7 @@ export default function ProjectsPage() {
       </div>
     );
   }
-
+ 
   return (
     <div className="min-h-screen flex flex-col bg-[#F5F5F0] text-gray-900">
       <header className="bg-[#1a1a1a] shadow-md sticky top-0 z-50">
@@ -124,7 +124,7 @@ export default function ProjectsPage() {
           <div className="w-10"></div>
         </div>
       </header>
-
+ 
       <main className="flex-1 max-w-6xl mx-auto w-full px-6 py-8">
         <section className="mb-12">
           <div className="flex items-center gap-3 mb-6">
@@ -134,7 +134,7 @@ export default function ProjectsPage() {
               {inProgressJobs.length}
             </span>
           </div>
-
+ 
           {inProgressJobs.length === 0 ? (
             <div className="bg-white rounded-xl shadow-lg p-12 text-center border border-gray-200">
               <p className="text-gray-500 text-lg">No projects in progress</p>
@@ -155,7 +155,7 @@ export default function ProjectsPage() {
                         {job.title.charAt(0)}
                       </span>
                     </div>
-                    
+                   
                     <div className="flex-1">
                       <h3 className="font-bold text-[#1a1a1a] text-lg mb-1">
                         {job.title}
@@ -171,7 +171,7 @@ export default function ProjectsPage() {
                       <p className="text-[#D4A574] font-bold text-xl mb-4">
                         ${job.pricePerHour}/hr
                       </p>
-
+ 
                       <div className="border-t pt-4">
                         <p className="text-sm text-gray-600 mb-2 font-medium">Complete this job:</p>
                         <div className="flex gap-3">
@@ -206,7 +206,7 @@ export default function ProjectsPage() {
             </div>
           )}
         </section>
-
+ 
         <section>
           <div className="flex items-center gap-3 mb-6">
             <div className="w-2 h-8 bg-green-500 rounded-full"></div>
@@ -215,7 +215,7 @@ export default function ProjectsPage() {
               {completedJobs.length}
             </span>
           </div>
-
+ 
           {completedJobs.length === 0 ? (
             <div className="bg-white rounded-xl shadow-lg p-12 text-center border border-gray-200">
               <p className="text-gray-500 text-lg">No completed projects yet</p>
@@ -233,7 +233,7 @@ export default function ProjectsPage() {
                         {job.title.charAt(0)}
                       </span>
                     </div>
-                    
+                   
                     <div className="flex-1">
                       <h3 className="font-bold text-[#1a1a1a] text-lg mb-1">
                         {job.title}
@@ -278,8 +278,8 @@ export default function ProjectsPage() {
           )}
         </section>
       </main>
-
-
+ 
+ 
     </div>
   );
 }
