@@ -150,16 +150,14 @@ export default function MyServicesPage() {
             No services added yet.
           </p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {services.map((service) => (
               <div
                 key={service._id}
-                className="relative bg-gradient-to-br from-[#f9fafb] via-white to-[#f0f0f0] rounded-3xl shadow-[0_10px_25px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)] hover:-translate-y-3 transition-all duration-500 overflow-hidden group"
+                className="relative bg-white rounded-2xl border border-[#E5E5E5] shadow-md hover:shadow-xl hover:-translate-y-2 transition-all duration-300 overflow-hidden"
               >
-                <span className="absolute inset-0 bg-gradient-to-tr from-[#C8102E]/10 via-transparent to-[#C5A96A]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></span>
-
                 {/* Image */}
-                <div className="relative w-full h-56">
+                <div className="relative w-full h-36">
                   <Image
                     src={
                       service.image
@@ -168,43 +166,50 @@ export default function MyServicesPage() {
                     }
                     alt={service.title}
                     fill
-                    className="object-cover rounded-t-3xl"
+                    className="object-cover"
                     unoptimized
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                 </div>
 
                 {/* Content */}
-                <div className="relative p-6 z-10">
-                  <h3 className="text-xl font-bold text-[#C8102E] mb-1">
+                <div className="p-5">
+                  <h3 className="text-lg font-bold text-[#C8102E] mb-2 border-b border-gray-200 pb-1">
                     {service.title}
                   </h3>
-                  <p className="text-[#555] text-sm mb-2 italic">
-                    {service.category}
-                  </p>
 
-                  <div className="flex justify-between items-center mt-2 mb-4">
-                    <p className="text-[#C5A96A] font-semibold">
+                  <div className="flex flex-col gap-1 mb-3 text-sm text-[#1C1C1C]">
+                    <p>
+                      <span className="font-semibold text-[#C5A96A]">
+                        Category:
+                      </span>{" "}
+                      {service.category}
+                    </p>
+                    <p>
+                      <span className="font-semibold text-[#C5A96A]">Type:</span>{" "}
                       {service.priceType}
                     </p>
-                    <p className="text-[#1C1C1C] font-semibold text-lg">
+                    <p>
+                      <span className="font-semibold text-[#C5A96A]">
+                        Price:
+                      </span>{" "}
                       ${service.price} CAD
                     </p>
                   </div>
 
                   {/* Buttons */}
-                  <div className="flex gap-3 mt-4">
+                  <div className="flex gap-3 mt-5">
                     <button
                       onClick={() => handleEditClick(service)}
-                      className="flex-1 bg-gradient-to-r from-[#f6d365] to-[#fda085] text-[#1C1C1C] py-2 rounded-xl font-semibold hover:scale-[1.03] hover:shadow-md transition-all"
+                      className="flex-1 bg-[#C5A96A] text-[#1C1C1C] py-2 rounded-lg font-semibold hover:bg-[#B99655] transition-all duration-300 shadow-sm"
                     >
-                      ✏️ Update
+                      Update
                     </button>
                     <button
                       onClick={() => handleDeleteService(service._id)}
-                      className="flex-1 bg-gradient-to-r from-[#ff416c] to-[#ff4b2b] text-white py-2 rounded-xl font-semibold hover:scale-[1.03] hover:shadow-md transition-all"
+                      className="flex-1 bg-[#C8102E] text-white py-2 rounded-lg font-semibold hover:bg-[#a40f25] transition-all duration-300 shadow-sm"
                     >
-                      🗑 Delete
+                      Delete
                     </button>
                   </div>
                 </div>
