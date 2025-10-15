@@ -56,24 +56,46 @@ export default function MyServicesPage() {
     setShowPopup(true);
   };
 
+  // ✅ Fixed version: updates instantly without refresh
   const handleUpdateService = async () => {
     if (!editingService) return;
 
     try {
+      const payload = {
+        ...formData,
+        price: formData.price === "" ? null : Number(formData.price),
+      };
+
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/services/${editingService._id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(payload),
         }
       );
 
       if (!res.ok) throw new Error("Failed to update service");
       const updated = await res.json();
 
+      // Merge new data safely with old one (so nothing breaks)
       setServices((prev) =>
-        prev.map((s) => (s._id === updated._id ? updated : s))
+        prev.map((s) =>
+          s._id === updated._id
+            ? {
+                ...s,
+                ...updated,
+                title: updated.title ?? s.title,
+                category: updated.category ?? s.category,
+                priceType: updated.priceType ?? s.priceType,
+                price:
+                  updated.price !== undefined && updated.price !== null
+                    ? updated.price
+                    : s.price,
+                image: updated.image ?? s.image,
+              }
+            : s
+        )
       );
 
       setShowPopup(false);
@@ -154,10 +176,10 @@ export default function MyServicesPage() {
             {services.map((service) => (
               <div
                 key={service._id}
-                className="relative bg-white rounded-2xl border border-[#E5E5E5] shadow-md hover:shadow-xl hover:-translate-y-2 transition-all duration-300 overflow-hidden"
+                className="relative bg-white rounded-2xl shadow-[0_10px_25px_rgba(0,0,0,0.1)] hover:shadow-[0_15px_35px_rgba(0,0,0,0.15)] hover:-translate-y-2 transition-all duration-500 overflow-hidden border border-[#eee]"
               >
                 {/* Image */}
-                <div className="relative w-full h-36">
+                <div className="relative w-full h-40">
                   <Image
                     src={
                       service.image
@@ -174,15 +196,13 @@ export default function MyServicesPage() {
 
                 {/* Content */}
                 <div className="p-5">
-                  <h3 className="text-lg font-bold text-[#C8102E] mb-2 border-b border-gray-200 pb-1">
+                  <h3 className="text-xl font-semibold text-[#C8102E] mb-2 border-b border-gray-200 pb-1">
                     {service.title}
                   </h3>
 
-                  <div className="flex flex-col gap-1 mb-3 text-sm text-[#1C1C1C]">
+                  <div className="flex flex-col gap-1 mb-3 text-sm text-gray-700">
                     <p>
-                      <span className="font-semibold text-[#C5A96A]">
-                        Category:
-                      </span>{" "}
+                      <span className="font-semibold text-[#C5A96A]">Category:</span>{" "}
                       {service.category}
                     </p>
                     <p>
@@ -190,24 +210,22 @@ export default function MyServicesPage() {
                       {service.priceType}
                     </p>
                     <p>
-                      <span className="font-semibold text-[#C5A96A]">
-                        Price:
-                      </span>{" "}
+                      <span className="font-semibold text-[#C5A96A]">Price:</span>{" "}
                       ${service.price} CAD
                     </p>
                   </div>
 
                   {/* Buttons */}
-                  <div className="flex gap-3 mt-5">
+                  <div className="flex gap-3 mt-4">
                     <button
                       onClick={() => handleEditClick(service)}
-                      className="flex-1 bg-[#C5A96A] text-[#1C1C1C] py-2 rounded-lg font-semibold hover:bg-[#B99655] transition-all duration-300 shadow-sm"
+                      className="flex-1 bg-gradient-to-r from-[#f9d976] to-[#f39f86] text-[#1C1C1C] py-2 rounded-lg font-semibold hover:scale-[1.03] hover:shadow-md transition-all"
                     >
                       Update
                     </button>
                     <button
                       onClick={() => handleDeleteService(service._id)}
-                      className="flex-1 bg-[#C8102E] text-white py-2 rounded-lg font-semibold hover:bg-[#a40f25] transition-all duration-300 shadow-sm"
+                      className="flex-1 bg-gradient-to-r from-[#ff4b2b] to-[#ff416c] text-white py-2 rounded-lg font-semibold hover:scale-[1.03] hover:shadow-md transition-all"
                     >
                       Delete
                     </button>
