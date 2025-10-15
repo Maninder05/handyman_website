@@ -22,9 +22,7 @@ export default function CreateService() {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const router = useRouter();
 
-  const handleLogout = () => {
-    router.push("/");
-  };
+  const handleLogout = () => router.push("/");
 
   const toggleMenu = () => {
     setShowMenu(!showMenu);
@@ -72,17 +70,12 @@ export default function CreateService() {
       formData.append("category", category);
       formData.append("priceType", priceType);
       formData.append("price", price);
-      if (image) {
-        formData.append("image", image);
-      }
+      if (image) formData.append("image", image);
 
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/services`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/services`, {
+        method: "POST",
+        body: formData,
+      });
 
       if (res.ok) {
         setPopup("Service Submitted Successfully ✅");
@@ -105,8 +98,10 @@ export default function CreateService() {
     <div className="min-h-screen bg-[#FFF9F5] flex flex-col">
       {/* Header */}
       <header className="bg-[#5C4033] shadow-md relative py-4 px-4 border-b-4 border-[#EED9C4]">
-        <div className="max-w-5xl mx-auto flex items-center justify-between">
-          <h1 className="text-3xl font-bold text-[#EED9C4]">Create Service</h1>
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
+          <h1 className="text-3xl font-bold text-[#EED9C4] tracking-wide">
+            Create Service
+          </h1>
 
           <div className="flex items-center gap-4 relative">
             {/* Profile Icon */}
@@ -140,7 +135,7 @@ export default function CreateService() {
               </div>
             )}
 
-            {/* Menu */}
+            {/* Menu Button */}
             <button
               onClick={toggleMenu}
               className="p-2 rounded-md hover:bg-[#EED9C4]/40 bg-[#C4956A] text-white transition"
@@ -176,10 +171,10 @@ export default function CreateService() {
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="flex-1 flex justify-center items-start py-10 px-4">
-        <div className="w-full max-w-4xl bg-white rounded-xl shadow-lg p-10 space-y-8 border-t-4 border-[#EED9C4]">
-          {/* Service Title */}
+      {/* Main Section */}
+      <main className="flex-1 flex justify-center items-start py-14 px-4">
+        <div className="w-full max-w-4xl bg-white rounded-2xl shadow-xl p-12 space-y-10 border-t-4 border-[#EED9C4]">
+          {/* Title */}
           <div>
             <label className="block mb-2 font-semibold text-[#5C4033]">
               Service Title
@@ -188,7 +183,7 @@ export default function CreateService() {
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full rounded-lg p-4 border border-[#EED9C4] bg-[#FFF8F2] text-[#5C4033] focus:outline-none focus:ring-2 focus:ring-[#C4956A] transition"
+              className="w-full rounded-xl p-4 border border-[#EED9C4] bg-[#FFF8F2] text-[#5C4033] focus:outline-none focus:ring-2 focus:ring-[#C4956A] transition"
               placeholder="Enter service title"
             />
             {errors.title && (
@@ -204,7 +199,7 @@ export default function CreateService() {
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full rounded-lg p-4 border border-[#EED9C4] bg-[#FFF8F2] text-[#5C4033] focus:outline-none focus:ring-2 focus:ring-[#C4956A] appearance-none pr-8 transition cursor-pointer"
+              className="w-full rounded-xl p-4 border border-[#EED9C4] bg-[#FFF8F2] text-[#5C4033] focus:outline-none focus:ring-2 focus:ring-[#C4956A] appearance-none pr-8 transition cursor-pointer"
             >
               <option value="">Select Category</option>
               <option>Electrical Repair</option>
@@ -220,12 +215,12 @@ export default function CreateService() {
           {/* Image Upload */}
           <div>
             <label className="block mb-2 font-semibold text-[#5C4033]">
-              Image
+              Upload Service Image
             </label>
             <div className="flex items-center gap-4">
-              <label className="flex-1 flex justify-between items-center px-4 py-3 border border-[#EED9C4] rounded-lg bg-[#FFF8F2] cursor-pointer hover:bg-[#FAF0E6] transition">
-                {image ? image.name : "No file chosen"}
-                <span className="ml-2 text-[#C4956A]">▼</span>
+              <label className="flex-1 flex justify-between items-center px-4 py-3 border border-[#EED9C4] rounded-xl bg-[#FFF8F2] cursor-pointer hover:bg-[#FAF0E6] transition">
+                {image ? image.name : "Choose image file"}
+                <span className="ml-2 text-[#C4956A]">📁</span>
                 <input
                   type="file"
                   accept="image/*"
@@ -234,7 +229,7 @@ export default function CreateService() {
                 />
               </label>
               {imagePreview && (
-                <div className="w-24 h-24 relative border border-[#EED9C4] rounded-lg overflow-hidden shadow">
+                <div className="w-24 h-24 relative border border-[#EED9C4] rounded-xl overflow-hidden shadow">
                   <Image
                     src={imagePreview}
                     alt="Preview"
@@ -249,7 +244,7 @@ export default function CreateService() {
             )}
           </div>
 
-          {/* Price */}
+          {/* Price Section */}
           <div>
             <label className="block mb-2 font-semibold text-[#5C4033]">
               Price
@@ -258,7 +253,7 @@ export default function CreateService() {
               <select
                 value={priceType}
                 onChange={(e) => setPriceType(e.target.value)}
-                className="rounded-lg p-4 border border-[#EED9C4] bg-[#FFF8F2] text-[#5C4033] focus:outline-none focus:ring-2 focus:ring-[#C4956A] transition cursor-pointer"
+                className="rounded-xl p-4 border border-[#EED9C4] bg-[#FFF8F2] text-[#5C4033] focus:outline-none focus:ring-2 focus:ring-[#C4956A] transition cursor-pointer"
               >
                 <option>Hourly</option>
                 <option>Fixed</option>
@@ -267,7 +262,7 @@ export default function CreateService() {
                 type="text"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
-                className="flex-1 rounded-lg p-4 border border-[#EED9C4] bg-[#FFF8F2] text-[#5C4033] focus:outline-none focus:ring-2 focus:ring-[#C4956A] transition"
+                className="flex-1 rounded-xl p-4 border border-[#EED9C4] bg-[#FFF8F2] text-[#5C4033] focus:outline-none focus:ring-2 focus:ring-[#C4956A] transition"
                 placeholder="Enter price"
               />
             </div>
@@ -277,16 +272,16 @@ export default function CreateService() {
           </div>
 
           {/* Buttons */}
-          <div className="flex justify-end gap-3 pt-4 border-t border-[#EED9C4]/60">
+          <div className="flex justify-end gap-4 pt-6 border-t border-[#EED9C4]/60">
             <button
               onClick={() => setPopup("Draft Saved Successfully 📝")}
-              className="bg-[#EED9C4] text-[#5C4033] px-5 py-2 rounded-lg hover:bg-[#E3C7A8] transition shadow"
+              className="bg-[#EED9C4] text-[#5C4033] px-6 py-3 rounded-xl hover:bg-[#E3C7A8] transition shadow font-medium"
             >
               Save Draft
             </button>
             <button
               onClick={handleSubmit}
-              className="bg-[#C4956A] text-white px-5 py-2 rounded-lg hover:bg-[#B07E54] transition shadow"
+              className="bg-[#C4956A] text-white px-6 py-3 rounded-xl hover:bg-[#B07E54] transition shadow font-medium"
             >
               Submit Now →
             </button>
