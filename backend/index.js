@@ -17,6 +17,7 @@ import RouterService from './routes/CreateServiceRoutes.js';
 import subscriptionRouter from "./routes/subscription.routes.js";
 import webhookRouter from "./routes/webhook.router.js";
 import paypalRouter from "./routes/paypal.routes.js";
+import jobRoutes from './routes/jobRoutes.js'; // Added job routes
 
 import Subscription from "./models/subscription.model.js";
 
@@ -51,6 +52,7 @@ app.use("/api/handymen", RouterHandyman);
 app.use("/api/services", RouterService);
 app.use("/api/subscriptions", subscriptionRouter);
 app.use("/api/paypal", paypalRouter);
+app.use(jobRoutes); // Added job routes - uses /api/jobs prefix
 
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URL, { dbName: "handyman_db" })
