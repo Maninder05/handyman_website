@@ -28,22 +28,24 @@ export default function MyServicesPage() {
     price: "",
   });
 
+  // ✅ Fetch services on load
   useEffect(() => {
-    const fetchServices = async () => {
-      try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/services`);
-        if (!res.ok) throw new Error("Failed to fetch services");
-        const data = await res.json();
-        setServices(data);
-      } catch (err) {
-        console.error("Error fetching services:", err);
-        setError("Failed to load services ❌");
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchServices();
   }, []);
+
+  const fetchServices = async () => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/services`);
+      if (!res.ok) throw new Error("Failed to fetch services");
+      const data = await res.json();
+      setServices(data);
+    } catch (err) {
+      console.error("Error fetching services:", err);
+      setError("Failed to load services ❌");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleEditClick = (service: Service) => {
     setEditingService(service);
@@ -56,7 +58,7 @@ export default function MyServicesPage() {
     setShowPopup(true);
   };
 
-  // ✅ Fixed version: updates instantly without refresh
+  // ✅ FIXED: instant update without refresh
   const handleUpdateService = async () => {
     if (!editingService) return;
 
@@ -76,25 +78,23 @@ export default function MyServicesPage() {
       );
 
       if (!res.ok) throw new Error("Failed to update service");
-      const updated = await res.json();
 
-      // Merge new data safely with old one (so nothing breaks)
+      // Try to get the updated service directly from response
+      let updatedService;
+      try {
+        updatedService = await res.json();
+      } catch {
+        // if backend returns message only, re-fetch the updated one
+        const refetch = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/services/${editingService._id}`
+        );
+        updatedService = await refetch.json();
+      }
+
+      // ✅ update instantly in frontend
       setServices((prev) =>
         prev.map((s) =>
-          s._id === updated._id
-            ? {
-                ...s,
-                ...updated,
-                title: updated.title ?? s.title,
-                category: updated.category ?? s.category,
-                priceType: updated.priceType ?? s.priceType,
-                price:
-                  updated.price !== undefined && updated.price !== null
-                    ? updated.price
-                    : s.price,
-                image: updated.image ?? s.image,
-              }
-            : s
+          s._id === editingService._id ? { ...s, ...updatedService } : s
         )
       );
 
@@ -116,7 +116,6 @@ export default function MyServicesPage() {
       );
 
       if (!res.ok) throw new Error("Failed to delete service");
-
       setServices((prev) => prev.filter((s) => s._id !== id));
     } catch (err) {
       console.error("Error deleting service:", err);
