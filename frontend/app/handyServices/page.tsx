@@ -91,7 +91,6 @@ export default function MyServicesPage() {
         updatedService = await refetch.json();
       }
 
-      // ✅ update instantly in frontend
       setServices((prev) =>
         prev.map((s) =>
           s._id === editingService._id ? { ...s, ...updatedService } : s
