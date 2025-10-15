@@ -1,3 +1,4 @@
+// frontend: app/create-service/page.tsx  (or wherever your CreateService component lives)
 "use client";
 
 import { useState } from "react";
@@ -47,17 +48,19 @@ export default function CreateService() {
       return;
     }
 
-    setErrors({});
+    setErrors({}); 
     setImage(file);
     setImagePreview(URL.createObjectURL(file));
   };
 
-  const handleSubmit = async () => {
+  // Shared submit function used for publish + draft
+  const submitToServer = async (isDraft = false) => {
     const newErrors: { [key: string]: string } = {};
     if (!title) newErrors.title = "Title is required";
     if (!category) newErrors.category = "Category is required";
     if (!price) newErrors.price = "Price is required";
-    if (!image) newErrors.image = "Image is required";
+    // If publishing, image is required; drafts can be saved without image
+    if (!image && !isDraft) newErrors.image = "Image is required";
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -70,6 +73,7 @@ export default function CreateService() {
       formData.append("category", category);
       formData.append("priceType", priceType);
       formData.append("price", price);
+      formData.append("isDraft", isDraft ? "true" : "false");
       if (image) formData.append("image", image);
 
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/services`, {
@@ -78,7 +82,8 @@ export default function CreateService() {
       });
 
       if (res.ok) {
-        setPopup("Service Submitted Successfully ✅");
+        setPopup(isDraft ? "Draft saved ✅" : "Service submitted ✅");
+        // clear only if published; for draft you might keep fields — but user wanted same behavior earlier, I'll clear both
         setTitle("");
         setCategory("");
         setPrice("");
@@ -92,6 +97,14 @@ export default function CreateService() {
       console.error("Error submitting service:", err);
       setPopup("Error submitting service ❌");
     }
+  };
+
+  const handleSubmit = async () => {
+    await submitToServer(false);
+  };
+
+  const handleSaveDraft = async () => {
+    await submitToServer(true);
   };
 
   return (
@@ -171,7 +184,7 @@ export default function CreateService() {
         </div>
       </header>
 
-      {/* Main Section */}
+      {/* Main Section (same design you provided) */}
       <main className="flex-1 flex justify-center items-start py-14 px-4">
         <div className="w-full max-w-4xl bg-white rounded-2xl shadow-xl p-12 space-y-10 border-t-4 border-[#EED9C4]">
           {/* Title */}
@@ -230,12 +243,7 @@ export default function CreateService() {
               </label>
               {imagePreview && (
                 <div className="w-24 h-24 relative border border-[#EED9C4] rounded-xl overflow-hidden shadow">
-                  <Image
-                    src={imagePreview}
-                    alt="Preview"
-                    fill
-                    className="object-cover"
-                  />
+                  <Image src={imagePreview} alt="Preview" fill className="object-cover" />
                 </div>
               )}
             </div>
@@ -274,7 +282,7 @@ export default function CreateService() {
           {/* Buttons */}
           <div className="flex justify-end gap-4 pt-6 border-t border-[#EED9C4]/60">
             <button
-              onClick={() => setPopup("Draft Saved Successfully 📝")}
+              onClick={handleSaveDraft}
               className="bg-[#EED9C4] text-[#5C4033] px-6 py-3 rounded-xl hover:bg-[#E3C7A8] transition shadow font-medium"
             >
               Save Draft

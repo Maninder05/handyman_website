@@ -1,10 +1,10 @@
-// controllers/CreateServiceController.js
+// backend/controllers/CreateServiceController.js
 import Service from "../models/CreateService.js";
 
-// ================= CREATE SERVICE =================
+// Create a service (or draft)
 export const createService = async (req, res) => {
   try {
-    const { title, category, priceType, price } = req.body;
+    const { title, category, priceType, price, isDraft } = req.body;
     let imagePath = "";
 
     if (req.file) {
@@ -17,57 +17,60 @@ export const createService = async (req, res) => {
       priceType,
       price: Number(price),
       image: imagePath,
+      isDraft: isDraft === "true" || isDraft === true, // handle formData and JSON
     });
 
     await newService.save();
-    res
-      .status(201)
-      .json({ message: "Service created successfully ✅", service: newService });
+    res.status(201).json({ message: "Service created successfully ✅", service: newService });
   } catch (error) {
     console.error("Error creating service:", error.message);
-    res
-      .status(500)
-      .json({ message: "Failed to create service ❌", error: error.message });
+    res.status(500).json({ message: "Failed to create service ❌", error: error.message });
   }
 };
 
-// ================= GET ALL SERVICES =================
+// Get all published services (isDraft: false)
 export const getServices = async (req, res) => {
   try {
-    const services = await Service.find();
+    const services = await Service.find({ isDraft: false }).sort({ createdAt: -1 });
     res.status(200).json(services);
   } catch (error) {
     console.error("Error fetching services:", error.message);
-    res
-      .status(500)
-      .json({ message: "Failed to fetch services ❌", error: error.message });
+    res.status(500).json({ message: "Failed to fetch services ❌", error: error.message });
   }
 };
 
-// ================= UPDATE SERVICE =================
+// Get all drafts
+export const getDrafts = async (req, res) => {
+  try {
+    const drafts = await Service.find({ isDraft: true }).sort({ updatedAt: -1 });
+    res.status(200).json(drafts);
+  } catch (error) {
+    console.error("Error fetching drafts:", error.message);
+    res.status(500).json({ message: "Failed to fetch drafts ❌", error: error.message });
+  }
+};
+
+// Update service (also can publish/unpublish)
 export const updateService = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, category, priceType, price } = req.body;
+    const { title, category, priceType, price, isDraft } = req.body;
 
-    // Find existing service
     const existingService = await Service.findById(id);
     if (!existingService) {
       return res.status(404).json({ message: "Service not found ❌" });
     }
 
-    // Update image if a new one is uploaded
-    let imagePath = existingService.image;
+    // Update image if uploaded
     if (req.file) {
-      imagePath = `/uploads/${req.file.filename}`;
+      existingService.image = `/uploads/${req.file.filename}`;
     }
 
-    // Update fields
-    existingService.title = title || existingService.title;
-    existingService.category = category || existingService.category;
-    existingService.priceType = priceType || existingService.priceType;
-    existingService.price = price ? Number(price) : existingService.price;
-    existingService.image = imagePath;
+    if (title !== undefined) existingService.title = title;
+    if (category !== undefined) existingService.category = category;
+    if (priceType !== undefined) existingService.priceType = priceType;
+    if (price !== undefined) existingService.price = Number(price);
+    if (isDraft !== undefined) existingService.isDraft = isDraft === "true" || isDraft === true;
 
     await existingService.save();
 
@@ -77,13 +80,11 @@ export const updateService = async (req, res) => {
     });
   } catch (error) {
     console.error("Error updating service:", error.message);
-    res
-      .status(500)
-      .json({ message: "Failed to update service ❌", error: error.message });
+    res.status(500).json({ message: "Failed to update service ❌", error: error.message });
   }
 };
 
-// ================= DELETE SERVICE =================
+// Delete service
 export const deleteService = async (req, res) => {
   try {
     const { id } = req.params;
@@ -93,13 +94,9 @@ export const deleteService = async (req, res) => {
       return res.status(404).json({ message: "Service not found ❌" });
     }
 
-    res
-      .status(200)
-      .json({ message: "Service deleted successfully ✅", service: deletedService });
+    res.status(200).json({ message: "Service deleted successfully ✅", service: deletedService });
   } catch (error) {
     console.error("Error deleting service:", error.message);
-    res
-      .status(500)
-      .json({ message: "Failed to delete service ❌", error: error.message });
+    res.status(500).json({ message: "Failed to delete service ❌", error: error.message });
   }
 };
