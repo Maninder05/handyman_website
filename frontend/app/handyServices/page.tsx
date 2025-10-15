@@ -58,7 +58,6 @@ export default function MyServicesPage() {
     setShowPopup(true);
   };
 
-  // ✅ FIXED: instant update without refresh
   const handleUpdateService = async () => {
     if (!editingService) return;
 
