@@ -9,7 +9,7 @@ const jwtAuthWithNext = (req, res, next) => {
     return res.status(401).json({ status: false, message: 'No token provided' });
   }
 
-  // Split "Bearer and token"
+  // Split "Bearer token123" into ["Bearer", "token123"]
   const ary = full_token.split(" ");
   
   if (ary.length !== 2) {
@@ -20,8 +20,8 @@ const jwtAuthWithNext = (req, res, next) => {
   const actualToken = ary[1];
 
   try {
-    // Verify the token using your secret key
-    const decoded = jwt.verify(actualToken, process.env.SEC_KEY);
+    // Verify the token using your secret key - FIXED: Use JWT_SECRET
+    const decoded = jwt.verify(actualToken, process.env.JWT_SECRET || process.env.SEC_KEY);
     
     // Put the decoded user info into req.user so other functions can use it
     req.user = decoded;
@@ -30,6 +30,7 @@ const jwtAuthWithNext = (req, res, next) => {
     next();
   } catch (err) {
     // If token is invalid or expired, reject the request
+    console.error('[JWT Verification Error]:', err.message);
     return res.status(401).json({ status: false, message: 'Unauthorized User' });
   }
 };
