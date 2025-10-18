@@ -55,6 +55,7 @@ export const signup = async (req, res) => {
       message: "Signup successful",
       user: sanitizeUser(newUser),
       token,
+      userType: newUser.userType, // ✅ ADDED: Send userType at top level
     });
   } catch (err) {
     res.status(500).json({ message: "Server error: " + err.message });
@@ -85,7 +86,7 @@ export const login = async (req, res) => {
     user.sessionExpiresAt = new Date(Date.now() + SESSION_TTL_MS);
     await user.save();
 
-    // create JWT token (short-lived) - FIXED: Added email
+    // create JWT token (short-lived)
     const token = jwt.sign({ 
       id: user._id, 
       email: user.email, 
@@ -96,6 +97,7 @@ export const login = async (req, res) => {
       message: "Login successful",
       token,
       user: sanitizeUser(user),
+      userType: user.userType, // ✅ ADDED: Send userType at top level
     });
   } catch (err) {
     res.status(500).json({ message: "Server error: " + err.message });
