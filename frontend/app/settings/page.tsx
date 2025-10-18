@@ -3,8 +3,8 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Menu, X, User, Lock, Shield, Bell, Eye, Trash2, LogOut, Upload } from "lucide-react";
-import { useSettings } from "@/contexts/SettingsContext";
-import { useTranslation } from "@/lib/translations";
+import { useSettings } from "../contexts/SettingsContext";
+import { useTranslation } from "../lib/translations";
 
 interface AccountData {
   firstName: string;
