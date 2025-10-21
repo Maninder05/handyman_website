@@ -65,8 +65,3 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Something went wrong!' });
 });
  
-//Example of authSession implementation over routes for protecting sensitive pages after token expires over website
-// import authSession from '../middleware/authSession.js';
-// router.get("/dashboard", authSession, (req, res) => {
-//   res.json({ ok: true, user: req.user });
-// });
