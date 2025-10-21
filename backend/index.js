@@ -6,62 +6,77 @@ import path from "path";
 import { fileURLToPath } from "url";
 import cookieParser from 'cookie-parser';
 import passport from 'passport';
- 
-// register passport strategies
+
+// Register passport strategies
 import './config/passport.js';
- 
-import RouterUser from './routes/RouteUser.js';       // User routes
-import RouterHandyman from './routes/handyRoutes.js'; // Handyman routes
-import RouterService from './routes/serviceRoutes.js'; //New service routes
- 
+
+// Routers
+import RouterUser from './routes/RouteUser.js';
+import RouterHandyman from './routes/handyRoutesAddProfile.js';
+import RouterService from './routes/CreateServiceRoutes.js';
+import subscriptionRouter from "./routes/subscription.routes.js";
+import webhookRouter from "./routes/webhook.router.js";
+import paypalRouter from "./routes/paypal.routes.js";
+import jobRoutes from './routes/jobRoutes.js';
+import clientRoutes from './routes/clientRoutes.js';
+import settingRoutes from './routes/settingRoutes.js'; 
+
+import Subscription from "./models/subscription.model.js";
+
 dotenv.config();
- 
 const app = express();
-const PORT = process.env.PORT || 7000;
- 
-// Middleware
-app.use(cors({
-  origin: process.env.CLIENT_URL, // frontend URL
-  credentials: true,
-}));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+const PORT = process.env.PORT || 8000;
+
+// Middleware - CORS
+app.use(cors({ origin: process.env.CLIENT_URL || "http://localhost:3000", credentials: true }));
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use(cookieParser());
- 
-// Initialize passport (used by OAuth routes)
 app.use(passport.initialize());
- 
-// ✅ Serve uploaded images
+
+// Health check
+app.get('/', (req, res) => res.send('Backend is running!'));
+
+// Static uploads folder
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
- 
+
+// Stripe webhook raw parser (MUST be before other routes)
+app.post(
+  "/api/webhooks/stripe",
+  express.raw({ type: "application/json" }),
+  (req, _res, next) => {
+    req.rawBody = req.body;
+    next();
+  },
+  webhookRouter
+);
+
 // Routes
-app.use('/api/users', RouterUser);
-app.use('/api/handymen', RouterHandyman);
-app.use('/api/services', RouterService);
- 
-// Default test route
-app.get('/', (req, res) => {
-  res.send('Backend is running!');
-});
- 
-// Connect to MongoDB and start server
-mongoose.connect(process.env.MONGO_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}).then(() => {
-  console.log('Connected to MongoDB successfully!');
-  app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+app.use("/api/users", RouterUser);
+app.use("/api/handymen", RouterHandyman);
+app.use("/api/services", RouterService);
+app.use("/api/subscriptions", subscriptionRouter);
+app.use("/api/paypal", paypalRouter);
+app.use(jobRoutes); // Job routes - uses /api/jobs prefix
+app.use('/api/clients', clientRoutes);
+app.use('/api/settings', settingRoutes); // 
+
+// MongoDB connection
+mongoose.connect(process.env.MONGO_URL, { dbName: "handyman_db" })
+  .then(() => {
+    console.log("Connected to MongoDB: handyman_db");
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    Subscription.syncIndexes().then(() => console.log("[mongo] Subscription indexes synced"));
+  })
+  .catch(err => {
+    console.error("Database connection error:", err.message);
+    process.exit(1);
   });
-}).catch((err) => {
-  console.error('Database connection error:', err);
-});
- 
-// Optional: global error handler
+
+// Global error handler
 app.use((err, req, res, next) => {
-  console.error('Unhandled error:', err);
-  res.status(500).json({ error: 'Something went wrong!' });
+  console.error("🔥 Unhandled error:", err);
+  res.status(500).json({ error: "Something went wrong!" });
 });
- 

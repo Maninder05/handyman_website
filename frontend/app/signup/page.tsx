@@ -48,10 +48,17 @@ export default function Signup() {
   // If OAuth returned token in query -> save and redirect
   useEffect(() => {
     const token = searchParams.get("token");
+    const type = searchParams.get("userType");
+    
     if (token) {
       localStorage.setItem("token", token);
-      // You could also set a cookie here if desired
-      router.push("/handyDashboard");
+      
+      // ✅ FIXED: Redirect based on user type
+      if (type === "customer") {
+        router.push("/clientProfile");
+      } else {
+        router.push("/handyDashboard");
+      }
     }
   }, [searchParams, router]);
 
@@ -71,9 +78,15 @@ export default function Signup() {
       if (res.data.token) {
         localStorage.setItem("token", res.data.token);
       }
-      // close modal and redirect to dashboard
+      
       setShowSignup(false);
-      router.push("/handyDashboard");
+      
+      // ✅ FIXED: Redirect based on userType
+      if (userType === "customer") {
+        router.push("/clientProfile");
+      } else {
+        router.push("/handyDashboard");
+      }
     } catch (err: any) {
       alert(err.response?.data?.message || "Signup failed");
     }
@@ -93,8 +106,15 @@ export default function Signup() {
       if (res.data.token) {
         localStorage.setItem("token", res.data.token);
       }
+      
       setShowLogin(false);
-      router.push("/handyDashboard");
+      
+      // ✅ FIXED: Redirect based on userType from backend response
+      if (res.data.userType === "customer") {
+        router.push("/clientProfile");
+      } else {
+        router.push("/handyDashboard");
+      }
     } catch (err: any) {
       alert(err.response?.data?.message || "Login failed");
     }
@@ -117,7 +137,7 @@ export default function Signup() {
             <button
               onClick={() => {
                 setShowSignup(false);
-                router.push("/"); // ✅ Close modal -> Landing
+                router.push("/");
               }}
               className="absolute top-3 right-3 text-neutral-400 hover:text-white"
             >
@@ -253,7 +273,7 @@ export default function Signup() {
             <button
               onClick={() => {
                 setShowLogin(false);
-                router.push("/"); // ✅ Close modal -> Landing
+                router.push("/");
               }}
               className="absolute top-3 right-3 text-neutral-400 hover:text-white"
             >
@@ -318,7 +338,7 @@ export default function Signup() {
             </div>
 
             <p className="text-sm text-neutral-400 mt-4 text-center">
-              Don’t have an account?{" "}
+              Don&apos;t have an account?{" "}
               <a
                 onClick={() => {
                   setShowLogin(false);
@@ -335,4 +355,3 @@ export default function Signup() {
     </main>
   );
 }
-

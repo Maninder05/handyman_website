@@ -1,94 +1,113 @@
 "use client";
 
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Menu, X } from "lucide-react";
-import {
-  FiHome,
-  FiMessageCircle,
-  FiHelpCircle,
-  FiBell,
-  FiSettings,
-  FiUser,
-} from "react-icons/fi";
+import { FiUser, FiPlus, FiDollarSign, FiShoppingBag, FiStar } from "react-icons/fi";
 
-export default function PortfolioPage() {
-  // this is for the dropdown menu
+type Service = { title: string; desc: string; };
+type Order = { title: string; desc: string; };
+type Profile = {
+  _id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  bio?: string;
+  skills?: string[];
+  profileImage?: string;
+  jobsDone: number;
+  inProgress: number;
+  rating: number;
+  earnings: number;
+  activeOrders: number;
+  services: Service[];
+  recentOrders: Order[];
+};
+
+export default function HandyDashboard() {
   const [showMenu, setShowMenu] = useState(false);
-
-  // toggle profile dropdown
   const [showProfileMenu, setShowProfileMenu] = useState(false);
-
-  // this is for switching between buyer and seller
-  const [buyerMode, setBuyerMode] = useState(false);
-
-  // next.js router for changing pages
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  // when we click the switch button
-  const handleSwitchClick = () => {
-    setBuyerMode(!buyerMode);
-    if (!buyerMode) {
-      router.push("../clientDashboard");
-    }
-  };
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          setLoading(false);
+          return;
+        }
 
-  // logout
+        const res = await fetch("http://localhost:8000/api/handymen/me", {
+          headers: { "Authorization": `Bearer ${token}` },
+        });
+
+        if (res.ok) {
+          const data: Profile = await res.json();
+          setProfile(data);
+        } else {
+          // Profile doesn't exist yet, that's fine - show empty dashboard
+          setProfile(null);
+        }
+      } catch (err) {
+        console.error("Error fetching profile:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
   const handleLogout = () => {
+    localStorage.removeItem("token");
     router.push("/");
   };
 
-  // toggle hamburger dropdown
-  const toggleMenu = () => {
-    setShowMenu(!showMenu);
-    setShowProfileMenu(false); // close profile if menu is opened
-  };
+  const toggleMenu = () => { setShowMenu(s => !s); setShowProfileMenu(false); };
+  const toggleProfile = () => { setShowProfileMenu(s => !s); setShowMenu(false); };
 
-  // toggle profile dropdown
-  const toggleProfile = () => {
-    setShowProfileMenu(!showProfileMenu);
-    setShowMenu(false); // close menu if profile is opened
-  };
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#F5F5F0] flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-[#D4A574] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gray-900 flex flex-col text-gray-100">
+    <div className="min-h-screen bg-[#F5F5F0] text-gray-900 flex flex-col">
       {/* HEADER */}
-      <header className="bg-gradient-to-r from-[#FFCC66] to-[#FF7E5F] shadow-md relative">
-        <div className="max-w-5xl mx-auto flex items-center justify-between px-6 py-4">
-          {/* Title */}
-          <h1 className="text-2xl font-extrabold text-gray-900 tracking-wide">
-            Handyman Portal
+      <header className="bg-[#1a1a1a] shadow-md sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
+          <h1 className="text-2xl font-bold text-white tracking-wide">
+            Portfolio
           </h1>
 
-          {/* Right side buttons */}
           <div className="flex items-center gap-4 relative">
-            {/* Profile Icon */}
-            <button
-              onClick={toggleProfile}
-              className="p-2 rounded-full hover:bg-yellow-500 transition"
+            <button 
+              onClick={toggleProfile} 
+              className="p-2 rounded-full hover:bg-[#2a2a2a] transition"
             >
-              <FiUser size={22} className="text-gray-900" />
+              <FiUser size={24} className="text-white" />
             </button>
 
-            {/* Profile dropdown */}
             {showProfileMenu && (
-              <div className="absolute right-14 top-14 bg-gray-800 rounded-xl shadow-lg border w-48 z-50">
-                <ul className="text-sm divide-y">
+              <div className="absolute right-14 top-14 bg-white border border-gray-200 rounded-lg shadow-xl w-52 z-50">
+                <ul className="text-sm text-gray-800">
                   <li>
-                    <Link
-                      href="/handyAccount"
-                      className="block px-4 py-3 hover:bg-yellow-600 hover:text-gray-900 transition"
-                    >
+                    <Link href="/handyAccount" className="block px-5 py-3 hover:bg-[#F5F5F0] transition font-medium">
                       View Account
                     </Link>
                   </li>
                   <li>
-                    <button
-                      onClick={handleLogout}
-                      className="w-full text-left px-4 py-3 text-red-500 hover:bg-red-50 transition"
-                    >
+                    <button onClick={handleLogout} className="w-full text-left px-5 py-3 text-[#C41E3A] hover:bg-red-50 transition font-medium">
                       Logout
                     </button>
                   </li>
@@ -96,75 +115,18 @@ export default function PortfolioPage() {
               </div>
             )}
 
-            {/* Menu button */}
-            <button
-              onClick={toggleMenu}
-              className="p-2 rounded-md hover:bg-yellow-500 bg-yellow-400 text-gray-900 transition"
-            >
+            <button onClick={toggleMenu} className="p-2 rounded-md bg-[#D4A574] text-[#1a1a1a] hover:bg-[#C4956A] transition">
               {showMenu ? <X size={26} /> : <Menu size={26} />}
             </button>
 
-            {/* Hamburger dropdown */}
             {showMenu && (
-              <div className="absolute right-0 top-14 bg-gray-800 shadow-xl rounded-xl border w-56 text-sm z-50 overflow-hidden">
-                <ul className="divide-y">
-                  <li>
-                    <Link
-                      href="/create-service"
-                      className="block px-4 py-3 hover:bg-yellow-600 hover:text-gray-900 transition"
-                    >
-                      Add Service
-                    </Link>
-                  </li>
-                  {/*  Create Profile page */}
-                  <li>
-                    <Link
-                      href="/Add-profile"
-                      className="block px-4 py-3 hover:bg-yellow-600 hover:text-gray-900 transition"
-                    >
-                      Add profile
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/handyAccount"
-                      className="block px-4 py-3 hover:bg-yellow-600 hover:text-gray-900 transition"
-                    >
-                      My Account
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/order"
-                      className="block px-4 py-3 hover:bg-yellow-600 hover:text-gray-900 transition"
-                    >
-                      Track Order
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/membership"
-                      className="block px-4 py-3 hover:bg-yellow-600 hover:text-gray-900 transition"
-                    >
-                      Membership Plan
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/help"
-                      className="block px-4 py-3 hover:bg-yellow-600 hover:text-gray-900 transition"
-                    >
-                      FAQ
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/settings"
-                      className="block px-4 py-3 hover:bg-yellow-600 hover:text-gray-900 transition"
-                    >
-                      Account Settings
-                    </Link>
-                  </li>
+              <div className="absolute right-0 top-14 bg-white border border-gray-200 rounded-xl shadow-xl w-72 text-sm z-50 overflow-hidden">
+                <ul className="divide-y divide-gray-100">
+                  <li><Link href="/handyProfile" className="block px-5 py-3 hover:bg-[#F5F5F0] transition font-medium">Add Profile</Link></li>
+                  <li><Link href="/handyAccount" className="block px-5 py-3 hover:bg-[#F5F5F0] transition font-medium">My Account</Link></li>
+                  <li><Link href="/jobs-done" className="block px-5 py-3 hover:bg-[#F5F5F0] transition font-medium">My Projects</Link></li>
+                  <li><Link href="/available-jobs" className="block px-5 py-3 hover:bg-[#F5F5F0] transition font-medium">Find Jobs</Link></li>
+                  <li><Link href="/help" className="block px-5 py-3 hover:bg-[#F5F5F0] transition font-medium">Help & FAQ</Link></li>
                 </ul>
               </div>
             )}
@@ -172,154 +134,207 @@ export default function PortfolioPage() {
         </div>
       </header>
 
-      {/* PROFILE SECTION */}
-      <main className="flex-1 overflow-y-auto">
-        <section className="bg-gray-700 text-white py-10">
-          <div className="max-w-5xl mx-auto text-center">
-            {/* profile image */}
-            <Image
-              src="/images/profile.jpg"
-              alt="Profile"
-              width={120}
-              height={120}
-              className="rounded-full border-4 border-yellow-400 mx-auto shadow-lg"
-            />
-            <h2 className="text-2xl font-bold mt-4 text-yellow-400">
-              Kenji Teneka
-            </h2>
-            <p className="text-sm text-gray-300">kenjitenka@gmail.com</p>
+      <main className="flex-1 overflow-y-auto pb-10">
+        {/* PROFILE CARD - ALWAYS SHOWS (empty or filled) */}
+        <section className="bg-gradient-to-br from-[#D4A574] to-[#C4956A] py-8">
+          <div className="max-w-6xl mx-auto px-6">
+            <div className="flex flex-col items-center text-center mb-8">
+              {profile?.profileImage ? (
+                <img src={profile.profileImage} alt="Profile" className="w-24 h-24 rounded-full border-4 border-white shadow-lg object-cover mb-4"/>
+              ) : (
+                <div className="w-24 h-24 rounded-full border-4 border-white bg-white/20 flex items-center justify-center mb-4">
+                  <FiUser size={40} className="text-white" />
+                </div>
+              )}
+              <div>
+                <h2 className="text-2xl font-bold text-white mb-1">
+                  {profile?.name || "Your Name"}
+                </h2>
+                <p className="text-white/90 text-sm">
+                  {profile?.email || "your.email@example.com"}
+                </p>
+              </div>
+            </div>
 
-            {/* numbers for jobs done, progress, rating */}
-            <div className="flex justify-center gap-10 mt-6 text-gray-100">
-              <div>
-                <p className="text-xl font-bold">15</p>
-                <p className="text-sm">Jobs Done</p>
+            <div className="grid grid-cols-3 gap-4">
+              <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 text-center border border-white/30">
+                <p className="text-3xl font-bold text-white">{profile?.jobsDone || 0}</p>
+                <p className="text-white/90 text-sm mt-1">Job Done</p>
               </div>
-              <div>
-                <p className="text-xl font-bold">3</p>
-                <p className="text-sm">In Progress</p>
+              <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 text-center border border-white/30">
+                <p className="text-3xl font-bold text-white">{profile?.inProgress || 0}</p>
+                <p className="text-white/90 text-sm mt-1">Job In Progress</p>
               </div>
-              <div>
-                <p className="text-xl font-bold">5.0</p>
-                <p className="text-sm">Rating</p>
+              <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 text-center border border-white/30">
+                <div className="flex items-center justify-center gap-1">
+                  <p className="text-3xl font-bold text-white">{profile?.rating || 0}</p>
+                  <FiStar className="text-yellow-300 fill-yellow-300" size={20} />
+                </div>
+                <p className="text-white/90 text-sm mt-1">Rating</p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* CONTENT CARDS */}
-        <section className="max-w-5xl mx-auto px-6 py-10 space-y-8">
-          {/* toggle switch for buyer/seller */}
-          <div className="bg-gray-800 rounded-xl shadow p-5 flex items-center justify-between">
-            <span className="font-medium text-yellow-400">
-              Switch To Buyer Mode
-            </span>
-            <button
-              onClick={handleSwitchClick}
-              className={`w-14 h-7 flex items-center rounded-full p-1 transition ${
-                buyerMode ? "bg-yellow-500" : "bg-gray-600"
-              }`}
-            >
-              {/* the little round circle */}
-              <div
-                className={`w-5 h-5 bg-white rounded-full shadow transform ${
-                  buyerMode ? "translate-x-7" : "translate-x-0"
-                }`}
-              />
-            </button>
+        {/* EARNINGS & ACTIVE ORDERS - ALWAYS SHOWS */}
+        <section className="max-w-6xl mx-auto px-6 -mt-6 mb-8">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-xl font-bold text-[#1a1a1a]">Your Earning</h3>
+            <Link href="/earnings" className="text-[#D4A574] hover:text-[#C4956A] font-medium text-sm">
+              View All
+            </Link>
           </div>
 
-          {/* earnings and orders */}
-          <div className="grid grid-cols-2 gap-6">
-            <div className="bg-gray-800 rounded-xl shadow p-6 text-center">
-              <p className="text-2xl font-bold text-yellow-400">$800</p>
-              <p className="text-sm text-gray-300">Total Earnings</p>
-            </div>
-            <div className="bg-gray-800 rounded-xl shadow p-6 text-center">
-              <p className="text-2xl font-bold text-yellow-400">3</p>
-              <p className="text-sm text-gray-300">Active Orders</p>
-            </div>
-          </div>
-
-          {/* recent orders */}
-          <div className="bg-gray-800 rounded-xl shadow p-6">
-            <h3 className="font-semibold mb-4 text-yellow-400">
-              Recent Orders
-            </h3>
-            <ul className="space-y-3">
-              <li className="p-4 border rounded-lg hover:shadow transition">
-                <p className="font-medium text-yellow-400">
-                  🔧 Electrical Repair
-                </p>
-                <p className="text-sm text-gray-300">
-                  John Patrosky booked this service yesterday.
-                </p>
-              </li>
-              <li className="p-4 border rounded-lg hover:shadow transition">
-                <p className="font-medium text-yellow-400">🚰 Plumbing Fix</p>
-                <p className="text-sm text-gray-300">
-                  Anna Lee scheduled for next week.
-                </p>
-              </li>
-            </ul>
-          </div>
-
-          {/* services */}
-          <div className="bg-gray-800 rounded-xl shadow p-6">
-            <h3 className="font-semibold mb-4 text-yellow-400">My Services</h3>
-            <div className="grid sm:grid-cols-2 gap-4">
-              <div className="p-4 border rounded-lg hover:shadow transition">
-                <p className="font-bold text-yellow-400">Painting</p>
-                <p className="text-sm text-gray-300">
-                  Offered at $150 per room
-                </p>
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-[#D4A574]/10 rounded-full flex items-center justify-center">
+                  <FiDollarSign size={24} className="text-[#D4A574]" />
+                </div>
+                <div>
+                  <p className="text-3xl font-bold text-[#1a1a1a]">${profile?.earnings || 0}</p>
+                  <p className="text-gray-500 text-sm">Your this month</p>
+                </div>
               </div>
-              <div className="p-4 border rounded-lg hover:shadow transition">
-                <p className="font-bold text-yellow-400">Carpentry</p>
-                <p className="text-sm text-gray-300">
-                  Custom furniture and repairs
-                </p>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                  <FiShoppingBag size={24} className="text-blue-600" />
+                </div>
+                <div>
+                  <p className="text-3xl font-bold text-[#1a1a1a]">{profile?.activeOrders || 0}</p>
+                  <p className="text-gray-500 text-sm">Active Order</p>
+                </div>
               </div>
             </div>
           </div>
+        </section>
+
+        {/* RECENT ORDERS - ALWAYS SHOWS */}
+        <section className="max-w-6xl mx-auto px-6 mb-8">
+          <h3 className="text-xl font-bold text-[#1a1a1a] mb-6">Recent Orders</h3>
+
+          {(!profile?.recentOrders || profile.recentOrders.length === 0) ? (
+            <div className="bg-white rounded-xl shadow-lg p-12 text-center border border-gray-200">
+              <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <FiShoppingBag size={32} className="text-gray-400" />
+              </div>
+              <p className="text-gray-400 text-lg mb-2">No recent orders</p>
+              <p className="text-gray-500 text-sm mb-4">Complete jobs to see them here</p>
+              <Link 
+                href="/available-jobs"
+                className="inline-block px-6 py-3 bg-[#D4A574] text-[#1a1a1a] rounded-lg hover:bg-[#C4956A] transition font-semibold"
+              >
+                Browse Available Jobs
+              </Link>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {profile.recentOrders.map((order, i) => (
+                <div key={i} className="bg-white rounded-xl shadow-lg p-6 border border-gray-200 hover:shadow-xl transition">
+                  <div className="flex items-start gap-4">
+                    <div className="w-16 h-16 bg-gradient-to-br from-[#D4A574] to-[#C4956A] rounded-xl flex items-center justify-center flex-shrink-0">
+                      <span className="text-white text-xl font-bold">{order.title.charAt(0)}</span>
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-bold text-[#1a1a1a] text-lg mb-1">{order.title}</h4>
+                      <p className="text-gray-600 text-sm">{order.desc}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+
+        {/* MY SERVICES - ALWAYS SHOWS */}
+        <section className="max-w-6xl mx-auto px-6 mb-8">
+          <h3 className="text-xl font-bold text-[#1a1a1a] mb-6">My Services</h3>
+
+          {(!profile?.services || profile.services.length === 0) ? (
+            <div className="bg-white rounded-xl shadow-lg p-12 text-center border border-gray-200">
+              <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <FiPlus size={32} className="text-gray-400" />
+              </div>
+              <p className="text-gray-400 text-lg mb-2">No services added</p>
+              <p className="text-gray-500 text-sm mb-4">Add your services to attract customers</p>
+              <Link 
+                href="/handyProfile"
+                className="inline-block px-6 py-3 bg-[#D4A574] text-[#1a1a1a] rounded-lg hover:bg-[#C4956A] transition font-semibold"
+              >
+                Add Services
+              </Link>
+            </div>
+          ) : (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {profile.services.map((service, i) => (
+                <div key={i} className="bg-white rounded-xl shadow-lg p-5 border-2 border-gray-200 hover:border-[#D4A574] hover:shadow-xl transition">
+                  <h4 className="font-bold text-[#1a1a1a] text-lg mb-2">{service.title}</h4>
+                  <p className="text-gray-600 text-sm">{service.desc || "Professional service"}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+
+        {/* SKILLS - ALWAYS SHOWS */}
+        <section className="max-w-6xl mx-auto px-6 mb-8">
+          <h3 className="text-xl font-bold text-[#1a1a1a] mb-6">Skills & Expertise</h3>
+          
+          {(!profile?.skills || profile.skills.length === 0) ? (
+            <div className="bg-white rounded-xl shadow-lg p-12 text-center border border-gray-200">
+              <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <FiStar size={32} className="text-gray-400" />
+              </div>
+              <p className="text-gray-400 text-lg mb-2">No skills added</p>
+              <p className="text-gray-500 text-sm mb-4">Add your skills to your profile</p>
+              <Link 
+                href="/handyProfile"
+                className="inline-block px-6 py-3 bg-[#D4A574] text-[#1a1a1a] rounded-lg hover:bg-[#C4956A] transition font-semibold"
+              >
+                Add Skills
+              </Link>
+            </div>
+          ) : (
+            <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+              <div className="flex flex-wrap gap-3">
+                {profile.skills.map((skill, i) => (
+                  <span key={i} className="px-4 py-2 bg-[#D4A574] text-[#1a1a1a] rounded-full font-medium hover:bg-[#C4956A] transition">
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+        </section>
+
+        {/* BIO - ALWAYS SHOWS */}
+        <section className="max-w-6xl mx-auto px-6 mb-8">
+          <h3 className="text-xl font-bold text-[#1a1a1a] mb-6">About Me</h3>
+          
+          {!profile?.bio ? (
+            <div className="bg-white rounded-xl shadow-lg p-12 text-center border border-gray-200">
+              <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <FiUser size={32} className="text-gray-400" />
+              </div>
+              <p className="text-gray-400 text-lg mb-2">No bio added</p>
+              <p className="text-gray-500 text-sm mb-4">Tell customers about yourself</p>
+              <Link 
+                href="/handyProfile"
+                className="inline-block px-6 py-3 bg-[#D4A574] text-[#1a1a1a] rounded-lg hover:bg-[#C4956A] transition font-semibold"
+              >
+                Add Bio
+              </Link>
+            </div>
+          ) : (
+            <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+              <p className="text-gray-700 leading-relaxed">{profile.bio}</p>
+            </div>
+          )}
         </section>
       </main>
-
-      {/* FOOTER */}
-      <footer className="bg-gray-800 text-gray-300 mt-10">
-        <div className="max-w-5xl mx-auto flex justify-around py-5 text-sm">
-          <Link
-            href="/"
-            className="flex flex-col items-center gap-1 hover:text-yellow-400 transition"
-          >
-            <FiHome size={20} /> Home
-          </Link>
-          <Link
-            href="/messages"
-            className="flex flex-col items-center gap-1 hover:text-yellow-400 transition"
-          >
-            <FiMessageCircle size={20} /> Messages
-          </Link>
-          <Link
-            href="/help"
-            className="flex flex-col items-center gap-1 hover:text-yellow-400 transition"
-          >
-            <FiHelpCircle size={20} /> Help
-          </Link>
-          <Link
-            href="/notifications"
-            className="flex flex-col items-center gap-1 hover:text-[#FF7E5F] transition"
-          >
-            <FiBell size={20} /> Notifications
-          </Link>
-          <Link
-            href="/settings"
-            className="flex flex-col items-center gap-1 hover:text-[#FF7E5F] transition"
-          >
-            <FiSettings size={20} /> Settings
-          </Link>
-        </div>
-      </footer>
     </div>
   );
 }
