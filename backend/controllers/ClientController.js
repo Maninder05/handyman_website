@@ -9,13 +9,13 @@ export const getMyProfile = async (req, res) => {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    const profile = await Client.findOne({ email });
+    const client = await Client.findOne({ email });
     
-    if (!profile) {
-      return res.status(404).json({ message: "Profile not found" });
+    if (!client) {
+      return res.status(404).json({ message: "Client not found" });
     }
 
-    res.status(200).json(profile);
+    res.status(200).json(client);
   } catch (err) {
     console.error("Error fetching client profile:", err);
     res.status(500).json({ message: "Server error", error: err.message });
@@ -31,24 +31,20 @@ export const createProfile = async (req, res) => {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    const existingProfile = await Client.findOne({ email });
-    if (existingProfile) {
+    const existingClient = await Client.findOne({ email });
+    if (existingClient) {
       return res.status(400).json({ message: "Profile already exists" });
     }
 
-    const newProfile = new Client({
+    const newClient = new Client({
       ...req.body,
-      email: email,
+      email
     });
 
-    await newProfile.save();
-    
-    res.status(201).json({
-      message: "Profile created successfully",
-      profile: newProfile
-    });
+    await newClient.save();
+    res.status(201).json({ message: "Profile created successfully", client: newClient });
   } catch (err) {
-    console.error("Error creating profile:", err);
+    console.error("Error creating client profile:", err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
@@ -62,22 +58,22 @@ export const updateProfile = async (req, res) => {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    const updatedProfile = await Client.findOneAndUpdate(
+    const updatedClient = await Client.findOneAndUpdate(
       { email },
-      { ...req.body },
+      { $set: req.body },
       { new: true, runValidators: true }
     );
 
-    if (!updatedProfile) {
-      return res.status(404).json({ message: "Profile not found" });
+    if (!updatedClient) {
+      return res.status(404).json({ message: "Client not found" });
     }
 
-    res.status(200).json({
-      message: "Profile updated successfully",
-      profile: updatedProfile
+    res.status(200).json({ 
+      message: "Profile updated successfully", 
+      client: updatedClient 
     });
   } catch (err) {
-    console.error("Error updating profile:", err);
+    console.error("Error updating client profile:", err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };

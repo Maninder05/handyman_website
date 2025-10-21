@@ -1,4 +1,5 @@
-import Client from '../models/clientSettings.js';
+import ClientSetting from '../models/clientSetting.js';
+import Client from '../models/clientProfile.js';
 import bcrypt from 'bcryptjs';
 
 // Get all settings
@@ -10,78 +11,140 @@ export const getSettings = async (req, res) => {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    const client = await Client.findOne({ email });
-    
-    if (!client) {
-      return res.status(404).json({ message: "Client not found" });
-    }
+    // Use findOneAndUpdate with upsert to avoid duplicate key errors
+    const settings = await ClientSetting.findOneAndUpdate(
+      { email },
+      { 
+        $setOnInsert: {
+          email,
+          theme: 'light',
+          language: 'en',
+          timezone: 'UTC',
+          privacySettings: {
+            profileVisibility: 'public',
+            showEmail: true,
+            showPhone: false
+          },
+          twoFactorEnabled: false,
+          notifications: {
+            emailNotifications: true,
+            smsNotifications: false,
+            pushNotifications: true,
+            jobAlerts: true,
+            messageAlerts: true
+          }
+        }
+      },
+      { new: true, upsert: true }
+    );
 
-    res.status(200).json({
-      account: {
-        firstName: client.firstName || "",
-        lastName: client.lastName || "",
-        email: client.email || "",
-        phone: client.phone || "",
-        address: client.address || "",
-        profileImage: client.profileImage || ""
-      },
-      privacy: client.privacySettings || {
-        profileVisibility: "public",
-        showEmail: true,
-        showPhone: false
-      },
-      twoFactorEnabled: client.twoFactorEnabled || false,
-      notifications: client.notificationSettings || {
-        emailNotifications: true,
-        smsNotifications: false,
-        pushNotifications: true,
-        jobAlerts: true,
-        messageAlerts: true
-      },
-      display: client.displaySettings || {
-        theme: "light",
-        language: "en",
-        timezone: "UTC"
-      }
-    });
+    res.status(200).json(settings);
   } catch (err) {
     console.error("Error fetching settings:", err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
 
-// Update account info
-export const updateAccount = async (req, res) => {
+// Update display settings (theme, language, timezone)
+export const updateDisplay = async (req, res) => {
   try {
     const email = req.user?.email;
-    const { firstName, lastName, phone, address, profileImage } = req.body;
+    const { theme, language, timezone } = req.body;
     
     if (!email) {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    const updatedClient = await Client.findOneAndUpdate(
+    const updatedSettings = await ClientSetting.findOneAndUpdate(
       { email },
-      { 
-        firstName, 
-        lastName, 
-        phone, 
-        address, 
-        profileImage 
-      },
-      { new: true, runValidators: true }
+      { theme, language, timezone },
+      { new: true, upsert: true, runValidators: true }
     );
 
-    if (!updatedClient) {
-      return res.status(404).json({ message: "Client not found" });
-    }
-
     res.status(200).json({
-      message: "Account updated successfully",
-      client: updatedClient
+      message: "Display settings updated successfully",
+      settings: updatedSettings
     });
   } catch (err) {
-    console.error("Error updating account:", err);
+    console.error("Error updating display settings:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+// Update privacy settings
+export const updatePrivacy = async (req, res) => {
+  try {
+    const email = req.user?.email;
+    const privacySettings = req.body;
+    
+    if (!email) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const updatedSettings = await ClientSetting.findOneAndUpdate(
+      { email },
+      { privacySettings },
+      { new: true, upsert: true }
+    );
+
+    res.status(200).json({
+      message: "Privacy settings updated successfully",
+      settings: updatedSettings
+    });
+  } catch (err) {
+    console.error("Error updating privacy:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+// Toggle 2FA
+export const toggle2FA = async (req, res) => {
+  try {
+    const email = req.user?.email;
+    const { enabled } = req.body;
+    
+    if (!email) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const updatedSettings = await ClientSetting.findOneAndUpdate(
+      { email },
+      { twoFactorEnabled: enabled },
+      { new: true, upsert: true }
+    );
+
+    res.status(200).json({
+      message: `2FA ${enabled ? "enabled" : "disabled"} successfully`,
+      settings: updatedSettings
+    });
+  } catch (err) {
+    console.error("Error toggling 2FA:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+// Update notifications
+export const updateNotifications = async (req, res) => {
+  try {
+    const email = req.user?.email;
+    const notifications = req.body;
+    
+    if (!email) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const updatedSettings = await ClientSetting.findOneAndUpdate(
+      { email },
+      { notifications },
+      { new: true, upsert: true }
+    );
+
+    res.status(200).json({
+      message: "Notification settings updated successfully",
+      settings: updatedSettings
+    });
+  } catch (err) {
+    console.error("Error updating notifications:", err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
@@ -96,18 +159,10 @@ export const changePassword = async (req, res) => {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    if (!currentPassword || !newPassword) {
-      return res.status(400).json({ message: "All fields are required" });
-    }
-
-    if (newPassword.length < 8) {
-      return res.status(400).json({ message: "Password must be at least 8 characters" });
-    }
-
     const client = await Client.findOne({ email });
     
-    if (!client) {
-      return res.status(404).json({ message: "Client not found" });
+    if (!client || !client.password) {
+      return res.status(404).json({ message: "Client not found or no password set" });
     }
 
     // Verify current password
@@ -130,156 +185,6 @@ export const changePassword = async (req, res) => {
   }
 };
 
-// Update privacy settings
-export const updatePrivacy = async (req, res) => {
-  try {
-    const email = req.user?.email;
-    const { profileVisibility, showEmail, showPhone } = req.body;
-    
-    if (!email) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
-    const privacySettings = {
-      profileVisibility: profileVisibility || "public",
-      showEmail: showEmail !== undefined ? showEmail : true,
-      showPhone: showPhone !== undefined ? showPhone : false
-    };
-
-    const updatedClient = await Client.findOneAndUpdate(
-      { email },
-      { privacySettings },
-      { new: true }
-    );
-
-    if (!updatedClient) {
-      return res.status(404).json({ message: "Client not found" });
-    }
-
-    res.status(200).json({
-      message: "Privacy settings updated successfully",
-      privacySettings: updatedClient.privacySettings
-    });
-  } catch (err) {
-    console.error("Error updating privacy:", err);
-    res.status(500).json({ message: "Server error", error: err.message });
-  }
-};
-
-// Toggle 2FA
-export const toggle2FA = async (req, res) => {
-  try {
-    const email = req.user?.email;
-    const { enabled } = req.body;
-    
-    if (!email) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
-    if (typeof enabled !== 'boolean') {
-      return res.status(400).json({ message: "Invalid request" });
-    }
-
-    const updatedClient = await Client.findOneAndUpdate(
-      { email },
-      { twoFactorEnabled: enabled },
-      { new: true }
-    );
-
-    if (!updatedClient) {
-      return res.status(404).json({ message: "Client not found" });
-    }
-
-    res.status(200).json({
-      message: `2FA ${enabled ? "enabled" : "disabled"} successfully`,
-      twoFactorEnabled: updatedClient.twoFactorEnabled
-    });
-  } catch (err) {
-    console.error("Error toggling 2FA:", err);
-    res.status(500).json({ message: "Server error", error: err.message });
-  }
-};
-
-// Update notification settings
-export const updateNotifications = async (req, res) => {
-  try {
-    const email = req.user?.email;
-    const { 
-      emailNotifications, 
-      smsNotifications, 
-      pushNotifications, 
-      jobAlerts, 
-      messageAlerts 
-    } = req.body;
-    
-    if (!email) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
-    const notificationSettings = {
-      emailNotifications: emailNotifications !== undefined ? emailNotifications : true,
-      smsNotifications: smsNotifications !== undefined ? smsNotifications : false,
-      pushNotifications: pushNotifications !== undefined ? pushNotifications : true,
-      jobAlerts: jobAlerts !== undefined ? jobAlerts : true,
-      messageAlerts: messageAlerts !== undefined ? messageAlerts : true
-    };
-
-    const updatedClient = await Client.findOneAndUpdate(
-      { email },
-      { notificationSettings },
-      { new: true }
-    );
-
-    if (!updatedClient) {
-      return res.status(404).json({ message: "Client not found" });
-    }
-
-    res.status(200).json({
-      message: "Notification settings updated successfully",
-      notificationSettings: updatedClient.notificationSettings
-    });
-  } catch (err) {
-    console.error("Error updating notifications:", err);
-    res.status(500).json({ message: "Server error", error: err.message });
-  }
-};
-
-// Update display settings
-export const updateDisplay = async (req, res) => {
-  try {
-    const email = req.user?.email;
-    const { theme, language, timezone } = req.body;
-    
-    if (!email) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
-    const displaySettings = {
-      theme: theme || "light",
-      language: language || "en",
-      timezone: timezone || "UTC"
-    };
-
-    const updatedClient = await Client.findOneAndUpdate(
-      { email },
-      { displaySettings },
-      { new: true }
-    );
-
-    if (!updatedClient) {
-      return res.status(404).json({ message: "Client not found" });
-    }
-
-    res.status(200).json({
-      message: "Display settings updated successfully",
-      displaySettings: updatedClient.displaySettings
-    });
-  } catch (err) {
-    console.error("Error updating display settings:", err);
-    res.status(500).json({ message: "Server error", error: err.message });
-  }
-};
-
 // Delete account
 export const deleteAccount = async (req, res) => {
   try {
@@ -289,11 +194,11 @@ export const deleteAccount = async (req, res) => {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    const deletedClient = await Client.findOneAndDelete({ email });
-
-    if (!deletedClient) {
-      return res.status(404).json({ message: "Client not found" });
-    }
+    // Delete client profile
+    await Client.findOneAndDelete({ email });
+    
+    // Delete client settings
+    await ClientSetting.findOneAndDelete({ email });
 
     res.status(200).json({ message: "Account deleted successfully" });
   } catch (err) {

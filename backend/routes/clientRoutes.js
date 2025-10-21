@@ -10,7 +10,8 @@ router.get('/me', jwtAuthWithNext, getMyProfile);
 // Create client profile
 router.post('/', jwtAuthWithNext, createProfile);
 
-// Update client profile
+// Update client profile (both paths for compatibility)
 router.put('/', jwtAuthWithNext, updateProfile);
+router.put('/update', jwtAuthWithNext, updateProfile);
 
 export default router;

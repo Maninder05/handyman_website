@@ -19,7 +19,7 @@ import webhookRouter from "./routes/webhook.router.js";
 import paypalRouter from "./routes/paypal.routes.js";
 import jobRoutes from './routes/jobRoutes.js';
 import clientRoutes from './routes/clientRoutes.js';
-import settingRoutes from './routes/settingRoutes.js'; // ✅ NEW: Settings routes
+import settingRoutes from './routes/settingRoutes.js'; 
 
 import Subscription from "./models/subscription.model.js";
 
@@ -60,8 +60,8 @@ app.use("/api/services", RouterService);
 app.use("/api/subscriptions", subscriptionRouter);
 app.use("/api/paypal", paypalRouter);
 app.use(jobRoutes); // Job routes - uses /api/jobs prefix
-app.use('/api/clients', clientRoutes); // ✅ NEW: Client profile routes
-app.use('/api/clients/settings', settingRoutes); // ✅ NEW: Settings routes
+app.use('/api/clients', clientRoutes);
+app.use('/api/settings', settingRoutes); // 
 
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URL, { dbName: "handyman_db" })

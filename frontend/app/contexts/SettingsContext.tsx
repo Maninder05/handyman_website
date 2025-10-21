@@ -51,69 +51,62 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   });
   const [twoFactorEnabled, setTwoFactorEnabledState] = useState(false);
 
-  // Load settings from localStorage on mount
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | 'auto';
-    const savedLanguage = localStorage.getItem('language') as 'en' | 'es' | 'fr' | 'de';
-    const savedTimezone = localStorage.getItem('timezone');
-    
-    if (savedTheme) setThemeState(savedTheme);
-    if (savedLanguage) setLanguageState(savedLanguage);
-    if (savedTimezone) setTimezoneState(savedTimezone);
+    if (typeof window !== 'undefined') {
+      const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | 'auto';
+      const savedLanguage = localStorage.getItem('language') as 'en' | 'es' | 'fr' | 'de';
+      const savedTimezone = localStorage.getItem('timezone');
+      
+      if (savedTheme) setThemeState(savedTheme);
+      if (savedLanguage) setLanguageState(savedLanguage);
+      if (savedTimezone) setTimezoneState(savedTimezone);
 
-    // Fetch from backend
-    refreshSettings();
+      refreshSettings();
+    }
   }, []);
 
-  // Apply theme to document
   useEffect(() => {
-    const root = document.documentElement;
-    
-    if (theme === 'dark') {
-      root.classList.add('dark');
-    } else if (theme === 'light') {
-      root.classList.remove('dark');
-    } else {
-      // Auto mode - check system preference
-      const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (isDark) {
+    if (typeof window !== 'undefined') {
+      const root = document.documentElement;
+      
+      if (theme === 'dark') {
         root.classList.add('dark');
-      } else {
+      } else if (theme === 'light') {
         root.classList.remove('dark');
+      } else {
+        const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (isDark) {
+          root.classList.add('dark');
+        } else {
+          root.classList.remove('dark');
+        }
       }
     }
   }, [theme]);
 
   const refreshSettings = async () => {
     try {
+      if (typeof window === 'undefined') return;
+      
       const token = localStorage.getItem('token');
       if (!token) return;
 
-      const res = await fetch('http://localhost:8000/api/clients/settings', {
+      const res = await fetch('http://localhost:8000/api/settings', {
         headers: { Authorization: `Bearer ${token}` }
       });
 
       if (res.ok) {
         const data = await res.json();
-        if (data.display) {
-          setThemeState(data.display.theme || 'light');
-          setLanguageState(data.display.language || 'en');
-          setTimezoneState(data.display.timezone || 'UTC');
-          
-          // Save to localStorage
-          localStorage.setItem('theme', data.display.theme || 'light');
-          localStorage.setItem('language', data.display.language || 'en');
-          localStorage.setItem('timezone', data.display.timezone || 'UTC');
-        }
-        if (data.notifications) {
-          setNotifications(data.notifications);
-        }
-        if (data.privacy) {
-          setPrivacySettings(data.privacy);
-        }
-        if (data.twoFactorEnabled !== undefined) {
-          setTwoFactorEnabledState(data.twoFactorEnabled);
-        }
+        if (data.theme) setThemeState(data.theme);
+        if (data.language) setLanguageState(data.language);
+        if (data.timezone) setTimezoneState(data.timezone);
+        if (data.notifications) setNotifications(data.notifications);
+        if (data.privacySettings) setPrivacySettings(data.privacySettings);
+        if (data.twoFactorEnabled !== undefined) setTwoFactorEnabledState(data.twoFactorEnabled);
+        
+        localStorage.setItem('theme', data.theme || 'light');
+        localStorage.setItem('language', data.language || 'en');
+        localStorage.setItem('timezone', data.timezone || 'UTC');
       }
     } catch (error) {
       console.error('Error fetching settings:', error);
@@ -122,17 +115,23 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
 
   const setTheme = (newTheme: 'light' | 'dark' | 'auto') => {
     setThemeState(newTheme);
-    localStorage.setItem('theme', newTheme);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('theme', newTheme);
+    }
   };
 
   const setLanguage = (lang: 'en' | 'es' | 'fr' | 'de') => {
     setLanguageState(lang);
-    localStorage.setItem('language', lang);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('language', lang);
+    }
   };
 
   const setTimezone = (tz: string) => {
     setTimezoneState(tz);
-    localStorage.setItem('timezone', tz);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('timezone', tz);
+    }
   };
 
   const updateNotifications = (newNotifications: NotificationSettings) => {

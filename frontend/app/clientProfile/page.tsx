@@ -45,7 +45,7 @@ export default function ClientProfile() {
           return;
         }
 
-        const res = await fetch("http://localhost:8000/api/clients/me", {
+        const res = await fetch("http://localhost:8000/api/Clients/me", {
           headers: { "Authorization": `Bearer ${token}` },
         });
 
