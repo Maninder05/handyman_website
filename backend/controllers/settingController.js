@@ -11,7 +11,7 @@ export const getSettings = async (req, res) => {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    // Use findOneAndUpdate with upsert to avoid duplicate key errors
+    // Use findOne And Update with upsert to avoid duplicate key errors
     const settings = await ClientSetting.findOneAndUpdate(
       { email },
       { 
