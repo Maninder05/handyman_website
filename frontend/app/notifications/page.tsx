@@ -80,7 +80,7 @@ export default function NotificationBell({ user }: Props) {
   const markAllRead = async () => {
     try {
       await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/notifications/mark-all-read`,
+        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"}/api/notifications/mark-all-read`,
         {},
         { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
       );
