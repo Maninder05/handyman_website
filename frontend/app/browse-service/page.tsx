@@ -16,6 +16,7 @@ export default function BrowseServicesPage() {
 
   return (
     <main className="bg-[#F8F8F8] min-h-screen text-[#5C4033] flex flex-col">
+      {/* ================= HEADER ================= */}
       <section className="bg-[#5C4033] pb-6 text-center shadow-md border-b-4 border-[#EED9C4]">
         <h1 className="text-3xl font-bold text-[#EED9C4] pt-6 mb-4">
           Browse Services
@@ -38,6 +39,7 @@ export default function BrowseServicesPage() {
         </div>
       </section>
 
+      {/* ================= SERVICES GRID ================= */}
       <section className="px-4 py-10 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {filteredServices.map((service, index) => (
