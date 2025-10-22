@@ -1,15 +1,20 @@
 "use client"; //this makes current comp a Client Component i.e., being bundled and able to run in the browser so that hooks & event listeners can be implemented
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useSettings } from "./contexts/SettingsContext";
+import { useTranslation } from "./lib/translations";
 // import Footer from "@/components/Footer"
+
 
 export default function LandingPage() {
   const router = useRouter();
+  const { theme, language } = useSettings();
+  const { t } = useTranslation(language);
 
   return (
-    <main className="bg-neutral-900 min-h-screen text-neutral-100">
+    <main className="bg-neutral-900 dark:bg-[#0a0a0a] min-h-screen text-neutral-100 transition-colors">
       {/* Navbar */}
-      <header className="w-full bg-neutral-950 border-b border-neutral-800 sticky top-0 z-50">
+      <header className="w-full bg-neutral-950 dark:bg-[#1a1a1a] border-b border-neutral-800 dark:border-gray-700 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <div className="flex items-center gap-3">
             <Image
@@ -44,7 +49,7 @@ export default function LandingPage() {
             </button>
             <a
               onClick={() => router.push("/signup?mode=login")}
-              className="px-4 py-2 border border-[#FFCC66] text-[#FFCC66] rounded-lg bg-black font-bold transform transition-transform duration-300 hover:scale-105 active:scale-95 hover:bg-[#f6ae1f] hover:text-black hover:border-black cursor-pointer"
+              className="px-4 py-2 border border-[#FFCC66] text-[#FFCC66] rounded-lg bg-black dark:bg-[#2a2a2a] font-bold transform transition-transform duration-300 hover:scale-105 active:scale-95 hover:bg-[#f6ae1f] hover:text-black hover:border-black cursor-pointer"
             >
               Login
             </a>
@@ -57,7 +62,7 @@ export default function LandingPage() {
         className="relative w-full h-[80vh] flex items-center justify-center bg-cover bg-center"
         style={{ backgroundImage: "url('/images/handyman-home.jpg')" }}
       >
-        <div className="absolute inset-0 bg-black/60"></div>
+        <div className="absolute inset-0 bg-black/60 dark:bg-black/70"></div>
         <div className="relative z-10 text-center text-white max-w-3xl px-4">
           <p className="text-[#FFCC66] font-semibold uppercase tracking-wider mb-3">
             Trusted by 5000+ Homeowners
@@ -65,7 +70,7 @@ export default function LandingPage() {
           <h2 className="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
             Reliable Fixes, Right at Your Doorstep
           </h2>
-          <p className="text-lg md:text-xl mb-8 text-neutral-200">
+          <p className="text-lg md:text-xl mb-8 text-neutral-200 dark:text-neutral-300">
             From quick fixes to big renovations — our skilled handymen ensure
             quality, trust, and efficiency every time.
           </p>
@@ -103,7 +108,7 @@ export default function LandingPage() {
           ].map((s, i) => (
             <div
               key={i}
-              className="p-6 bg-neutral-950 rounded-2xl border border-neutral-800 hover:border-[#FFCC66] hover:shadow-lg hover:shadow-[#FFCC66]/20 transition"
+              className="p-6 bg-neutral-950 dark:bg-[#1a1a1a] rounded-2xl border border-neutral-800 dark:border-gray-700 hover:border-[#FFCC66] hover:shadow-lg hover:shadow-[#FFCC66]/20 transition"
             >
               <div className="relative w-85 h-70 rounded-xl overflow-hidden mb-1">
                 <Image src={s.img} alt={s.title} fill />
@@ -111,7 +116,7 @@ export default function LandingPage() {
               <h4 className="font-semibold text-lg text-[#FFCC66] mb-2">
                 {s.title}
               </h4>
-              <p className="text-neutral-400 text-sm">{s.desc}</p>
+              <p className="text-neutral-400 dark:text-gray-400 text-sm">{s.desc}</p>
             </div>
           ))}
         </div>
@@ -120,26 +125,26 @@ export default function LandingPage() {
       {/* Facts */}
       <section
         id="facts"
-        className="bg-neutral-950 py-16 border-y border-neutral-800"
+        className="bg-neutral-950 dark:bg-[#1a1a1a] py-16 border-y border-neutral-800 dark:border-gray-700"
       >
         <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-10 text-center">
           <div>
             <h4 className="text-4xl font-bold text-[#FFCC66] mb-2">10,000+</h4>
-            <p className="text-neutral-400">Repairs completed this year</p>
+            <p className="text-neutral-400 dark:text-gray-400">Repairs completed this year</p>
           </div>
           <div>
             <h4 className="text-4xl font-bold text-[#FFCC66] mb-2">45 min</h4>
-            <p className="text-neutral-400">Average response time</p>
+            <p className="text-neutral-400 dark:text-gray-400">Average response time</p>
           </div>
           <div>
             <h4 className="text-4xl font-bold text-[#FFCC66] mb-2">98%</h4>
-            <p className="text-neutral-400">Customer satisfaction rate</p>
+            <p className="text-neutral-400 dark:text-gray-400">Customer satisfaction rate</p>
           </div>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="bg-gradient-to-r from-[#ecd4a6] to-[#eeb84b] py-16">
+      <section className="bg-gradient-to-r from-[#ecd4a6] to-[#eeb84b] dark:from-[#CBB677] dark:to-[#B8A565] py-16">
         <div className="max-w-5xl mx-auto text-center text-neutral-900">
           <h3 className="text-3xl font-bold mb-4">Ready to get started?</h3>
           <p className="mb-6 text-lg">
@@ -148,7 +153,7 @@ export default function LandingPage() {
           </p>
           <a
             onClick={() => router.push("/signup")}
-            className="px-8 py-3 bg-neutral-900 hover:bg-neutral-800 text-[#FFCC66] rounded-xl text-lg font-medium shadow-lg transition"
+            className="px-8 py-3 bg-neutral-900 hover:bg-neutral-800 text-[#FFCC66] rounded-xl text-lg font-medium shadow-lg transition cursor-pointer inline-block"
           >
             Sign Up Now
           </a>
@@ -156,7 +161,7 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-neutral-950 text-neutral-400 py-10">
+      <footer className="bg-neutral-950 dark:bg-[#1a1a1a] text-neutral-400 dark:text-gray-400 py-10">
         <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-12">
           <div>
             <h4 className="text-lg font-semibold mb-4 text-[#FFCC66]">
@@ -201,7 +206,7 @@ export default function LandingPage() {
             <p className="text-sm">✉ support@handyman.com</p>
           </div>
         </div>
-        <div className="text-center mt-8 text-xs text-neutral-500">
+        <div className="text-center mt-8 text-xs text-neutral-500 dark:text-gray-500">
           © {new Date().getFullYear()} Handyman Services. All rights reserved.
         </div>
       </footer>

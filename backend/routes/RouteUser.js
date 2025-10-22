@@ -6,6 +6,12 @@ import passport from "passport";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
 
+//Example of authSession implementation over routes for protecting sensitive pages after token expires over website
+// import authSession from '../middleware/authSession.js';
+// router.get("/dashboard", authSession, (req, res) => {
+//   res.json({ ok: true, user: req.user });
+// });
+
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || "mysecret";
 const SESSION_TTL_MS = 15 * 60 * 1000; // 15 minutes
@@ -47,53 +53,65 @@ router.post(
 router.post("/logout", logout);
 
 // ----------------- OAuth routes (Google + Facebook) -----------------
-// Start Google OAuth
-router.get('/auth/google', passport.authenticate('google', { scope: ['profile','email'] }));
+// Only setup Google OAuth routes if credentials are provided
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  // Start Google OAuth
+  router.get('/auth/google', passport.authenticate('google', { scope: ['profile','email'] }));
 
-// Google callback
-router.get('/auth/google/callback',
-  passport.authenticate('google', { session: false, failureRedirect: `${CLIENT_URL}/signup?oauth=fail` }),
-  async (req, res) => {
-    // req.user set by passport verify callback
-    try {
-      const user = req.user;
-      // assign session token and expiry
-      const sessionToken = crypto.randomBytes(32).toString("hex");
-      user.sessionToken = sessionToken;
-      user.sessionExpiresAt = new Date(Date.now() + SESSION_TTL_MS);
-      await user.save();
+  // Google callback
+  router.get('/auth/google/callback',
+    passport.authenticate('google', { session: false, failureRedirect: `${CLIENT_URL}/signup?oauth=fail` }),
+    async (req, res) => {
+      // req.user set by passport verify callback
+      try {
+        const user = req.user;
+        // assign session token and expiry
+        const sessionToken = crypto.randomBytes(32).toString("hex");
+        user.sessionToken = sessionToken;
+        user.sessionExpiresAt = new Date(Date.now() + SESSION_TTL_MS);
+        await user.save();
 
-      const token = jwt.sign({ id: user._id, sessionToken }, JWT_SECRET, { expiresIn: "15m" });
-      // redirect to frontend with token (frontend will capture it from query params)
-      return res.redirect(`${CLIENT_URL}/signup?token=${token}&mode=login`);
-    } catch (err) {
-      console.error("OAuth callback error:", err);
-      return res.redirect(`${CLIENT_URL}/signup?oauth=error`);
+        const token = jwt.sign({ id: user._id, sessionToken }, JWT_SECRET, { expiresIn: "15m" });
+        // redirect to frontend with token (frontend will capture it from query params)
+        return res.redirect(`${CLIENT_URL}/signup?token=${token}&mode=login`);
+      } catch (err) {
+        console.error("OAuth callback error:", err);
+        return res.redirect(`${CLIENT_URL}/signup?oauth=error`);
+      }
     }
-  }
-);
+  );
+  console.log('[routes] Google OAuth routes registered');
+} else {
+  console.log('[routes] Google OAuth routes skipped - credentials missing');
+}
 
-// Start Facebook OAuth
-router.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email'] }));
+// Only setup Facebook OAuth routes if credentials are provided
+if (process.env.FACEBOOK_CLIENT_ID && process.env.FACEBOOK_CLIENT_SECRET) {
+  // Start Facebook OAuth
+  router.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email'] }));
 
-// Facebook callback
-router.get('/auth/facebook/callback',
-  passport.authenticate('facebook', { session: false, failureRedirect: `${CLIENT_URL}/signup?oauth=fail` }),
-  async (req, res) => {
-    try {
-      const user = req.user;
-      const sessionToken = crypto.randomBytes(32).toString("hex");
-      user.sessionToken = sessionToken;
-      user.sessionExpiresAt = new Date(Date.now() + SESSION_TTL_MS);
-      await user.save();
+  // Facebook callback
+  router.get('/auth/facebook/callback',
+    passport.authenticate('facebook', { session: false, failureRedirect: `${CLIENT_URL}/signup?oauth=fail` }),
+    async (req, res) => {
+      try {
+        const user = req.user;
+        const sessionToken = crypto.randomBytes(32).toString("hex");
+        user.sessionToken = sessionToken;
+        user.sessionExpiresAt = new Date(Date.now() + SESSION_TTL_MS);
+        await user.save();
 
-      const token = jwt.sign({ id: user._id, sessionToken }, JWT_SECRET, { expiresIn: "15m" });
-      return res.redirect(`${CLIENT_URL}/signup?token=${token}&mode=login`);
-    } catch (err) {
-      console.error("OAuth callback error:", err);
-      return res.redirect(`${CLIENT_URL}/signup?oauth=error`);
+        const token = jwt.sign({ id: user._id, sessionToken }, JWT_SECRET, { expiresIn: "15m" });
+        return res.redirect(`${CLIENT_URL}/signup?token=${token}&mode=login`);
+      } catch (err) {
+        console.error("OAuth callback error:", err);
+        return res.redirect(`${CLIENT_URL}/signup?oauth=error`);
+      }
     }
-  }
-);
+  );
+  console.log('[routes] Facebook OAuth routes registered');
+} else {
+  console.log('[routes] Facebook OAuth routes skipped - credentials missing');
+}
 
 export default router;

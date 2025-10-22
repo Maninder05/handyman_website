@@ -20,10 +20,10 @@ import { connectDB } from "./config/db.js";
 // -------------------------
 // Import route modules
 // -------------------------
-import RouterUser from "./routes/RouteUser.js"; // User routes
-import RouterHandyman from "./routes/handyRoutesAddProfile.js"; // Handyman routes
-import RouterService from "./routes/CreateServiceRoutes.js"; // Service routes
-import routeHandyFilter from "./routes/routeHandyFilter.js"; // ✅ HandyFilter routes
+import RouterUser from "./routes/RouteUser.js";
+import RouterHandyman from "./routes/handyRoutesAddProfile.js";
+import RouterService from "./routes/CreateServiceRoutes.js";
+import routeHandyFilter from "./routes/routeHandyFilter.js";
 
 // ⚠️ PAYMENT ROUTES COMMENTED OUT - Uncomment when you have Stripe/PayPal keys
 // import subscriptionRouter from "./routes/subscription.routes.js";
@@ -34,7 +34,7 @@ import routeHandyFilter from "./routes/routeHandyFilter.js"; // ✅ HandyFilter 
 // Initialize app
 // -------------------------
 const app = express();
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 7000;
 
 // -------------------------
 // Connect to MongoDB
@@ -71,7 +71,7 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use("/api/users", RouterUser);
 app.use("/api/handymen", RouterHandyman);
 app.use("/api/services", RouterService);
-app.use("/api/handyfilter", routeHandyFilter); // ✅ New HandyFilter route added
+app.use("/api/handyfilter", routeHandyFilter);
 
 // ⚠️ PAYMENT ROUTES COMMENTED OUT - Uncomment when you have Stripe/PayPal keys
 // app.use("/api/subscriptions", subscriptionRouter);
@@ -85,7 +85,7 @@ app.use("/api/handyfilter", routeHandyFilter); // ✅ New HandyFilter route adde
 //   "/api/webhooks/stripe",
 //   express.raw({ type: "application/json" }),
 //   (req, _res, next) => {
-//     req.rawBody = req.body; // keep raw buffer for signature verification
+//     req.rawBody = req.body;
 //     next();
 //   },
 //   webhookRouter
@@ -103,10 +103,6 @@ app.get("/", (req, res) =>
       handymen: "/api/handymen",
       services: "/api/services",
       handyfilter: "/api/handyfilter",
-      // Payment endpoints disabled until Stripe/PayPal configured
-      // subscriptions: "/api/subscriptions",
-      // paypal: "/api/paypal",
-      // stripeWebhook: "/api/webhooks/stripe",
     },
   })
 );
@@ -120,11 +116,10 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // -------------------------
 // MongoDB Connection Fallback
-// (only if connectDB() is not used)
 // -------------------------
 if (!mongoose.connection.readyState) {
   mongoose
-    .connect(process.env.MONGO_URL || "mongodb://localhost:27017/handyman_db")
+    .connect(process.env.MONGO_URI || "mongodb://localhost:27017/handyman_db")
     .then(() => console.log("✅ MongoDB connected successfully (fallback)"))
     .catch((err) => console.error("❌ MongoDB connection error:", err));
 }

@@ -1,15 +1,17 @@
+// backend/routes/CreateServiceRoutes.js
 import express from "express";
 import multer from "multer";
 import {
   createService,
   getServices,
+  getDrafts,
   updateService,
   deleteService,
 } from "../controllers/CreateServiceController.js";
 
 const router = express.Router();
 
-// ================= MULTER SETUP =================
+// Multer setup (same as before)
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads/");
@@ -18,21 +20,19 @@ const storage = multer.diskStorage({
     cb(null, Date.now() + "-" + file.originalname);
   },
 });
-
 const upload = multer({ storage });
 
-// ================= ROUTES =================
-
-// ✅ Create a new service
+// Routes
 router.post("/", upload.single("image"), createService);
-
-// ✅ Get all services
 router.get("/", getServices);
 
-// ✅ Update a service by ID
+// Drafts route
+router.get("/drafts", getDrafts);
+
+// Update (supports optional image upload)
 router.put("/:id", upload.single("image"), updateService);
 
-// ✅ Delete a service by ID
+// Delete
 router.delete("/:id", deleteService);
 
 export default router;
