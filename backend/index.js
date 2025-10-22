@@ -17,8 +17,8 @@ import RouterService from './routes/CreateServiceRoutes.js';
 import subscriptionRouter from "./routes/subscription.routes.js";
 import webhookRouter from "./routes/webhook.router.js";
 import paypalRouter from "./routes/paypal.routes.js";
-import jobRoutes from './routes/jobRoutes.js';
 import clientRoutes from './routes/clientRoutes.js';
+import jobRoutes from './routes/jobRoutes.js';
 import settingRoutes from './routes/settingRoutes.js'; 
 
 import Subscription from "./models/subscription.model.js";
