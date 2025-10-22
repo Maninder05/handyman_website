@@ -7,10 +7,22 @@ const JWT_EXPIRES_IN = "7d"; // adjust as needed
 
 export const registerHandyman = async (req, res) => {
   try {
-    const { name, email, password, age, experience, skills = [], hourlyRate, distanceRadiusKm, attributes = {} } = req.body;
+    const {
+      name,
+      email,
+      password,
+      age,
+      experience,
+      skills = [],
+      hourlyRate,
+      distanceRadiusKm,
+      attributes = {},
+    } = req.body;
 
     if (!email || !password) {
-      return res.status(400).json({ error: "Email and password are required." });
+      return res
+        .status(400)
+        .json({ error: "Email and password are required." });
     }
 
     const existing = await Handyman.findOne({ email: email.toLowerCase() });
@@ -36,11 +48,19 @@ export const registerHandyman = async (req, res) => {
     await handyman.save();
 
     // sign token
-    const token = jwt.sign({ id: handyman._id, email: handyman.email }, process.env.JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+    const token = jwt.sign(
+      { id: handyman._id, email: handyman.email },
+      process.env.JWT_SECRET,
+      { expiresIn: JWT_EXPIRES_IN }
+    );
 
     res.status(201).json({
       message: "Handyman registered.",
-      handyman: { id: handyman._id, name: handyman.name, email: handyman.email },
+      handyman: {
+        id: handyman._id,
+        name: handyman.name,
+        email: handyman.email,
+      },
       token,
     });
   } catch (err) {
@@ -52,19 +72,29 @@ export const registerHandyman = async (req, res) => {
 export const loginHandyman = async (req, res) => {
   try {
     const { email, password } = req.body;
-    if (!email || !password) return res.status(400).json({ error: "Email and password required." });
+    if (!email || !password)
+      return res.status(400).json({ error: "Email and password required." });
 
     const handyman = await Handyman.findOne({ email: email.toLowerCase() });
-    if (!handyman) return res.status(401).json({ error: "Invalid credentials." });
+    if (!handyman)
+      return res.status(401).json({ error: "Invalid credentials." });
 
     const match = await bcrypt.compare(password, handyman.password);
     if (!match) return res.status(401).json({ error: "Invalid credentials." });
 
-    const token = jwt.sign({ id: handyman._id, email: handyman.email }, process.env.JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+    const token = jwt.sign(
+      { id: handyman._id, email: handyman.email },
+      process.env.JWT_SECRET,
+      { expiresIn: JWT_EXPIRES_IN }
+    );
 
     res.json({
       message: "Login successful",
-      handyman: { id: handyman._id, name: handyman.name, email: handyman.email },
+      handyman: {
+        id: handyman._id,
+        name: handyman.name,
+        email: handyman.email,
+      },
       token,
     });
   } catch (err) {
@@ -78,7 +108,8 @@ export const getHandymanProfile = async (req, res) => {
     // auth middleware will set req.handymanId
     const id = req.handymanId;
     const handyman = await Handyman.findById(id).select("-password");
-    if (!handyman) return res.status(404).json({ error: "Handyman not found." });
+    if (!handyman)
+      return res.status(404).json({ error: "Handyman not found." });
     res.json(handyman);
   } catch (err) {
     console.error("getHandymanProfile error:", err);
@@ -89,7 +120,15 @@ export const getHandymanProfile = async (req, res) => {
 export const upsertHandymanFilter = async (req, res) => {
   try {
     const id = req.handymanId;
-    const { name, age, experience, skills, hourlyRate, distanceRadiusKm, attributes } = req.body;
+    const {
+      name,
+      age,
+      experience,
+      skills,
+      hourlyRate,
+      distanceRadiusKm,
+      attributes,
+    } = req.body;
 
     const update = {};
     if (name !== undefined) update.name = name;
@@ -97,11 +136,17 @@ export const upsertHandymanFilter = async (req, res) => {
     if (experience !== undefined) update.experience = experience;
     if (Array.isArray(skills)) update.skills = skills;
     if (hourlyRate !== undefined) update.hourlyRate = hourlyRate;
-    if (distanceRadiusKm !== undefined) update.distanceRadiusKm = distanceRadiusKm;
+    if (distanceRadiusKm !== undefined)
+      update.distanceRadiusKm = distanceRadiusKm;
     if (attributes !== undefined) update.attributes = attributes;
 
-    const handyman = await Handyman.findByIdAndUpdate(id, { $set: update }, { new: true, upsert: false }).select("-password");
-    if (!handyman) return res.status(404).json({ error: "Handyman not found." });
+    const handyman = await Handyman.findByIdAndUpdate(
+      id,
+      { $set: update },
+      { new: true, upsert: false }
+    ).select("-password");
+    if (!handyman)
+      return res.status(404).json({ error: "Handyman not found." });
 
     res.json({ message: "Profile updated", handyman });
   } catch (err) {
