@@ -1,10 +1,9 @@
-// controllers/notificationController.js
-const Notification = require('../models/ModelNotification');
-// const User = require('../models/User');
-const { sendEmail } = require('../services/emailService');
-// const { sendSms } = require('../services/smsService');
+// backend/controllers/ControllerNotification.js
+import Notification from '../models/ModelNotification.js';
+import { sendEmail } from '../services/emailService.js';
+// import { sendSms } from '../services/smsService.js';
 
-const createNotification = async ({ recipientId, senderId, title, body, data = {}, channel = 'system', io = null }) => {
+export const createNotification = async ({ recipientId, senderId, title, body, data = {}, channel = 'system', io = null }) => {
   const notif = await Notification.create({
     recipient: recipientId,
     sender: senderId,
@@ -14,11 +13,9 @@ const createNotification = async ({ recipientId, senderId, title, body, data = {
     channel
   });
 
-  // populate minimal info
-  const populated = await notif.populate('recipient', 'email phone notificationPreferences').execPopulate();
+  const populated = await notif.populate('recipient', 'email phone notificationPreferences');
 
-  // emit realtime event to the user's socket if io provided
-  if (io && populated.recipient && populated.recipient.socketId) {
+  if (io && populated.recipient?.socketId) {
     io.to(populated.recipient.socketId).emit('notification', {
       notification: {
         id: notif._id,
@@ -31,9 +28,8 @@ const createNotification = async ({ recipientId, senderId, title, body, data = {
     });
   }
 
-  // Send email if preference enabled
   try {
-    if (populated.recipient.notificationPreferences.email) {
+    if (populated.recipient?.notificationPreferences?.email) {
       await sendEmail({
         to: populated.recipient.email,
         subject: title,
@@ -45,9 +41,8 @@ const createNotification = async ({ recipientId, senderId, title, body, data = {
     console.error('Email send error:', err.message);
   }
 
-  // Send SMS if preference enabled and phone exists
   try {
-    if (populated.recipient.notificationPreferences.sms && populated.recipient.phone) {
+    if (populated.recipient?.notificationPreferences?.sms && populated.recipient.phone) {
       await sendSms(populated.recipient.phone, `${title} - ${body}`);
     }
   } catch (err) {
@@ -57,9 +52,9 @@ const createNotification = async ({ recipientId, senderId, title, body, data = {
   return notif;
 };
 
-const getNotifications = async (req, res) => {
+export const getNotifications = async (req, res) => {
   try {
-    const userId = req.user._id; // assume auth middleware sets req.user
+    const userId = req.user?._id;
     const notifs = await Notification.find({ recipient: userId }).sort({ createdAt: -1 }).limit(100);
     const unreadCount = await Notification.countDocuments({ recipient: userId, read: false });
     res.json({ success: true, notifications: notifs, unreadCount });
@@ -68,11 +63,15 @@ const getNotifications = async (req, res) => {
   }
 };
 
-const markAsRead = async (req, res) => {
+export const markAsRead = async (req, res) => {
   try {
-    const userId = req.user._id;
+    const userId = req.user?._id;
     const { id } = req.params;
-    const updated = await Notification.findOneAndUpdate({ _id: id, recipient: userId }, { read: true }, { new: true });
+    const updated = await Notification.findOneAndUpdate(
+      { _id: id, recipient: userId },
+      { read: true },
+      { new: true }
+    );
     const unreadCount = await Notification.countDocuments({ recipient: userId, read: false });
     res.json({ success: true, notification: updated, unreadCount });
   } catch (err) {
@@ -80,14 +79,12 @@ const markAsRead = async (req, res) => {
   }
 };
 
-const markAllRead = async (req, res) => {
+export const markAllRead = async (req, res) => {
   try {
-    const userId = req.user._id;
-    await Notification.updateMany({ recipient: userId, read: false }, { $set: { read: true }});
+    const userId = req.user?._id;
+    await Notification.updateMany({ recipient: userId, read: false }, { $set: { read: true } });
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 };
-
-module.exports = { createNotification, getNotifications, markAsRead, markAllRead };
