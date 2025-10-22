@@ -1,8 +1,8 @@
 // controllers/notificationController.js
-const Notification = require('../models/Notification');
-const User = require('../models/User');
+const Notification = require('../models/ModelNotification');
+// const User = require('../models/User');
 const { sendEmail } = require('../services/emailService');
-const { sendSms } = require('../services/smsService');
+// const { sendSms } = require('../services/smsService');
 
 const createNotification = async ({ recipientId, senderId, title, body, data = {}, channel = 'system', io = null }) => {
   const notif = await Notification.create({
