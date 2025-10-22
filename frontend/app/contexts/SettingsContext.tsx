@@ -64,7 +64,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     } else if (themeValue === 'light') {
       root.classList.remove('dark');
     } else {
-      const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches; // dark mode
       if (isDark) {
         root.classList.add('dark');
       } else {
