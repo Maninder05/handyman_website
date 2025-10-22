@@ -48,7 +48,7 @@ export default function CreateService() {
       return;
     }
 
-    setErrors({}); 
+    setErrors({});
     setImage(file);
     setImagePreview(URL.createObjectURL(file));
   };
@@ -76,10 +76,13 @@ export default function CreateService() {
       formData.append("isDraft", isDraft ? "true" : "false");
       if (image) formData.append("image", image);
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/services`, {
-        method: "POST",
-        body: formData,
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/services`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       if (res.ok) {
         setPopup(isDraft ? "Draft saved ✅" : "Service submitted ✅");
@@ -215,10 +218,16 @@ export default function CreateService() {
               className="w-full rounded-xl p-4 border border-[#EED9C4] bg-[#FFF8F2] text-[#5C4033] focus:outline-none focus:ring-2 focus:ring-[#C4956A] appearance-none pr-8 transition cursor-pointer"
             >
               <option value="">Select Category</option>
-              <option>Electrical Repair</option>
+              <option>Electrical</option>
               <option>Plumbing</option>
-              <option>HVAC</option>
               <option>Carpentry</option>
+              <option>Appliances</option>
+              <option>Painting & Finishing</option>
+              <option>Cleaning</option>
+              <option>Landscaping</option>
+              <option>Renovation</option>
+              <option>Roofing</option>
+              <option>General Repairs</option>
             </select>
             {errors.category && (
               <p className="text-[#C4956A] text-sm mt-1">{errors.category}</p>
@@ -243,7 +252,12 @@ export default function CreateService() {
               </label>
               {imagePreview && (
                 <div className="w-24 h-24 relative border border-[#EED9C4] rounded-xl overflow-hidden shadow">
-                  <Image src={imagePreview} alt="Preview" fill className="object-cover" />
+                  <Image
+                    src={imagePreview}
+                    alt="Preview"
+                    fill
+                    className="object-cover"
+                  />
                 </div>
               )}
             </div>
