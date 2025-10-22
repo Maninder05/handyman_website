@@ -1,17 +1,14 @@
-// models/Notification.js
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+import mongoose from 'mongoose';
 
-const NotificationSchema = new Schema({
-  recipient: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  sender: { type: Schema.Types.ObjectId, ref: 'User' }, // optional
-  title: { type: String, required: true },
-  body: { type: String },
-  data: { type: Schema.Types.Mixed }, // to store action ids e.g. { orderId: '...' }
+const notificationSchema = new mongoose.Schema({
+  recipient: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  sender: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  title: String,
+  body: String,
+  data: Object,
+  channel: { type: String, default: 'system' },
   read: { type: Boolean, default: false },
-  channel: { type: String, enum: ['system','order','payment','review'], default: 'system' }
 }, { timestamps: true });
 
-NotificationSchema.index({ recipient: 1, createdAt: -1 });
-
-module.exports = mongoose.model('Notification', NotificationSchema);
+const Notification = mongoose.model('Notification', notificationSchema);
+export default Notification;

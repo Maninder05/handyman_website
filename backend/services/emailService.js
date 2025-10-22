@@ -1,8 +1,11 @@
-// services/emailService.js
-const nodemailer = require('nodemailer');
-const fs = require('fs');
-const handlebars = require('handlebars');
-const path = require('path');
+import nodemailer from 'nodemailer';
+import fs from 'fs';
+import handlebars from 'handlebars';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,
@@ -10,11 +13,11 @@ const transporter = nodemailer.createTransport({
   secure: false,
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
+    pass: process.env.EMAIL_PASS,
+  },
 });
 
-async function sendEmail({ to, subject, templateName = 'default', templateVars = {}, attachments = [] }) {
+export async function sendEmail({ to, subject, templateName = 'default', templateVars = {}, attachments = [] }) {
   const templatePath = path.join(__dirname, '..', 'emails', `${templateName}.html`);
   let html = `<p>${templateVars.body || 'You have a new notification'}</p>`;
 
@@ -29,10 +32,8 @@ async function sendEmail({ to, subject, templateName = 'default', templateVars =
     to,
     subject,
     html,
-    attachments
+    attachments,
   };
 
   return transporter.sendMail(mailOptions);
 }
-
-module.exports = { sendEmail };
