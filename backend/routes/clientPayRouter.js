@@ -88,8 +88,7 @@ router.post("/capture", async (req, res) => {
 
     return res.json({
       ok: true,
-      status: captured.status,     // expected: 'succeeded'
-      piId: captured.id,
+      status: captured.status,     // this updates the 
       capturedAmount: captured.amount_received || captured.amount, // in cents
     });
   } catch (e) {
