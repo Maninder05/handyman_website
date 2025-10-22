@@ -1,12 +1,10 @@
-// backend/index.js
-import dotenv from "dotenv";
-dotenv.config();
-
-import express from "express";
-import mongoose from "mongoose";
-import cors from "cors";
+import express from 'express';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import dotenv from 'dotenv';
 import path from "path";
 import { fileURLToPath } from "url";
+
 
 import Subscription from "./models/subscription.model.js";
 
@@ -19,9 +17,25 @@ import webhookRouter from "./routes/webhook.router.js";          // Membership (
 import paypalRouter from "./routes/paypal.routes.js";
 import clientWebhookRouter from "./routes/clientWebhook.router.js"; // Client → Handyman payment webhooks
 import clientPayRouter from "./routes/clientPayRouter.js";          // Client payment API (create-intent, etc.)
+import cookieParser from 'cookie-parser';
+import passport from 'passport';
+import http from "http";
+import { Server } from "socket.io";
+
+// register passport strategies
+import './config/passport.js';
+
+// Routes
+import RouterUser from './routes/RouteUser.js';
+import RouterHandyman from './routes/handyRoutesAddProfile.js';
+import RouterService from './routes/CreateServiceRoutes.js';
+import RouterNotification from './routes/RouteNotification.js'; 
+
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 7000;
+
 
 // CORS
 app.use(
@@ -60,16 +74,26 @@ app.post(
 
 // ------------------------------------------------------------
 // 2) JSON parsers for normal routes (AFTER webhooks)
-// ------------------------------------------------------------
+ Middleware
+app.use(cors({
+  origin: process.env.CLIENT_URL,
+  credentials: true,
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(passport.initialize());
+
 
 // ------------------------------------------------------------
 // 3) Static files
-// ------------------------------------------------------------
+
+// Serve uploaded images
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 
 // ------------------------------------------------------------
 // 4) App routers (normal JSON routes)
@@ -109,7 +133,64 @@ mongoose
   })
   .catch((err) => {
     console.error("Database connection error:", err);
+
+// Routes
+app.use('/api/users', RouterUser);
+app.use('/api/handymen', RouterHandyman);
+app.use('/api/services', RouterService);
+app.use('/api/notifications', RouterNotification); 
+
+// Default test route
+app.get('/', (req, res) => {
+  res.send('Backend is running!');
+});
+
+// Create HTTP server for Socket.io
+const server = http.createServer(app);
+
+// Setup Socket.io
+const io = new Server(server, {
+  cors: {
+    origin: process.env.CLIENT_URL,
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
+});
+
+// Socket.io logic (real-time notifications)
+io.on("connection", (socket) => {
+  console.log("User connected:", socket.id);
+
+  // Join a specific room (like userId or handymanId)
+  socket.on("joinRoom", (userId) => {
+    socket.join(userId);
+    console.log(`User ${userId} joined their room`);
   });
+
+  // Send notification to a user
+  socket.on("sendNotification", ({ receiverId, notification }) => {
+    io.to(receiverId).emit("receiveNotification", notification);
+    console.log("Notification sent to", receiverId);
+  });
+
+  socket.on("disconnect", () => {
+    console.log(" User disconnected:", socket.id);
+  });
+});
+
+// Connect to MongoDB and start server
+mongoose.connect(process.env.MONGO_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+}).then(() => {
+  console.log('Connected to MongoDB successfully!');
+  server.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+}).catch((err) => {
+  console.error('Database connection error:', err);
+});
+
 
 // ------------------------------------------------------------
 // 7) Error handler (last middleware)
@@ -119,4 +200,8 @@ app.use((err, _req, res, _next) => {
   // If a webhook route leaked raw body parsing errors, make sure we reply safely
   const status = err.statusCode || err.status || 500;
   res.status(status).json({ error: err.message || "Something went wrong!" });
+// Optional: global error handler
+app.use((err, req, res, next) => {
+  console.error('Unhandled error:', err);
+  res.status(500).json({ error: 'Something went wrong!' });
 });

@@ -1,10 +1,13 @@
-// controllers/controllerHandyFilter.js
+// controllers/ControllerHandyFilter.js
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import Handyman from "../models/Handyman.js";
+import Handyman from "../models/ModelHandyFilter.js";
 
-const JWT_EXPIRES_IN = "7d"; // adjust as needed
+const JWT_EXPIRES_IN = "7d";
 
+// ============================
+// REGISTER HANDYMAN
+// ============================
 export const registerHandyman = async (req, res) => {
   try {
     const {
@@ -19,24 +22,27 @@ export const registerHandyman = async (req, res) => {
       attributes = {},
     } = req.body;
 
+    // Validate required fields
     if (!email || !password) {
       return res
         .status(400)
         .json({ error: "Email and password are required." });
     }
 
+    // Check if already registered
     const existing = await Handyman.findOne({ email: email.toLowerCase() });
     if (existing) {
       return res.status(409).json({ error: "Email already registered." });
     }
 
-    const salt = await bcrypt.genSalt(10);
-    const hashed = await bcrypt.hash(password, salt);
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Create new handyman
     const handyman = new Handyman({
       name,
       email: email.toLowerCase(),
-      password: hashed,
+      password: hashedPassword,
       age,
       experience,
       skills,
@@ -47,7 +53,7 @@ export const registerHandyman = async (req, res) => {
 
     await handyman.save();
 
-    // sign token
+    // Create JWT token
     const token = jwt.sign(
       { id: handyman._id, email: handyman.email },
       process.env.JWT_SECRET,
@@ -55,7 +61,8 @@ export const registerHandyman = async (req, res) => {
     );
 
     res.status(201).json({
-      message: "Handyman registered.",
+      success: true,
+      message: "Handyman registered successfully.",
       handyman: {
         id: handyman._id,
         name: handyman.name,
@@ -64,32 +71,41 @@ export const registerHandyman = async (req, res) => {
       token,
     });
   } catch (err) {
-    console.error("registerHandyman error:", err);
-    res.status(500).json({ error: "Registration failed." });
+    console.error("❌ registerHandyman error:", err);
+    res.status(500).json({ error: "Registration failed. Please try again." });
   }
 };
 
+// ============================
+// LOGIN HANDYMAN
+// ============================
 export const loginHandyman = async (req, res) => {
   try {
     const { email, password } = req.body;
+
     if (!email || !password)
-      return res.status(400).json({ error: "Email and password required." });
+      return res
+        .status(400)
+        .json({ error: "Email and password are required." });
 
     const handyman = await Handyman.findOne({ email: email.toLowerCase() });
     if (!handyman)
-      return res.status(401).json({ error: "Invalid credentials." });
+      return res.status(401).json({ error: "Invalid email or password." });
 
-    const match = await bcrypt.compare(password, handyman.password);
-    if (!match) return res.status(401).json({ error: "Invalid credentials." });
+    const isMatch = await bcrypt.compare(password, handyman.password);
+    if (!isMatch)
+      return res.status(401).json({ error: "Invalid email or password." });
 
+    // Sign token
     const token = jwt.sign(
       { id: handyman._id, email: handyman.email },
       process.env.JWT_SECRET,
       { expiresIn: JWT_EXPIRES_IN }
     );
 
-    res.json({
-      message: "Login successful",
+    res.status(200).json({
+      success: true,
+      message: "Login successful.",
       handyman: {
         id: handyman._id,
         name: handyman.name,
@@ -98,25 +114,31 @@ export const loginHandyman = async (req, res) => {
       token,
     });
   } catch (err) {
-    console.error("loginHandyman error:", err);
-    res.status(500).json({ error: "Login failed." });
+    console.error("❌ loginHandyman error:", err);
+    res.status(500).json({ error: "Login failed. Please try again." });
   }
 };
 
+// ============================
+// GET HANDYMAN PROFILE
+// ============================
 export const getHandymanProfile = async (req, res) => {
   try {
-    // auth middleware will set req.handymanId
-    const id = req.handymanId;
+    const id = req.handymanId; // set by auth middleware
     const handyman = await Handyman.findById(id).select("-password");
     if (!handyman)
       return res.status(404).json({ error: "Handyman not found." });
-    res.json(handyman);
+
+    res.status(200).json({ success: true, handyman });
   } catch (err) {
-    console.error("getHandymanProfile error:", err);
+    console.error("❌ getHandymanProfile error:", err);
     res.status(500).json({ error: "Failed to fetch profile." });
   }
 };
 
+// ============================
+// UPDATE FILTER / PROFILE SETTINGS
+// ============================
 export const upsertHandymanFilter = async (req, res) => {
   try {
     const id = req.handymanId;
@@ -130,6 +152,7 @@ export const upsertHandymanFilter = async (req, res) => {
       attributes,
     } = req.body;
 
+    // Only update provided fields
     const update = {};
     if (name !== undefined) update.name = name;
     if (age !== undefined) update.age = age;
@@ -143,14 +166,19 @@ export const upsertHandymanFilter = async (req, res) => {
     const handyman = await Handyman.findByIdAndUpdate(
       id,
       { $set: update },
-      { new: true, upsert: false }
+      { new: true }
     ).select("-password");
+
     if (!handyman)
       return res.status(404).json({ error: "Handyman not found." });
 
-    res.json({ message: "Profile updated", handyman });
+    res.status(200).json({
+      success: true,
+      message: "Profile updated successfully.",
+      handyman,
+    });
   } catch (err) {
-    console.error("upsertHandymanFilter error:", err);
-    res.status(500).json({ error: "Failed to update profile." });
+    console.error("❌ upsertHandymanFilter error:", err);
+    res.status(500).json({ error: "Failed to update handyman profile." });
   }
 };

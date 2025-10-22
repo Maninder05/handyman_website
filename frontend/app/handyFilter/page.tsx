@@ -6,36 +6,28 @@ import { Menu, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function FilterPage() {
-  // this is for the dropdown menu
   const [showMenu, setShowMenu] = useState(false);
-
-  // toggle profile dropdown
   const [showProfileMenu, setShowProfileMenu] = useState(false);
-
-  // next.js router for changing pages
   const router = useRouter();
 
-  // logout
   const handleLogout = () => {
+    localStorage.removeItem("token");
     router.push("/");
   };
 
-  // toggle hamburger dropdown
   const toggleMenu = () => {
     setShowMenu(!showMenu);
-    setShowProfileMenu(false); // close profile if menu is opened
+    setShowProfileMenu(false);
   };
 
-  // toggle profile dropdown
   const toggleProfile = () => {
     setShowProfileMenu(!showProfileMenu);
-    setShowMenu(false); // close menu if profile is opened
+    setShowMenu(false);
   };
+
   const [rate, setRate] = useState(50);
   const [experience, setExperience] = useState("");
   const [skills, setSkills] = useState<string[]>([]);
-
-  // New address states
   const [address1, setAddress1] = useState("");
   const [city, setCity] = useState("");
   const [province, setProvince] = useState("");
@@ -62,24 +54,35 @@ export default function FilterPage() {
   const applyFilters = async () => {
     try {
       const token = localStorage.getItem("token");
+
+      console.log("🔍 Debug Info:");
+      console.log("Token exists:", !!token);
+      console.log("Token value:", token?.substring(0, 20) + "...");
+
       if (!token) {
         alert("⚠️ Please login first!");
+        router.push("/login");
         return;
       }
 
       const filters = {
         hourlyRate: rate,
-        experience: Number(experience),
-        skills,
+        experience: experience ? Number(experience) : undefined,
+        skills: skills.length > 0 ? skills : undefined,
         address: {
           address1,
           city,
           province,
         },
-        attributes: { updatedAt: new Date().toISOString() },
+        attributes: {
+          updatedAt: new Date().toISOString(),
+        },
       };
 
-      const res = await fetch("http://localhost:7000/api/handymen/me", {
+      console.log("📤 Sending filters:", filters);
+      console.log("🌐 URL:", "http://localhost:7000/api/handyfilter/me");
+
+      const res = await fetch("http://localhost:7000/api/handyfilter/me", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -88,23 +91,45 @@ export default function FilterPage() {
         body: JSON.stringify(filters),
       });
 
+      console.log("📥 Response status:", res.status);
+      console.log("📥 Response ok:", res.ok);
+
       let data;
+      const responseText = await res.text();
+      console.log("📥 Raw response:", responseText);
+
       try {
-        data = await res.json();
-      } catch {
-        data = {};
+        data = JSON.parse(responseText);
+      } catch (parseError) {
+        console.error("❌ Failed to parse JSON:", parseError);
+        data = { error: "Invalid response from server" };
       }
+
+      console.log("📥 Parsed data:", data);
 
       if (res.ok) {
         alert("✅ Filters saved successfully!");
-        console.log("Saved handyman:", data);
+        console.log("✅ Saved handyman:", data);
       } else {
-        alert("❌ Error: " + (data.error || "Unknown error"));
-        console.error("Error response:", data);
+        if (res.status === 401) {
+          alert("❌ Session expired. Please login again.");
+          localStorage.removeItem("token");
+          router.push("/login");
+        } else {
+          const errorMsg = data.error || data.message || "Unknown error";
+          alert("❌ Error: " + errorMsg);
+          console.error("❌ Error response:", data);
+        }
       }
     } catch (err: unknown) {
-      console.error("Apply filters failed:", err);
-      if (err instanceof Error) {
+      console.error("❌ Apply filters failed:", err);
+
+      if (err instanceof TypeError && err.message.includes("fetch")) {
+        alert(
+          "❌ Cannot connect to server. Make sure backend is running on port 7000"
+        );
+        console.error("Backend connection failed. Is it running?");
+      } else if (err instanceof Error) {
         alert("❌ Request failed: " + err.message);
       } else {
         alert("❌ Request failed: An unknown error occurred.");
@@ -113,18 +138,15 @@ export default function FilterPage() {
   };
 
   return (
-    <main className="bg-amber-50 min-h-screen text-gray-100 flex flex-col items-center ">
+    <main className="bg-amber-50 min-h-screen text-gray-100 flex flex-col items-center">
       {/* HEADER */}
       <header className="bg-gradient-to-r from-[#FFCC66] to-[#FF7E5F] shadow-md relative w-full">
         <div className="w-full flex items-center justify-between px-20 py-6">
-          {/* Title */}
           <h1 className="text-2xl font-extrabold text-gray-900 tracking-wide">
             Handyman Portal
           </h1>
 
-          {/* Right side buttons */}
           <div className="flex items-center gap-4 relative">
-            {/* Profile Icon */}
             <button
               onClick={toggleProfile}
               className="p-2 rounded-full hover:bg-yellow-500 transition"
@@ -132,7 +154,6 @@ export default function FilterPage() {
               <FiUser size={22} className="text-gray-900" />
             </button>
 
-            {/* Profile dropdown */}
             {showProfileMenu && (
               <div className="absolute right-14 top-14 bg-gray-800 rounded-xl shadow-lg border w-48 z-50">
                 <ul className="text-sm divide-y">
@@ -156,7 +177,6 @@ export default function FilterPage() {
               </div>
             )}
 
-            {/* Menu button */}
             <button
               onClick={toggleMenu}
               className="p-2 rounded-md hover:bg-yellow-500 bg-yellow-400 text-gray-900 transition"
@@ -164,7 +184,6 @@ export default function FilterPage() {
               {showMenu ? <X size={26} /> : <Menu size={26} />}
             </button>
 
-            {/* Hamburger dropdown */}
             {showMenu && (
               <div className="absolute right-0 top-14 bg-gray-800 shadow-xl rounded-xl border w-56 text-sm z-50 overflow-hidden">
                 <ul className="divide-y">
@@ -176,7 +195,6 @@ export default function FilterPage() {
                       Add Service
                     </Link>
                   </li>
-                  {/*  Create Profile page */}
                   <li>
                     <Link
                       href="/Add-profile"
@@ -240,7 +258,7 @@ export default function FilterPage() {
 
         {/* Hourly Rate */}
         <div className="mb-10">
-          <label className="block font-semibold mb-3 color-black-200">
+          <label className="block font-semibold mb-3 text-gray-900">
             Hourly Rate
           </label>
           <input

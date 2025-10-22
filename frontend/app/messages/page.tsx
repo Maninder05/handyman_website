@@ -67,7 +67,7 @@ export default function MessagesPage() {
       </section>
 
       {/* Messages Screen */}
-      <section className="flex-1 overflow-y-auto px-4 py-6 space-y-4 bg-neutral-800">
+      <section className="flex-1 overflow-y-auto px-4 py-6 space-y-4 bg-amber-50">
         {messages.map((msg, index) => (
           <div
             key={index}

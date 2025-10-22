@@ -1,3 +1,4 @@
+// frontend: app/create-service/page.tsx  (or wherever your CreateService component lives)
 "use client";
 
 import { useState } from "react";
@@ -8,7 +9,6 @@ import { Menu, X } from "lucide-react";
 import { FiUser } from "react-icons/fi";
 
 export default function CreateService() {
-  // form fields
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [priceType, setPriceType] = useState("Hourly");
@@ -16,21 +16,15 @@ export default function CreateService() {
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  // errors + popup
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [popup, setPopup] = useState<string | null>(null);
 
-  // dropdown menus
   const [showMenu, setShowMenu] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const router = useRouter();
 
-  // logout
-  const handleLogout = () => {
-    router.push("/");
-  };
+  const handleLogout = () => router.push("/");
 
-  // toggle menus
   const toggleMenu = () => {
     setShowMenu(!showMenu);
     setShowProfileMenu(false);
@@ -41,7 +35,6 @@ export default function CreateService() {
     setShowMenu(false);
   };
 
-  // upload image
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -60,13 +53,14 @@ export default function CreateService() {
     setImagePreview(URL.createObjectURL(file));
   };
 
-  // submit form
-  const handleSubmit = async () => {
+  // Shared submit function used for publish + draft
+  const submitToServer = async (isDraft = false) => {
     const newErrors: { [key: string]: string } = {};
     if (!title) newErrors.title = "Title is required";
     if (!category) newErrors.category = "Category is required";
     if (!price) newErrors.price = "Price is required";
-    if (!image) newErrors.image = "Image is required";
+    // If publishing, image is required; drafts can be saved without image
+    if (!image && !isDraft) newErrors.image = "Image is required";
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -79,9 +73,8 @@ export default function CreateService() {
       formData.append("category", category);
       formData.append("priceType", priceType);
       formData.append("price", price);
-      if (image) {
-        formData.append("image", image);
-      }
+      formData.append("isDraft", isDraft ? "true" : "false");
+      if (image) formData.append("image", image);
 
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/services`,
@@ -92,7 +85,8 @@ export default function CreateService() {
       );
 
       if (res.ok) {
-        setPopup("Service Submitted Successfully ✅");
+        setPopup(isDraft ? "Draft saved ✅" : "Service submitted ✅");
+        // clear only if published; for draft you might keep fields — but user wanted same behavior earlier, I'll clear both
         setTitle("");
         setCategory("");
         setPrice("");
@@ -108,31 +102,39 @@ export default function CreateService() {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-amber-50 flex flex-col">
-      {/* Header with dropdowns */}
-      <header className="bg-gradient-to-r from-[#FFCC66] to-[#FF7E5F] shadow-md relative py-4 px-4">
-        <div className="max-w-5xl mx-auto flex items-center justify-between">
-          <h1 className="text-3xl font-bold text-amber-900">Create Service</h1>
+  const handleSubmit = async () => {
+    await submitToServer(false);
+  };
 
-          {/* Right side icons (profile + menu) */}
+  const handleSaveDraft = async () => {
+    await submitToServer(true);
+  };
+
+  return (
+    <div className="min-h-screen bg-[#FFF9F5] flex flex-col">
+      {/* Header */}
+      <header className="bg-[#5C4033] shadow-md relative py-4 px-4 border-b-4 border-[#EED9C4]">
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
+          <h1 className="text-3xl font-bold text-[#EED9C4] tracking-wide">
+            Create Service
+          </h1>
+
           <div className="flex items-center gap-4 relative">
             {/* Profile Icon */}
             <button
               onClick={toggleProfile}
-              className="p-2 rounded-full hover:bg-amber-300 transition"
+              className="p-2 rounded-full hover:bg-[#C4956A]/30 transition"
             >
-              <FiUser size={22} className="text-amber-900" />
+              <FiUser size={22} className="text-[#EED9C4]" />
             </button>
 
-            {/* Profile dropdown */}
             {showProfileMenu && (
-              <div className="absolute right-14 top-14 bg-gray-800 rounded-xl shadow-lg border w-48 z-50">
-                <ul className="text-sm divide-y">
+              <div className="absolute right-14 top-14 bg-[#FFF8F2] rounded-xl shadow-lg border border-[#EED9C4] w-48 z-50">
+                <ul className="text-sm divide-y divide-[#EED9C4]">
                   <li>
                     <Link
                       href="/handyAccount"
-                      className="block px-4 py-3 hover:bg-amber-100 transition"
+                      className="block px-4 py-3 hover:bg-[#EED9C4]/40 transition text-[#5C4033]"
                     >
                       View Account
                     </Link>
@@ -140,7 +142,7 @@ export default function CreateService() {
                   <li>
                     <button
                       onClick={handleLogout}
-                      className="w-full text-left px-4 py-3 text-red-500 hover:bg-red-50 transition"
+                      className="w-full text-left px-4 py-3 text-[#C4956A] hover:bg-[#EED9C4]/40 transition"
                     >
                       Logout
                     </button>
@@ -149,74 +151,35 @@ export default function CreateService() {
               </div>
             )}
 
-            {/* Menu button */}
+            {/* Menu Button */}
             <button
               onClick={toggleMenu}
-              className="p-2 rounded-md hover:bg-amber-300 bg-amber-400 text-amber-900 transition"
+              className="p-2 rounded-md hover:bg-[#EED9C4]/40 bg-[#C4956A] text-white transition"
             >
               {showMenu ? <X size={26} /> : <Menu size={26} />}
             </button>
 
-            {/* Hamburger dropdown */}
             {showMenu && (
-              <div className="absolute right-0 top-14 bg-gray-800 shadow-xl rounded-xl border w-56 text-sm z-50 overflow-hidden">
-                <ul className="divide-y">
-                  <li>
-                    <Link
-                      href="/create-service"
-                      className="block px-4 py-3 hover:bg-amber-100 transition"
-                    >
-                      Add Service
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/Add-profile"
-                      className="block px-4 py-3 hover:bg-amber-100 transition"
-                    >
-                      Add profile
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/handyAccount"
-                      className="block px-4 py-3 hover:bg-amber-100 transition"
-                    >
-                      My Account
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/order"
-                      className="block px-4 py-3 hover:bg-amber-100 transition"
-                    >
-                      Track Order
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/membership"
-                      className="block px-4 py-3 hover:bg-amber-100 transition"
-                    >
-                      Membership Plan
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/help"
-                      className="block px-4 py-3 hover:bg-amber-100 transition"
-                    >
-                      FAQ
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/settings"
-                      className="block px-4 py-3 hover:bg-amber-100 transition"
-                    >
-                      Account Settings
-                    </Link>
-                  </li>
+              <div className="absolute right-0 top-14 bg-[#FFF8F2] shadow-xl rounded-xl border border-[#EED9C4] w-56 text-sm z-50 overflow-hidden">
+                <ul className="divide-y divide-[#EED9C4] text-[#5C4033]">
+                  {[
+                    ["Add Service", "/create-service"],
+                    ["Add Profile", "/Add-profile"],
+                    ["My Account", "/handyAccount"],
+                    ["Track Order", "/order"],
+                    ["Membership Plan", "/membership"],
+                    ["FAQ", "/help"],
+                    ["Account Settings", "/settings"],
+                  ].map(([label, href]) => (
+                    <li key={href}>
+                      <Link
+                        href={href}
+                        className="block px-4 py-3 hover:bg-[#EED9C4]/50 transition"
+                      >
+                        {label}
+                      </Link>
+                    </li>
+                  ))}
                 </ul>
               </div>
             )}
@@ -224,57 +187,62 @@ export default function CreateService() {
         </div>
       </header>
 
-      {/* Main content area */}
-      <main className="flex-1 flex justify-center items-start py-10 px-4">
-        {/* Form card */}
-        <div className="w-full max-w-4xl bg-white rounded-xl shadow-lg p-10 space-y-8">
-          {/* Service Title */}
+      {/* Main Section (same design you provided) */}
+      <main className="flex-1 flex justify-center items-start py-14 px-4">
+        <div className="w-full max-w-4xl bg-white rounded-2xl shadow-xl p-12 space-y-10 border-t-4 border-[#EED9C4]">
+          {/* Title */}
           <div>
-            <label className="block mb-2 font-semibold text-neutral-800">
+            <label className="block mb-2 font-semibold text-[#5C4033]">
               Service Title
             </label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full rounded-lg p-4 border border-gray-300 bg-neutral-50 text-neutral-800 focus:outline-none focus:ring-2 focus:ring-amber-400 transition"
+              className="w-full rounded-xl p-4 border border-[#EED9C4] bg-[#FFF8F2] text-[#5C4033] focus:outline-none focus:ring-2 focus:ring-[#C4956A] transition"
               placeholder="Enter service title"
             />
             {errors.title && (
-              <p className="text-red-500 text-sm mt-1">{errors.title}</p>
+              <p className="text-[#C4956A] text-sm mt-1">{errors.title}</p>
             )}
           </div>
 
           {/* Category */}
           <div>
-            <label className="block mb-2 font-semibold text-neutral-800">
+            <label className="block mb-2 font-semibold text-[#5C4033]">
               Category
             </label>
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full rounded-lg p-4 border border-gray-300 bg-neutral-50 text-neutral-800 focus:outline-none focus:ring-2 focus:ring-amber-400 appearance-none pr-8 transition cursor-pointer"
+              className="w-full rounded-xl p-4 border border-[#EED9C4] bg-[#FFF8F2] text-[#5C4033] focus:outline-none focus:ring-2 focus:ring-[#C4956A] appearance-none pr-8 transition cursor-pointer"
             >
               <option value="">Select Category</option>
-              <option>Electrical Repair</option>
+              <option>Electrical</option>
               <option>Plumbing</option>
-              <option>HVAC</option>
               <option>Carpentry</option>
+              <option>Appliances</option>
+              <option>Painting & Finishing</option>
+              <option>Cleaning</option>
+              <option>Landscaping</option>
+              <option>Renovation</option>
+              <option>Roofing</option>
+              <option>General Repairs</option>
             </select>
             {errors.category && (
-              <p className="text-red-500 text-sm mt-1">{errors.category}</p>
+              <p className="text-[#C4956A] text-sm mt-1">{errors.category}</p>
             )}
           </div>
 
           {/* Image Upload */}
           <div>
-            <label className="block mb-2 font-semibold text-neutral-800">
-              Image
+            <label className="block mb-2 font-semibold text-[#5C4033]">
+              Upload Service Image
             </label>
             <div className="flex items-center gap-4">
-              <label className="flex-1 flex justify-between items-center px-4 py-3 border border-gray-300 rounded-lg bg-neutral-50 cursor-pointer hover:bg-gray-100 transition">
-                {image ? image.name : "No file chosen"}
-                <span className="ml-2 text-gray-500">▼</span>
+              <label className="flex-1 flex justify-between items-center px-4 py-3 border border-[#EED9C4] rounded-xl bg-[#FFF8F2] cursor-pointer hover:bg-[#FAF0E6] transition">
+                {image ? image.name : "Choose image file"}
+                <span className="ml-2 text-[#C4956A]">📁</span>
                 <input
                   type="file"
                   accept="image/*"
@@ -283,7 +251,7 @@ export default function CreateService() {
                 />
               </label>
               {imagePreview && (
-                <div className="w-24 h-24 relative border rounded-lg overflow-hidden shadow">
+                <div className="w-24 h-24 relative border border-[#EED9C4] rounded-xl overflow-hidden shadow">
                   <Image
                     src={imagePreview}
                     alt="Preview"
@@ -294,20 +262,20 @@ export default function CreateService() {
               )}
             </div>
             {errors.image && (
-              <p className="text-red-500 text-sm mt-1">{errors.image}</p>
+              <p className="text-[#C4956A] text-sm mt-1">{errors.image}</p>
             )}
           </div>
 
-          {/* Price */}
+          {/* Price Section */}
           <div>
-            <label className="block mb-2 font-semibold text-neutral-800">
+            <label className="block mb-2 font-semibold text-[#5C4033]">
               Price
             </label>
             <div className="flex gap-4">
               <select
                 value={priceType}
                 onChange={(e) => setPriceType(e.target.value)}
-                className="rounded-lg p-4 border border-gray-300 bg-neutral-50 text-neutral-800 focus:outline-none focus:ring-2 focus:ring-amber-400 transition cursor-pointer"
+                className="rounded-xl p-4 border border-[#EED9C4] bg-[#FFF8F2] text-[#5C4033] focus:outline-none focus:ring-2 focus:ring-[#C4956A] transition cursor-pointer"
               >
                 <option>Hourly</option>
                 <option>Fixed</option>
@@ -316,26 +284,26 @@ export default function CreateService() {
                 type="text"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
-                className="flex-1 rounded-lg p-4 border border-gray-300 bg-neutral-50 text-neutral-800 focus:outline-none focus:ring-2 focus:ring-amber-400 transition"
+                className="flex-1 rounded-xl p-4 border border-[#EED9C4] bg-[#FFF8F2] text-[#5C4033] focus:outline-none focus:ring-2 focus:ring-[#C4956A] transition"
                 placeholder="Enter price"
               />
             </div>
             {errors.price && (
-              <p className="text-red-500 text-sm mt-1">{errors.price}</p>
+              <p className="text-[#C4956A] text-sm mt-1">{errors.price}</p>
             )}
           </div>
 
           {/* Buttons */}
-          <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+          <div className="flex justify-end gap-4 pt-6 border-t border-[#EED9C4]/60">
             <button
-              onClick={() => setPopup("Draft Saved Successfully 📝")}
-              className="bg-amber-300 text-amber-900 px-5 py-2 rounded-lg hover:bg-amber-400 transition shadow"
+              onClick={handleSaveDraft}
+              className="bg-[#EED9C4] text-[#5C4033] px-6 py-3 rounded-xl hover:bg-[#E3C7A8] transition shadow font-medium"
             >
               Save Draft
             </button>
             <button
               onClick={handleSubmit}
-              className="bg-amber-500 text-white px-5 py-2 rounded-lg hover:bg-amber-600 transition shadow"
+              className="bg-[#C4956A] text-white px-6 py-3 rounded-xl hover:bg-[#B07E54] transition shadow font-medium"
             >
               Submit Now →
             </button>
@@ -345,12 +313,12 @@ export default function CreateService() {
 
       {/* Popup */}
       {popup && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-xl shadow text-center w-80 text-neutral-800">
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-[#FFF8F2] p-6 rounded-xl shadow text-center w-80 text-[#5C4033]">
             <h2 className="text-lg font-bold mb-4">{popup}</h2>
             <button
               onClick={() => setPopup(null)}
-              className="bg-amber-500 text-white px-4 py-2 rounded-lg hover:bg-amber-600 transition"
+              className="bg-[#C4956A] text-white px-4 py-2 rounded-lg hover:bg-[#B07E54] transition"
             >
               Close
             </button>
