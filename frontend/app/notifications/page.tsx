@@ -49,7 +49,7 @@ export default function NotificationBell({ user }: Props) {
   const fetchNotifications = async () => {
     try {
       const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/notifications`,
+        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"}/api/notifications`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
@@ -64,7 +64,7 @@ export default function NotificationBell({ user }: Props) {
   const markRead = async (id: string) => {
     try {
       await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/notifications/mark-read/${id}`,
+        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"}/api/notifications/mark-read/${id}`,
         {},
         { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
       );
