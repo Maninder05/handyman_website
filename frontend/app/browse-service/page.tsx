@@ -23,19 +23,19 @@ export default function BrowseServicesPage() {
   const handleLogout = () => router.push("/");
 
   const services = [
-    { name: "Wiring Repair", price: 55, category: "Electrical", image: "" },
-    { name: "Pipe Leakage Fix", price: 60, category: "Plumbing", image: "" },
-    { name: "Custom Furniture", price: 75, category: "Carpentry", image: "" },
-    { name: "Appliance Installation", price: 50, category: "Appliances", image: "" },
-    { name: "Wall Painting", price: 65, category: "Painting & Finishing", image: "" },
-    { name: "Deep Cleaning", price: 40, category: "Cleaning", image: "" },
-    { name: "Lawn Mowing", price: 45, category: "Landscaping", image: "" },
-    { name: "Flooring Installation", price: 80, category: "Renovation", image: "" },
-    { name: "Door & Lock Repair", price: 55, category: "Carpentry", image: "" },
-    { name: "Ceiling Fan Installation", price: 50, category: "Electrical", image: "" },
-    { name: "Roof Leak Repair", price: 85, category: "Roofing", image: "" },
-    { name: "Drywall & Plaster Fix", price: 70, category: "Renovation", image: "" },
-    { name: "Furniture Assembly", price: 45, category: "General Repairs", image: "" },
+    { name: "Wiring Repair", price: 55, category: "Electrical", image: "/images/wiringrepair.jpg" },
+    { name: "Pipe Leakage Fix", price: 60, category: "Plumbing", image: "/images/pipefix.webp" },
+    { name: "Custom Furniture", price: 75, category: "Carpentry", image: "/images/furniturefix.webp" },
+    { name: "Appliance Installation", price: 50, category: "Appliances", image: "/images/applianceinstall.jpg" },
+    { name: "Wall Painting", price: 65, category: "Painting & Finishing", image: "/images/wallpaint.avif" },
+    { name: "Deep Cleaning", price: 40, category: "Cleaning", image: "/images/deepclean.webp" },
+    { name: "Lawn Mowing", price: 45, category: "Landscaping", image: "/images/lawnmowing.jpeg" },
+    { name: "Flooring Installation", price: 80, category: "Renovation", image: "/images/floorinstall.jpg" },
+    { name: "Door & Lock Repair", price: 55, category: "Carpentry", image: "/images/fixdoorlock.jpg" },
+    { name: "Ceiling Fan Installation", price: 50, category: "Electrical", image: "/images/ceilingfan.jpg" },
+    { name: "Roof Leak Repair", price: 85, category: "Roofing", image: "/images/roofleakrepair.jpg" },
+    { name: "Drywall & Plaster Fix", price: 70, category: "Renovation", image: "/images/drywallrepair.jpg" },
+    { name: "Furniture Assembly", price: 45, category: "General Repairs", image: "/images/furnitureassemble.jpg" },
   ];
 
   return (
