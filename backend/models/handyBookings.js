@@ -1,34 +1,49 @@
+// handyBookings.js
 import mongoose from "mongoose";
 
-const handyBookingSchema = new mongoose.Schema(
-  {
-    customerId: { type: mongoose.Types.ObjectId, required: true },
-    proId: { type: mongoose.Types.ObjectId, required: true },
-    proStripeAccountId: { type: String, required: true },
+const bookingSchema = new mongoose.Schema({
+  bookingID: { type: String, index: true },                // optional human id
+  customerId: { type: String, required: true },
+  proId: { type: String, required: true },
+  proStripeAccountId: { type: String, required: true },    // acct_...
+  title: String,
+  description: String,
+  scheduledAt: Date,
 
-    title: String,
-    description: String,
-    scheduledAt: Date,
+  // money (in cents)
+  subtotalAmount: { type: Number, required: true },
+  taxAmount: { type: Number, required: true },
+  platformFeeAmount: { type: Number, required: true },
+  totalAmount: { type: Number, required: true }, // subtotal + tax
 
-    subtotalAmount: { type: Number, required: true },
-    taxAmount: { type: Number, required: true },
-    platformFeeAmount: { type: Number, default: 0 },
-    totalAmount: { type: Number, required: true },
+  currency: { type: String, default: "cad" },
 
-    stripeCustomerId: String,
-    paymentIntentId: String,
-    clientSecret: String,
-    chargeSucceededAt: Date,
-    transferId: String,
+  // stripe
+  stripeCustomerId: String,
+  paymentIntentId: String,
+  clientSecret: String,
 
-    status: {
-      type: String,
-      enum: ["PENDING", "ACCEPTED", "COMPLETED", "PAID_OUT"],
-      default: "PENDING"
-    }
+  // lifecycle
+  status: {
+    type: String,
+    enum: [
+      "await_approval",
+      "accepted",
+      "authorized",           // hold placed
+      "in_progress",
+      "done_by_handyman",
+      "await_client_confirm",
+      "captured",             // charge finalized
+      "paid_out",
+      "completed",
+      "declined",
+      "canceled",
+      "authorization_expired"
+    ],
+    default: "await_approval"
   },
-  { timestamps: true, collection: "handyBookings" }
-);
+  expiresAt: Date,           // 24h accept window
+  transferId: String         // (if you use transfers path)
+}, { timestamps: true });
 
-const HandyBooking = mongoose.model("HandyBooking", handyBookingSchema);
-export default HandyBooking;
+export default mongoose.model("HandyBooking", bookingSchema);

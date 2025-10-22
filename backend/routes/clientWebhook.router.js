@@ -1,18 +1,9 @@
-// for client-to-handyman job payments
 import express from "express";
 import { handleClientStripeWebhook } from "../controllers/clientWebhook.controller.js";
 
 const router = express.Router();
 
-// Stripe requires raw body to verify the signature
-router.post(
-  "/",
-  express.raw({ type: "application/json" }),
-  (req, _res, next) => {
-    req.rawBody = req.body; // ✅ this line is required for verifyStripeEvent()
-    next();
-  },
-  handleClientStripeWebhook
-);
+// Stripe will POST here; req.body is a Buffer because index.js mounted express.raw()
+router.post("/", handleClientStripeWebhook);
 
 export default router;

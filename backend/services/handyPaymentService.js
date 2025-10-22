@@ -1,17 +1,18 @@
-const stripe = require('./stripe.client');
-const HandyBooking = require('../models/handyBookings');
+// handyPaymentService.js (ESM)
+import Stripe from "stripe";
+import HandyBooking from "../models/handyBookings.js";
 
-const currency = process.env.CURRENCY || 'cad';
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const currency = process.env.CURRENCY || "cad";
 const gstBps = Number(process.env.GST_RATE_BPS || 500) / 10000;           // 5%
 const platformFeeBps = Number(process.env.PLATFORM_FEE_BPS || 1200) / 10000; // 12%
 
 const calcTax = (n) => Math.round(n * gstBps);
 const calcPlatformFee = (n) => Math.round(n * platformFeeBps);
 
-/**
- * Create booking + immediate charge (escrow-style).
- */
-async function createBooking({
+/** 1) Create the order (no charge yet) */
+export async function createOrder({
+  bookingID,
   customerEmail,
   customerId,
   proId,
@@ -21,8 +22,8 @@ async function createBooking({
   scheduledAt,
   subtotalAmount
 }) {
-  if (!subtotalAmount || subtotalAmount <= 0) throw new Error('subtotalAmount must be > 0');
-  if (!proStripeAccountId) throw new Error('proStripeAccountId is required');
+  if (!subtotalAmount || subtotalAmount <= 0) throw new Error("subtotalAmount must be > 0");
+  if (!proStripeAccountId) throw new Error("proStripeAccountId is required");
 
   const taxAmount = calcTax(subtotalAmount);
   const platformFeeAmount = calcPlatformFee(subtotalAmount);
@@ -33,20 +34,10 @@ async function createBooking({
     metadata: { appCustomerId: String(customerId) }
   });
 
-  const paymentIntent = await stripe.paymentIntents.create({
-    amount: totalAmount,
-    currency,
-    description: `Handyman booking: ${title || 'Service'}`,
-    customer: stripeCustomer.id,
-    automatic_payment_methods: { enabled: true },
-    capture_method: 'automatic',
-    metadata: {
-      proStripeAccountId,
-      proId: String(proId)
-    }
-  });
+  const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24h
 
   const booking = await HandyBooking.create({
+    bookingID,
     customerId,
     proId,
     proStripeAccountId,
@@ -57,38 +48,94 @@ async function createBooking({
     taxAmount,
     platformFeeAmount,
     totalAmount,
+    currency,
     stripeCustomerId: stripeCustomer.id,
-    paymentIntentId: paymentIntent.id,
-    clientSecret: paymentIntent.client_secret
+    status: "await_approval",
+    expiresAt
   });
 
-  return { bookingId: booking._id, clientSecret: paymentIntent.client_secret, currency };
+  return booking;
 }
 
-/**
- * Transfer payout to the handyman (net of your platform fee).
- */
-async function completeAndPayout(bookingId) {
-  const booking = await HandyBooking.findById(bookingId).lean();
-  if (!booking) throw new Error('Booking not found');
-  if (booking.transferId) return booking; // already paid
+/** 2) Handyman accepts → create a manual-capture PI (bank HOLD) and return clientSecret */
+export async function acceptOrderAndCreateAuthPI(bookingMongoId) {
+  const b = await HandyBooking.findById(bookingMongoId);
+  if (!b) throw new Error("Booking not found");
 
-  const netToPro = Math.max(booking.totalAmount - booking.platformFeeAmount, 0);
+  // prevent accept after expiry
+  if (b.status === "await_approval" && b.expiresAt && b.expiresAt < new Date()) {
+    b.status = "declined";
+    await b.save();
+    throw new Error("Offer expired (auto-declined after 24h).");
+  }
 
-  const transfer = await stripe.transfers.create({
-    amount: netToPro,
-    currency,
-    destination: booking.proStripeAccountId,
-    description: `Payout for booking ${bookingId}`
+  // already accepted / has PI?
+  if (b.paymentIntentId) return { clientSecret: b.clientSecret, booking: b };
+
+  const pi = await stripe.paymentIntents.create({
+    amount: b.totalAmount,
+    currency: b.currency,
+    capture_method: "manual",                        // 👈 AUTH now, CAPTURE later
+    automatic_payment_methods: { enabled: true, allow_redirects: "never" },
+    customer: b.stripeCustomerId,
+    description: `Handyman booking: ${b.title || "Service"}`,
+    // Destination charge: funds routed to handyman when captured; app fee withheld
+    transfer_data: { destination: b.proStripeAccountId },
+    application_fee_amount: b.platformFeeAmount,
+    on_behalf_of: b.proStripeAccountId,
+    metadata: { bookingID: b.bookingID || String(b._id) }
   });
 
-  const updated = await HandyBooking.findByIdAndUpdate(
-    bookingId,
-    { status: 'PAID_OUT', transferId: transfer.id },
+  b.paymentIntentId = pi.id;
+  b.clientSecret = pi.client_secret;
+  b.status = "accepted";
+  await b.save();
+
+  return { clientSecret: pi.client_secret, booking: b };
+}
+
+/** 3) Optional: mark work started */
+export async function markInProgress(bookingMongoId) {
+  const b = await HandyBooking.findByIdAndUpdate(
+    bookingMongoId,
+    { status: "in_progress" },
     { new: true }
   );
-
-  return updated;
+  if (!b) throw new Error("Booking not found");
+  return b;
 }
 
-module.exports = { createBooking, completeAndPayout };
+/** 4) Handyman marks done → wait client confirm */
+export async function markDoneByHandyman(bookingMongoId) {
+  const b = await HandyBooking.findByIdAndUpdate(
+    bookingMongoId,
+    { status: "await_client_confirm" },
+    { new: true }
+  );
+  if (!b) throw new Error("Booking not found");
+  return b;
+}
+
+/** 5) Client confirms → capture (finalize) the charge */
+export async function capturePayment(bookingMongoId) {
+  const b = await HandyBooking.findById(bookingMongoId);
+  if (!b) throw new Error("Booking not found");
+  if (!b.paymentIntentId) throw new Error("No PaymentIntent on this booking");
+
+  const captured = await stripe.paymentIntents.capture(b.paymentIntentId);
+  b.status = "captured"; // webhook will flip to paid_out/completed
+  await b.save();
+  return captured;
+}
+
+/** Utility: auto-decline if 24h passed */
+export async function autoDeclineExpired(bookingMongoId) {
+  const b = await HandyBooking.findById(bookingMongoId);
+  if (!b) return null;
+  if (b.status !== "await_approval") return b;
+  if (b.expiresAt && b.expiresAt < new Date()) {
+    b.status = "declined";
+    await b.save();
+  }
+  return b;
+}

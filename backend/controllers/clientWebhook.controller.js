@@ -1,39 +1,74 @@
 // backend/controllers/clientWebhook.controller.js
-import { stripe, verifyStripeEvent } from "../services/stripe.client.js";
-import HandyBooking from "../models/handyBookings.js";
+import 'dotenv/config';                  // ensure env is loaded in this module too
+import Stripe from 'stripe';
+import HandyBooking from '../models/handyBookings.js';
 
-// ✅ Named export (matches your import)
-export const handleClientStripeWebhook = async (req, res) => {
+// Lazy init so we don't construct Stripe until env is available
+let _stripe = null;
+function getStripe() {
+  if (_stripe) return _stripe;
+  const key = process.env.STRIPE_SECRET_KEY;
+  if (!key) {
+    throw new Error('STRIPE_SECRET_KEY is missing. Add it to your .env file.');
+  }
+  _stripe = new Stripe(key);
+  return _stripe;
+}
+
+/**
+ * Webhook for client→handyman payments.
+ * IMPORTANT: route must be mounted with express.raw({ type: "application/json" }).
+ */
+export async function handleClientStripeWebhook(req, res) {
+  const stripe = getStripe(); // <-- create/read Stripe here
+
+  const sig = req.headers['stripe-signature'];
   let event;
+
   try {
-    // ✅ Use your existing helper to verify the event signature
-    event = verifyStripeEvent(req);
+    event = stripe.webhooks.constructEvent(
+      req.body, // raw Buffer from express.raw
+      sig,
+      process.env.STRIPE_WEBHOOK_SECRET_CLIENT
+    );
   } catch (err) {
-    console.error("[Stripe Client Webhook] Invalid signature:", err.message);
+    console.error('[WEBHOOK] Verify failed:', err.message);
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
   try {
-    if (event.type === "payment_intent.succeeded") {
+    if (event.type === 'payment_intent.amount_capturable_updated') {
       const pi = event.data.object;
-
-      // ✅ Find the booking by paymentIntentId
-      const booking = await HandyBooking.findOne({ paymentIntentId: pi.id });
-
-      if (booking && !booking.chargeSucceededAt) {
-        await HandyBooking.findByIdAndUpdate(booking._id, {
-          chargeSucceededAt: new Date(),
-          status: "COMPLETED",
-        });
-
-        console.log(`✅ Booking ${booking._id} marked as COMPLETED`);
-      }
+      await HandyBooking.findOneAndUpdate(
+        { paymentIntentId: pi.id },
+        { status: 'authorized' },
+        { new: true }
+      );
+      console.log('[WEBHOOK] AUTHORIZED:', pi.id);
     }
 
-    // ✅ Respond to Stripe that we received the event
-    res.json({ received: true });
-  } catch (error) {
-    console.error("[Stripe Client Webhook] Handler error:", error);
-    res.status(500).json({ error: "Webhook handler error" });
+    if (event.type === 'payment_intent.succeeded') {
+      const pi = event.data.object;
+      await HandyBooking.findOneAndUpdate(
+        { paymentIntentId: pi.id },
+        { status: 'paid_out' },
+        { new: true }
+      );
+      console.log('[WEBHOOK] SUCCEEDED:', pi.id);
+    }
+
+    if (event.type === 'payment_intent.canceled') {
+      const pi = event.data.object;
+      await HandyBooking.findOneAndUpdate(
+        { paymentIntentId: pi.id },
+        { status: 'authorization_expired' },
+        { new: true }
+      );
+      console.log('[WEBHOOK] CANCELED:', pi.id);
+    }
+  } catch (err) {
+    console.error('[WEBHOOK] Handler error:', err);
   }
-};
+
+  res.json({ received: true });
+}
