@@ -2,7 +2,8 @@ import jwt from "jsonwebtoken";
 import User from "../models/ModelUser.js";
 
 const JWT_SECRET = process.env.JWT_SECRET || "mysecret";
-const SESSION_TTL_MS = 15 * 60 * 1000; // 15 minutes
+//const SESSION_TTL_MS = 15 * 60 * 1000; // 15 minutes
+const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 
 export default async function authSession(req, res, next) {
   try {
@@ -23,7 +24,7 @@ export default async function authSession(req, res, next) {
     const user = await User.findById(payload.id);
     if (!user) return res.status(401).json({ message: "User not found" });
 
-    // verify session token matches
+    // verify session token  if it matches
     if (!user.sessionToken || user.sessionToken !== payload.sessionToken) {
       return res.status(401).json({ message: "Session invalid" });
     }

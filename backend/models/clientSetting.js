@@ -6,7 +6,8 @@ const ClientSettingSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
-      trim: true
+      trim: true,
+      lowercase: true
     },
     theme: {
       type: String,
@@ -65,8 +66,22 @@ const ClientSettingSchema = new mongoose.Schema(
       }
     }
   },
-  { timestamps: true }
+  { 
+    timestamps: true,
+    collection: 'clientsettings'
+  }
 );
+
+// Add index for faster lookups
+ClientSettingSchema.index({ email: 1 });
+
+// Pre-save hook to ensure email is lowercase
+ClientSettingSchema.pre('save', function(next) {
+  if (this.email) {
+    this.email = this.email.toLowerCase();
+  }
+  next();
+});
 
 const ClientSetting = mongoose.models.ClientSetting || mongoose.model('ClientSetting', ClientSettingSchema);
 
