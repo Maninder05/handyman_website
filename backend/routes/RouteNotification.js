@@ -1,10 +1,12 @@
-const express = require('express');
+import express from 'express';
+import { getNotifications, markAsRead, markAllRead } from '../controllers/ControllerNotification.js';
+import auth from '../middleware/auth.js';
+
 const router = express.Router();
-const { getNotifications, markAsRead, markAllRead } = require('../controllers/ControllerNotification');
-const auth = require('../middleware/auth'); // put your auth middleware
 
-router.get('/', auth, getNotifications);
-router.post('/mark-read/:id', auth, markAsRead);
-router.post('/mark-all-read', auth, markAllRead);
+// router.get('/', auth, getNotifications);
+router.get('/', getNotifications);
+router.post('/mark-read/:id', markAsRead);
+router.post('/mark-all-read', markAllRead);
 
-module.exports = router;
+export default router;
