@@ -44,13 +44,18 @@ export const signup = async (req, res) => {
 
     await newUser.save();
 
-    // create JWT (short-lived)
-    const token = jwt.sign({ id: newUser._id, sessionToken }, JWT_SECRET, { expiresIn: "15m" });
+    // create JWT (short-lived) 
+    const token = jwt.sign({ 
+      id: newUser._id, 
+      email: newUser.email, 
+      sessionToken 
+    }, JWT_SECRET, { expiresIn: "15m" });
 
     res.status(201).json({
       message: "Signup successful",
       user: sanitizeUser(newUser),
       token,
+      userType: newUser.userType, // ✅ ADDED: Send userType at top level
     });
   } catch (err) {
     res.status(500).json({ message: "Server error: " + err.message });
@@ -82,12 +87,17 @@ export const login = async (req, res) => {
     await user.save();
 
     // create JWT token (short-lived)
-    const token = jwt.sign({ id: user._id, sessionToken }, JWT_SECRET, { expiresIn: "15m" });
+    const token = jwt.sign({ 
+      id: user._id, 
+      email: user.email, 
+      sessionToken 
+    }, JWT_SECRET, { expiresIn: "15m" });
 
     res.json({
       message: "Login successful",
       token,
       user: sanitizeUser(user),
+      userType: user.userType, // ✅ ADDED: Send userType at top level
     });
   } catch (err) {
     res.status(500).json({ message: "Server error: " + err.message });
