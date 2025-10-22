@@ -16,7 +16,7 @@ import './config/passport.js';
 import RouterUser from './routes/RouteUser.js';
 import RouterHandyman from './routes/handyRoutesAddProfile.js';
 import RouterService from './routes/CreateServiceRoutes.js';
-import RouterNotification from './routes/RouteNotification.js'; // ✅ NEW
+import RouterNotification from './routes/RouteNotification.js'; 
 
 dotenv.config();
 
@@ -42,17 +42,17 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use('/api/users', RouterUser);
 app.use('/api/handymen', RouterHandyman);
 app.use('/api/services', RouterService);
-app.use('/api/notifications', RouterNotification); // ✅ Notification routes
+app.use('/api/notifications', RouterNotification); 
 
 // Default test route
 app.get('/', (req, res) => {
   res.send('Backend is running!');
 });
 
-// ✅ Create HTTP server for Socket.io
+// Create HTTP server for Socket.io
 const server = http.createServer(app);
 
-// ✅ Setup Socket.io
+// Setup Socket.io
 const io = new Server(server, {
   cors: {
     origin: process.env.CLIENT_URL,
@@ -61,9 +61,9 @@ const io = new Server(server, {
   },
 });
 
-// ✅ Socket.io logic (real-time notifications)
+// Socket.io logic (real-time notifications)
 io.on("connection", (socket) => {
-  console.log("🟢 User connected:", socket.id);
+  console.log("User connected:", socket.id);
 
   // Join a specific room (like userId or handymanId)
   socket.on("joinRoom", (userId) => {
@@ -74,11 +74,11 @@ io.on("connection", (socket) => {
   // Send notification to a user
   socket.on("sendNotification", ({ receiverId, notification }) => {
     io.to(receiverId).emit("receiveNotification", notification);
-    console.log("🔔 Notification sent to", receiverId);
+    console.log("Notification sent to", receiverId);
   });
 
   socket.on("disconnect", () => {
-    console.log("🔴 User disconnected:", socket.id);
+    console.log(" User disconnected:", socket.id);
   });
 });
 
@@ -89,10 +89,10 @@ mongoose.connect(process.env.MONGO_URL, {
 }).then(() => {
   console.log('✅ Connected to MongoDB successfully!');
   server.listen(PORT, () => {
-    console.log(`🚀 Server is running on port ${PORT}`);
+    console.log(` Server is running on port ${PORT}`);
   });
 }).catch((err) => {
-  console.error('❌ Database connection error:', err);
+  console.error('Database connection error:', err);
 });
 
 // Optional: global error handler
