@@ -77,6 +77,6 @@ mongoose.connect(process.env.MONGO_URL, { dbName: "handyman_db" })
 
 // Global error handler
 app.use((err, req, res, next) => {
-  console.error("🔥 Unhandled error:", err);
+  console.error(" Unhandled error:", err);
   res.status(500).json({ error: "Something went wrong!" });
 });
