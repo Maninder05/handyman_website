@@ -24,7 +24,6 @@ export default function BookHandymanPage() {
 
   return (
     <main className="bg-[#F8F8F8] min-h-screen text-[#5C4033] flex flex-col">
-      {/* ================= HEADER ================= */}
       <section className="bg-[#5C4033] pb-6 text-center shadow-md border-b-4 border-[#EED9C4]">
         <h1 className="text-3xl font-bold text-[#EED9C4] pt-6 mb-4">
           Book Handyman
@@ -47,7 +46,6 @@ export default function BookHandymanPage() {
         </div>
       </section>
 
-      {/* ================= HANDYMAN INFO ================= */}
       <section className="px-4 py-8 max-w-4xl mx-auto text-center">
         <div className="flex flex-col items-center gap-4">
           <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-[#C4956A]">
@@ -58,7 +56,6 @@ export default function BookHandymanPage() {
         </div>
       </section>
 
-      {/* ================= SERVICES LIST ================= */}
       <section className="px-4 py-8 max-w-5xl mx-auto">
         <h3 className="text-xl font-semibold mb-4 text-[#C4956A]">Available Services</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
