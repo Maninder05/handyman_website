@@ -11,7 +11,7 @@ export const getSettings = async (req, res) => {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    // Use findOneAndUpdate with upsert to avoid duplicate key errors
+    // Use findOne And Update with upsert to avoid duplicate key errors
     const settings = await ClientSetting.findOneAndUpdate(
       { email },
       { 
@@ -61,12 +61,14 @@ export const updateDisplay = async (req, res) => {
       { new: true, upsert: true, runValidators: true }
     );
 
+    console.log(` Display settings updated for ${email}:`, { theme, language, timezone });
+
     res.status(200).json({
       message: "Display settings updated successfully",
       settings: updatedSettings
     });
   } catch (err) {
-    console.error("Error updating display settings:", err);
+    console.error(" Error updating display settings:", err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
@@ -87,12 +89,14 @@ export const updatePrivacy = async (req, res) => {
       { new: true, upsert: true }
     );
 
+    console.log(` Privacy settings updated for ${email}`);
+
     res.status(200).json({
       message: "Privacy settings updated successfully",
       settings: updatedSettings
     });
   } catch (err) {
-    console.error("Error updating privacy:", err);
+    console.error(" Error updating privacy:", err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
@@ -112,6 +116,8 @@ export const toggle2FA = async (req, res) => {
       { twoFactorEnabled: enabled },
       { new: true, upsert: true }
     );
+
+    console.log(`2FA ${enabled ? 'enabled' : 'disabled'} for ${email}`);
 
     res.status(200).json({
       message: `2FA ${enabled ? "enabled" : "disabled"} successfully`,
@@ -139,12 +145,14 @@ export const updateNotifications = async (req, res) => {
       { new: true, upsert: true }
     );
 
+    console.log(` Notifications updated for ${email}`);
+
     res.status(200).json({
       message: "Notification settings updated successfully",
       settings: updatedSettings
     });
   } catch (err) {
-    console.error("Error updating notifications:", err);
+    console.error(" Error updating notifications:", err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
@@ -178,9 +186,11 @@ export const changePassword = async (req, res) => {
     client.password = hashedPassword;
     await client.save();
 
+    console.log(` Password changed for ${email}`);
+
     res.status(200).json({ message: "Password changed successfully" });
   } catch (err) {
-    console.error("Error changing password:", err);
+    console.error(" Error changing password:", err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
@@ -200,9 +210,11 @@ export const deleteAccount = async (req, res) => {
     // Delete client settings
     await ClientSetting.findOneAndDelete({ email });
 
+    console.log(` Account deleted for ${email}`);
+
     res.status(200).json({ message: "Account deleted successfully" });
   } catch (err) {
-    console.error("Error deleting account:", err);
+    console.error(" Error deleting account:", err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };

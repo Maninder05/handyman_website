@@ -24,7 +24,7 @@ export default async function authSession(req, res, next) {
     const user = await User.findById(payload.id);
     if (!user) return res.status(401).json({ message: "User not found" });
 
-    // verify session token matches
+    // verify session token  if it matches
     if (!user.sessionToken || user.sessionToken !== payload.sessionToken) {
       return res.status(401).json({ message: "Session invalid" });
     }

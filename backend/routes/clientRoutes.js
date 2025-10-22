@@ -7,10 +7,10 @@ const router = express.Router();
 // Get logged-in client's profile
 router.get('/me', jwtAuthWithNext, getMyProfile);
 
-// Create client profile
+// Create client profile explicitly
 router.post('/', jwtAuthWithNext, createProfile);
 
-// Update client profile (both paths for compatibility)
+// Update client profile
 router.put('/', jwtAuthWithNext, updateProfile);
 router.put('/update', jwtAuthWithNext, updateProfile);
 
