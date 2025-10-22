@@ -1,4 +1,5 @@
-// backend/routes/webhook.router.js
+//for membership subscriptions
+
 import express from "express";
 import { handleStripeWebhook } from "../controllers/webhook.controller.js";
 
