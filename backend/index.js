@@ -6,77 +6,97 @@ import path from "path";
 import { fileURLToPath } from "url";
 import cookieParser from 'cookie-parser';
 import passport from 'passport';
+import http from "http";
+import { Server } from "socket.io";
 
-// Register passport strategies
+// register passport strategies
 import './config/passport.js';
 
-// Routers
+// Routes
 import RouterUser from './routes/RouteUser.js';
 import RouterHandyman from './routes/handyRoutesAddProfile.js';
 import RouterService from './routes/CreateServiceRoutes.js';
-import subscriptionRouter from "./routes/subscription.routes.js";
-import webhookRouter from "./routes/webhook.router.js";
-import paypalRouter from "./routes/paypal.routes.js";
-import clientRoutes from './routes/clientRoutes.js';
-import jobRoutes from './routes/jobRoutes.js';
-import settingRoutes from './routes/settingRoutes.js'; 
-
-import Subscription from "./models/subscription.model.js";
+import RouterNotification from './routes/RouteNotification.js'; 
 
 dotenv.config();
-const app = express();
-const PORT = process.env.PORT || 8000;
 
-// Middleware - CORS
-app.use(cors({ origin: process.env.CLIENT_URL || "http://localhost:3000", credentials: true }));
-app.use(express.json({ limit: "10mb" }));
-app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+const app = express();
+const PORT = process.env.PORT || 7000;
+
+// Middleware
+app.use(cors({
+  origin: process.env.CLIENT_URL,
+  credentials: true,
+}));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(passport.initialize());
 
-// Health check
-app.get('/', (req, res) => res.send('Backend is running!'));
-
-// Static uploads folder
+// Serve uploaded images
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// Stripe webhook raw parser (MUST be before other routes)
-app.post(
-  "/api/webhooks/stripe",
-  express.raw({ type: "application/json" }),
-  (req, _res, next) => {
-    req.rawBody = req.body;
-    next();
-  },
-  webhookRouter
-);
-
 // Routes
-app.use("/api/users", RouterUser);
-app.use("/api/handymen", RouterHandyman);
-app.use("/api/services", RouterService);
-app.use("/api/subscriptions", subscriptionRouter);
-app.use("/api/paypal", paypalRouter);
-app.use(jobRoutes); // Job routes - uses /api/jobs prefix
-app.use('/api/clients', clientRoutes);
-app.use('/api/settings', settingRoutes); // 
+app.use('/api/users', RouterUser);
+app.use('/api/handymen', RouterHandyman);
+app.use('/api/services', RouterService);
+app.use('/api/notifications', RouterNotification); 
 
-// MongoDB connection
-mongoose.connect(process.env.MONGO_URL, { dbName: "handyman_db" })
-  .then(() => {
-    console.log("Connected to MongoDB: handyman_db");
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-    Subscription.syncIndexes().then(() => console.log("[mongo] Subscription indexes synced"));
-  })
-  .catch(err => {
-    console.error("Database connection error:", err.message);
-    process.exit(1);
+// Default test route
+app.get('/', (req, res) => {
+  res.send('Backend is running!');
+});
+
+// Create HTTP server for Socket.io
+const server = http.createServer(app);
+
+// Setup Socket.io
+const io = new Server(server, {
+  cors: {
+    origin: process.env.CLIENT_URL,
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
+});
+
+// Socket.io logic (real-time notifications)
+io.on("connection", (socket) => {
+  console.log("User connected:", socket.id);
+
+  // Join a specific room (like userId or handymanId)
+  socket.on("joinRoom", (userId) => {
+    socket.join(userId);
+    console.log(`User ${userId} joined their room`);
   });
 
-// Global error handler
+  // Send notification to a user
+  socket.on("sendNotification", ({ receiverId, notification }) => {
+    io.to(receiverId).emit("receiveNotification", notification);
+    console.log("Notification sent to", receiverId);
+  });
+
+  socket.on("disconnect", () => {
+    console.log(" User disconnected:", socket.id);
+  });
+});
+
+// Connect to MongoDB and start server
+mongoose.connect(process.env.MONGO_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+}).then(() => {
+  console.log('Connected to MongoDB successfully!');
+  server.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+}).catch((err) => {
+  console.error('Database connection error:', err);
+});
+
+// Optional: global error handler
 app.use((err, req, res, next) => {
-  console.error(" Unhandled error:", err);
-  res.status(500).json({ error: "Something went wrong!" });
+  console.error('Unhandled error:', err);
+  res.status(500).json({ error: 'Something went wrong!' });
 });
