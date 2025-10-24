@@ -1,18 +1,42 @@
-// models/Handyman.js
+// models/ModelHandyFilter.js
 import mongoose from "mongoose";
 
-const HandySchema = new mongoose.Schema({
-  name: { type: String, trim: true },
-  email: { type: String, required: true, unique: true, lowercase: true, trim: true },
-  password: { type: String, required: true }, // hashed
-  age: { type: Number },
-  experience: { type: Number }, // years
-  hourlyRate: { type: Number, default: 0 },
-  distanceRadiusKm: { type: Number, default: 10 },
-  skills: [{ type: String }], // array of skill names
-  attributes: { type: mongoose.Schema.Types.Mixed }, // flexible object for extra attributes
-  createdAt: { type: Date, default: Date.now },
-});
+const addressSchema = new mongoose.Schema(
+  {
+    address1: { type: String },
+    city: { type: String },
+    province: { type: String },
+  },
+  { _id: false }
+);
 
-const Handyman = mongoose.models.Handyman || mongoose.model("Handyman", HandySchema);
+const handyFilterSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true },
+    email: { type: String, required: true, unique: true, lowercase: true },
+    password: { type: String, required: true },
+    age: { type: Number },
+    experience: { type: Number },
+    skills: [{ type: String }],
+    hourlyRate: { type: Number },
+    distanceRadiusKm: { type: Number },
+    address: addressSchema,
+    available: { type: Boolean, default: true },
+    attributes: {
+      languages: [String],
+      certifications: [String],
+      bio: String,
+      updatedAt: String,
+    },
+  },
+  {
+    timestamps: true,
+    collection: "handyfilters",
+  }
+);
+
+// Prevent model recompilation error
+const Handyman =
+  mongoose.models.Handyman || mongoose.model("Handyman", handyFilterSchema);
+
 export default Handyman;

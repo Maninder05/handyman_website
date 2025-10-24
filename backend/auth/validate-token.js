@@ -1,51 +1,44 @@
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
+const { getJwtSecret } = require("../config/jwt.js");
 
 const jwtAuthWithNext = (req, resp, next) => {
+  const full_token =
+    req.headers["authorization"] || req.headers["Authorization"];
 
-    const full_token = req.headers['authorization'];  
-    console.log(full_token);
+  if (!full_token) {
+    return resp
+      .status(401)
+      .json({ status: false, message: "No token provided" });
+  }
 
-    // 🧩 ADDED: check if token is missing
-    if (!full_token) {
-        resp.json({ status: false, message: "No token provided" });
-        return;
+  const parts = full_token.split(" ");
+  const actualToken = parts.length === 1 ? parts[0] : parts[1];
+
+  if (!actualToken) {
+    return resp
+      .status(401)
+      .json({ status: false, message: "Invalid token format" });
+  }
+
+  try {
+    const secret = getJwtSecret();
+    const decoded = jwt.verify(actualToken, secret);
+
+    // store user info on req.user
+    req.user = decoded;
+
+    // If old code expects req.query.item, try to set if payload matches
+    if (decoded?.result?.emailid)
+      (req.query = req.query || {}), (req.query.item = decoded.result.emailid);
+
+    next();
+  } catch (err) {
+    console.log("[JWT Verification Error]:", err.message);
+    if (err.name === "TokenExpiredError") {
+      return resp.status(401).json({ status: false, message: "Token expired" });
     }
-
-    var ary = full_token.split(" ");             
-    let actualToken = ary[1];
-    console.log('*****************************************')
-    console.log(actualToken);
-
-    //Try catch is only used when you expect an exception to occur and need to handle it in a specified way
-    let isTokenValid;                                                                
-    try {
-        isTokenValid = jwt.verify(actualToken, process.env.SEC_KEY);
-    }
-    catch (err) {
-        console.log("[JWT Verification Error]:", err.message);
-
-        //  handle expired token separately
-        if (err.name === "TokenExpiredError") {
-            resp.json({ status: false, message: "Token expired" });
-            return;
-        }
-
-        resp.json({ status: false, message: "Unauthorized User" });            //this message will only be executed if token gets expired/invalidated
-        return;
-    }
-
-    if (isTokenValid) {
-
-        console.log("********************************************");
-        const obj = jwt.decode(ary[1]);
-        console.log(obj);
-
-        //  store user info on req.user (modern convention)
-        req.user = obj;
-
-        req.query.item = obj.result.emailid;
-        next();                                                          //If token gets validated, control will go to fetchOneProfile API(i.e. next middleware fxn) using next()                           
-    }
-}
+    return resp.status(401).json({ status: false, message: "Invalid token" });
+  }
+};
 
 module.exports = jwtAuthWithNext;
