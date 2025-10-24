@@ -1,3 +1,4 @@
+// claudia ai how can i get my frontend and backend worked with all this data ...
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
