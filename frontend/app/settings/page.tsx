@@ -55,7 +55,7 @@ export default function SettingsPage() {
           return;
         }
 
-        const res = await fetch("http://localhost:8000/api/clients/me", {
+        const res = await fetch("http://localhost:7000/api/clients/me", {
           headers: { Authorization: `Bearer ${token}` }
         });
         
