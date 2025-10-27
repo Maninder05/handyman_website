@@ -1,14 +1,7 @@
 import HandyProfile from "../models/HandyAddProfile.js";
 import bcrypt from "bcryptjs";
 
-// Import Job and Review models for fetching counts (Boss requirement)
-// You'll need to create these or I'll create them next
-// import Job from "../models/Job.js";
-// import Review from "../models/Review.js";
 
-// ==========================================
-// GET HANDYMAN PROFILE WITH STATS (Boss requirement)
-// ==========================================
 export const getMyProfile = async (req, res) => {
   try {
     // Get email from the decoded JWT token that middleware attached to req.user
@@ -27,57 +20,6 @@ export const getMyProfile = async (req, res) => {
       return res.status(404).json({ message: "Profile not found" });
     }
 
-    // ==========================================
-    // FETCH COUNTS FROM OTHER MODELS (Boss requirement)
-    // These counts should NOT be stored in the profile
-    // They should be fetched from Jobs and Reviews models
-    // ==========================================
-    
-    // TODO: Uncomment when you have Job and Review models
-    /*
-    const handymanId = profile._id;
-    
-    // 1. Active Orders Count (jobs with status = 'pending')
-    const activeOrdersCount = await Job.countDocuments({ 
-      handymanId: handymanId, 
-      status: 'pending' 
-    });
-    
-    // 2. Jobs In Progress Count (jobs with status = 'in-progress')
-    const jobsInProgressCount = await Job.countDocuments({ 
-      handymanId: handymanId, 
-      status: 'in-progress' 
-    });
-    
-    // 3. Jobs Done Count (jobs with status = 'completed')
-    const jobsDoneCount = await Job.countDocuments({ 
-      handymanId: handymanId, 
-      status: 'completed' 
-    });
-    
-    // 4. Reviews Count
-    const reviewsCount = await Review.countDocuments({ 
-      handymanId: handymanId 
-    });
-    
-    // Calculate average rating
-    const reviews = await Review.find({ handymanId: handymanId });
-    const averageRating = reviews.length > 0
-      ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length
-      : 0;
-
-    // Return profile with fetched stats
-    const profileWithStats = {
-      ...profile.toObject(),
-      activeOrdersCount,
-      jobsInProgressCount,
-      jobsDoneCount,
-      reviewsCount,
-      averageRating: averageRating.toFixed(1)
-    };
-
-    res.status(200).json(profileWithStats);
-    */
 
     // For now, return profile with dummy stats until you create Job/Review models
     const profileWithStats = {
@@ -98,9 +40,9 @@ export const getMyProfile = async (req, res) => {
   }
 };
 
-// ==========================================
+
 // CREATE NEW HANDYMAN PROFILE
-// ==========================================
+
 export const createProfile = async (req, res) => {
   try {
     // Get email from the decoded JWT token
@@ -138,9 +80,8 @@ export const createProfile = async (req, res) => {
   }
 };
 
-// ==========================================
 // UPDATE HANDYMAN PROFILE
-// ==========================================
+
 export const updateProfile = async (req, res) => {
   try {
     const email = req.user?.email;
@@ -190,9 +131,8 @@ export const updateProfile = async (req, res) => {
   }
 };
 
-// ==========================================
-// UPLOAD PROFILE PICTURE (Boss requirement)
-// ==========================================
+
+// UPLOAD PROFILE PICTURE 
 export const uploadProfilePic = async (req, res) => {
   try {
     const email = req.user?.email;
@@ -230,9 +170,8 @@ export const uploadProfilePic = async (req, res) => {
   }
 };
 
-// ==========================================
 // UPLOAD CERTIFICATION (Boss requirement)
-// ==========================================
+
 export const uploadCertification = async (req, res) => {
   try {
     const email = req.user?.email;
@@ -272,9 +211,8 @@ export const uploadCertification = async (req, res) => {
   }
 };
 
-// ==========================================
 // DELETE CERTIFICATION
-// ==========================================
+
 export const deleteCertification = async (req, res) => {
   try {
     const email = req.user?.email;
@@ -302,10 +240,8 @@ export const deleteCertification = async (req, res) => {
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
-
-// ==========================================
 // CHANGE PASSWORD
-// ==========================================
+
 export const changePassword = async (req, res) => {
   try {
     const email = req.user?.email;
@@ -352,9 +288,9 @@ export const changePassword = async (req, res) => {
   }
 };
 
-// ==========================================
+
 // DELETE ACCOUNT
-// ==========================================
+
 export const deleteAccount = async (req, res) => {
   try {
     const email = req.user?.email;
@@ -378,9 +314,9 @@ export const deleteAccount = async (req, res) => {
   }
 };
 
-// ==========================================
+
 // GET ALL HANDYMEN (for browsing/admin)
-// ==========================================
+
 export const getAllHandymen = async (req, res) => {
   try {
     const { verified, planType, skills } = req.query;
@@ -411,9 +347,8 @@ export const getAllHandymen = async (req, res) => {
   }
 };
 
-// ==========================================
 // VERIFY HANDYMAN (Admin Only - Boss requirement)
-// ==========================================
+
 export const verifyHandyman = async (req, res) => {
   try {
     const { handymanId } = req.params;
