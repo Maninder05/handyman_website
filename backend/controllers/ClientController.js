@@ -1,13 +1,8 @@
 import Client from "../models/clientProfile.js";
 import bcrypt from "bcryptjs";
 
-// Import Job model for fetching counts (Boss requirement)
-// You'll need to create this or I'll create it next
-// import Job from "../models/Job.js";
+// GET LOGGED-IN CLIENT'S PROFILE 
 
-// ==========================================
-// GET LOGGED-IN CLIENT'S PROFILE (Boss requirement: with stats)
-// ==========================================
 export const getMyProfile = async (req, res) => {
   try {
     const { id, email } = req.user;
@@ -19,17 +14,12 @@ export const getMyProfile = async (req, res) => {
     // Try to find existing client
     let client = await Client.findOne({ userId: id });
 
-    // Auto-create if doesn't exist (your existing logic)
+    // Auto-create if doesn't exist 
     if (!client) {
       client = await Client.create({ userId: id, email });
     }
 
-    // ==========================================
-    // FETCH COUNTS FROM JOBS MODEL (Boss requirement)
-    // These should NOT be stored, they should be fetched
-    // ==========================================
-    
-    // TODO: Uncomment when you have Job model
+    // FETCH COUNTS FROM JOBS MODEL 
     /*
     const clientObjectId = client._id;
     
@@ -55,7 +45,6 @@ export const getMyProfile = async (req, res) => {
     */
 
     // For now, return client with stats from database
-    // Once you create Job model, uncomment above code
     res.status(200).json(client);
     
   } catch (err) {
@@ -64,9 +53,9 @@ export const getMyProfile = async (req, res) => {
   }
 };
 
-// ==========================================
-// CREATE CLIENT PROFILE (explicit route)
-// ==========================================
+
+// CREATE CLIENT PROFILE 
+
 export const createProfile = async (req, res) => {
   try {
     const { id, email } = req.user;
@@ -97,9 +86,8 @@ export const createProfile = async (req, res) => {
   }
 };
 
-// ==========================================
 // UPDATE CLIENT PROFILE
-// ==========================================
+
 export const updateProfile = async (req, res) => {
   try {
     const { id } = req.user;
@@ -150,9 +138,8 @@ export const updateProfile = async (req, res) => {
   }
 };
 
-// ==========================================
 // UPLOAD PROFILE PICTURE
-// ==========================================
+
 export const uploadProfilePic = async (req, res) => {
   try {
     const { id } = req.user;
@@ -188,9 +175,8 @@ export const uploadProfilePic = async (req, res) => {
   }
 };
 
-// ==========================================
 // SAVE/FAVORITE HANDYMAN
-// ==========================================
+
 export const saveHandyman = async (req, res) => {
   try {
     const { id } = req.user;
@@ -216,9 +202,8 @@ export const saveHandyman = async (req, res) => {
   }
 };
 
-// ==========================================
 // REMOVE SAVED HANDYMAN
-// ==========================================
+
 export const removeSavedHandyman = async (req, res) => {
   try {
     const { id } = req.user;
@@ -244,9 +229,8 @@ export const removeSavedHandyman = async (req, res) => {
   }
 };
 
-// ==========================================
 // CHANGE PASSWORD
-// ==========================================
+
 export const changePassword = async (req, res) => {
   try {
     const { id } = req.user;
@@ -287,9 +271,8 @@ export const changePassword = async (req, res) => {
   }
 };
 
-// ==========================================
 // DELETE ACCOUNT
-// ==========================================
+
 export const deleteAccount = async (req, res) => {
   try {
     const { id } = req.user;

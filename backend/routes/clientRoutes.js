@@ -13,11 +13,9 @@ import {
 
 const router = express.Router();
 
-// ==========================================
 // CLIENT PROFILE ROUTES
-// ==========================================
 
-// Get logged-in client's profile (with stats - Boss requirement)
+// Get logged-in client's profile 
 // GET /api/clients/me
 router.get('/me', jwtAuthWithNext, getMyProfile);
 
@@ -25,24 +23,18 @@ router.get('/me', jwtAuthWithNext, getMyProfile);
 // POST /api/clients
 router.post('/', jwtAuthWithNext, createProfile);
 
-// Update client profile (both routes for compatibility)
+// Update client profile 
 // PUT /api/clients
 // PUT /api/clients/update
 router.put('/', jwtAuthWithNext, updateProfile);
 router.put('/update', jwtAuthWithNext, updateProfile);
 
-// ==========================================
 // FILE UPLOAD ROUTES
-// ==========================================
 
-// Upload profile picture
-// POST /api/clients/upload-image
-// Note: Add upload middleware when ready
 router.post('/upload-image', jwtAuthWithNext, uploadProfilePic);
 
-// ==========================================
 // SAVED HANDYMEN ROUTES
-// ==========================================
+
 
 // Save/favorite a handyman
 // POST /api/clients/save-handyman
@@ -52,15 +44,14 @@ router.post('/save-handyman', jwtAuthWithNext, saveHandyman);
 // DELETE /api/clients/saved-handyman/:handymanId
 router.delete('/saved-handyman/:handymanId', jwtAuthWithNext, removeSavedHandyman);
 
-// ==========================================
 // SETTINGS ROUTES
-// ==========================================
+
 
 // Change password
 // PUT /api/clients/change-password
 router.put('/change-password', jwtAuthWithNext, changePassword);
 
-// Delete account (Boss requirement: with confirmation)
+// Delete account 
 // DELETE /api/clients/delete
 router.delete('/delete', jwtAuthWithNext, deleteAccount);
 

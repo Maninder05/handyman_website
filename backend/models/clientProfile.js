@@ -2,14 +2,14 @@ import mongoose from "mongoose";
 
 const ClientSchema = new mongoose.Schema(
   {
-    // User reference (your existing structure)
+    // User reference 
     userId: { 
       type: mongoose.Schema.Types.ObjectId, 
       ref: "User", 
       required: true 
     },
     
-    // Unique client identifier (Boss requirement)
+    // Unique client identifier 
     clientId: { 
       type: String, 
       unique: true, 
@@ -47,7 +47,7 @@ const ClientSchema = new mongoose.Schema(
       minlength: 8
     },
     
-    // User type (Boss requirement)
+    // User type 
     userType: { 
       type: String, 
       enum: ['handyman', 'client', 'admin'],
@@ -55,7 +55,7 @@ const ClientSchema = new mongoose.Schema(
       required: true
     },
     
-    // Contact Information (Boss: "contact" not just "phone")
+    // Contact Information 
     contact: { 
       type: String,
       trim: true
@@ -69,7 +69,7 @@ const ClientSchema = new mongoose.Schema(
       type: String 
     },
     
-    // Profile Details (Boss requirement)
+    // Profile Details 
     bio: { 
       type: String,
       maxlength: 500
@@ -86,7 +86,7 @@ const ClientSchema = new mongoose.Schema(
       type: String 
     },
     
-    // Additional Links (Boss requirement - same as handyman)
+    // Additional Links 
     additionalLinks: {
       website: { type: String, default: '' },
       linkedin: { type: String, default: '' },
@@ -94,31 +94,31 @@ const ClientSchema = new mongoose.Schema(
       instagram: { type: String, default: '' }
     },
     
-    // Notifications count (Boss requirement)
+    // Notifications count
     notificationsCount: { 
       type: Number, 
       default: 0 
     },
     
-    // Jobs Posted Count (Boss requirement)
+    // Jobs Posted Count 
     jobsPostedCount: { 
       type: Number, 
       default: 0 
     },
     
-    // Your existing fields (keep for compatibility)
+    // Your existing fields 
     jobsPosted: { 
       type: Number, 
       default: 0 
     },
     
-    // Active Booking Count (Boss requirement)
+    // Active Booking Count 
     activeBookingCount: { 
       type: Number, 
       default: 0 
     },
     
-    // Your existing fields (keep for compatibility)
+    // Your existing fields 
     activeJobs: { 
       type: Number, 
       default: 0 
@@ -153,7 +153,7 @@ const ClientSchema = new mongoose.Schema(
     }
   },
   { 
-    timestamps: true // Boss requirement - createdAt, updatedAt
+    timestamps: true //  - createdAt, updatedAt
   }
 );
 
