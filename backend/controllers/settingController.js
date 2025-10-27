@@ -2,7 +2,7 @@ import ClientSetting from '../models/clientSetting.js';
 import Client from '../models/clientProfile.js';
 import bcrypt from 'bcryptjs';
 
-// Get all settings
+// Get all settings for logged-in user
 export const getSettings = async (req, res) => {
   try {
     const email = req.user?.email;
@@ -11,7 +11,7 @@ export const getSettings = async (req, res) => {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    // Use findOne And Update with upsert to avoid duplicate key errors
+    // Find or create settings with default values
     const settings = await ClientSetting.findOneAndUpdate(
       { email },
       { 
@@ -20,12 +20,7 @@ export const getSettings = async (req, res) => {
           theme: 'light',
           language: 'en',
           timezone: 'UTC',
-          privacySettings: {
-            profileVisibility: 'public',
-            showEmail: true,
-            showPhone: false
-          },
-          twoFactorEnabled: false,
+          notificationsEnabled: true,
           notifications: {
             emailNotifications: true,
             smsNotifications: false,
@@ -45,7 +40,7 @@ export const getSettings = async (req, res) => {
   }
 };
 
-// Update display settings (theme, language, timezone)
+// Update display settings
 export const updateDisplay = async (req, res) => {
   try {
     const email = req.user?.email;
@@ -61,75 +56,17 @@ export const updateDisplay = async (req, res) => {
       { new: true, upsert: true, runValidators: true }
     );
 
-    console.log(` Display settings updated for ${email}:`, { theme, language, timezone });
-
     res.status(200).json({
       message: "Display settings updated successfully",
       settings: updatedSettings
     });
   } catch (err) {
-    console.error(" Error updating display settings:", err);
+    console.error("Error updating display settings:", err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
 
-// Update privacy settings
-export const updatePrivacy = async (req, res) => {
-  try {
-    const email = req.user?.email;
-    const privacySettings = req.body;
-    
-    if (!email) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
-    const updatedSettings = await ClientSetting.findOneAndUpdate(
-      { email },
-      { privacySettings },
-      { new: true, upsert: true }
-    );
-
-    console.log(` Privacy settings updated for ${email}`);
-
-    res.status(200).json({
-      message: "Privacy settings updated successfully",
-      settings: updatedSettings
-    });
-  } catch (err) {
-    console.error(" Error updating privacy:", err);
-    res.status(500).json({ message: "Server error", error: err.message });
-  }
-};
-
-// Toggle 2FA
-export const toggle2FA = async (req, res) => {
-  try {
-    const email = req.user?.email;
-    const { enabled } = req.body;
-    
-    if (!email) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
-    const updatedSettings = await ClientSetting.findOneAndUpdate(
-      { email },
-      { twoFactorEnabled: enabled },
-      { new: true, upsert: true }
-    );
-
-    console.log(`2FA ${enabled ? 'enabled' : 'disabled'} for ${email}`);
-
-    res.status(200).json({
-      message: `2FA ${enabled ? "enabled" : "disabled"} successfully`,
-      settings: updatedSettings
-    });
-  } catch (err) {
-    console.error("Error toggling 2FA:", err);
-    res.status(500).json({ message: "Server error", error: err.message });
-  }
-};
-
-// Update notifications
+// Update notification settings
 export const updateNotifications = async (req, res) => {
   try {
     const email = req.user?.email;
@@ -145,14 +82,12 @@ export const updateNotifications = async (req, res) => {
       { new: true, upsert: true }
     );
 
-    console.log(` Notifications updated for ${email}`);
-
     res.status(200).json({
       message: "Notification settings updated successfully",
       settings: updatedSettings
     });
   } catch (err) {
-    console.error(" Error updating notifications:", err);
+    console.error("Error updating notifications:", err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
@@ -167,30 +102,37 @@ export const changePassword = async (req, res) => {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ message: "Please provide current and new password" });
+    }
+
+    if (newPassword.length < 8) {
+      return res.status(400).json({ message: "New password must be at least 8 characters" });
+    }
+
     const client = await Client.findOne({ email });
     
     if (!client || !client.password) {
       return res.status(404).json({ message: "Client not found or no password set" });
     }
 
-    // Verify current password
+    // Check if current password is correct
     const isMatch = await bcrypt.compare(currentPassword, client.password);
     if (!isMatch) {
       return res.status(400).json({ message: "Current password is incorrect" });
     }
 
-    // Hash new password
+    // Hash the new password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
 
+    // Update password
     client.password = hashedPassword;
     await client.save();
 
-    console.log(` Password changed for ${email}`);
-
     res.status(200).json({ message: "Password changed successfully" });
   } catch (err) {
-    console.error(" Error changing password:", err);
+    console.error("Error changing password:", err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
@@ -210,11 +152,9 @@ export const deleteAccount = async (req, res) => {
     // Delete client settings
     await ClientSetting.findOneAndDelete({ email });
 
-    console.log(` Account deleted for ${email}`);
-
     res.status(200).json({ message: "Account deleted successfully" });
   } catch (err) {
-    console.error(" Error deleting account:", err);
+    console.error("Error deleting account:", err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };

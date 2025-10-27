@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 
 const ClientSettingSchema = new mongoose.Schema(
   {
+    // User identification
     email: {
       type: String,
       required: true,
@@ -9,40 +10,49 @@ const ClientSettingSchema = new mongoose.Schema(
       trim: true,
       lowercase: true
     },
+    
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    
+    userType: {
+      type: String,
+      enum: ['client', 'handyman', 'admin'],
+      default: 'client'
+    },
+    
+    // Display settings
+    displayTheme: {
+      type: String,
+      default: 'light',
+      enum: ['light', 'dark']
+    },
+    
     theme: {
       type: String,
       default: 'light',
       enum: ['light', 'dark', 'auto']
     },
+    
     language: {
       type: String,
       default: 'en',
       enum: ['en', 'es', 'fr', 'de']
     },
+    
     timezone: {
       type: String,
       default: 'UTC',
       enum: ['UTC', 'EST', 'CST', 'MST', 'PST']
     },
-    privacySettings: {
-      profileVisibility: {
-        type: String,
-        default: 'public',
-        enum: ['public', 'private', 'contacts']
-      },
-      showEmail: {
-        type: Boolean,
-        default: true
-      },
-      showPhone: {
-        type: Boolean,
-        default: false
-      }
-    },
-    twoFactorEnabled: {
+    
+    // Notification settings
+    notificationsEnabled: {
       type: Boolean,
-      default: false
+      default: true
     },
+    
     notifications: {
       emailNotifications: {
         type: Boolean,
@@ -72,10 +82,11 @@ const ClientSettingSchema = new mongoose.Schema(
   }
 );
 
-// Add index for faster lookups
+// Index for faster lookups
 ClientSettingSchema.index({ email: 1 });
+ClientSettingSchema.index({ userId: 1 });
 
-// Pre-save hook to ensure email is lowercase
+// Make email lowercase before saving
 ClientSettingSchema.pre('save', function(next) {
   if (this.email) {
     this.email = this.email.toLowerCase();
