@@ -75,7 +75,6 @@ export default function SettingsPage() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [alert, setAlert] = useState<{ type: 'success' | 'error', message: string } | null>(null);
 
-
   const fetchProfileData = useCallback(async () => {
     setLoading(true);
     try {
@@ -92,9 +91,6 @@ export default function SettingsPage() {
       
       if (!profileRes.ok) {
         profileRes = await fetch("http://localhost:8000/api/handymen/me", {
-
-        const res = await fetch("http://localhost:7000/api/clients/me", {
-
           headers: { Authorization: `Bearer ${token}` }
         });
       }
@@ -156,15 +152,11 @@ export default function SettingsPage() {
     setSaving(true);
     try {
       const token = localStorage.getItem("token");
-
       const endpoint = userType === "handyman" 
         ? "http://localhost:8000/api/handymen/update" 
         : "http://localhost:8000/api/clients/update";
       
       const res = await fetch(endpoint, {
-
-      const res = await fetch("http://localhost:7000/api/clients/update", {
-
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -214,7 +206,7 @@ export default function SettingsPage() {
     setSaving(true);
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:7000/api/settings/password", {
+      const res = await fetch("http://localhost:8000/api/settings/password", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -241,47 +233,11 @@ export default function SettingsPage() {
     }
   };
 
-
   const handleDisplayUpdate = async () => {
     setSaving(true);
     try {
       const token = localStorage.getItem("token");
       const res = await fetch("http://localhost:8000/api/settings/display", {
-
-  const handlePrivacyUpdate = async () => {
-    setLoading(true);
-    
-    try {
-      const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:7000/api/settings/privacy", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify(settings.privacySettings)
-      });
-
-      const data = await res.json();
-      
-      if (res.ok) {
-        showMessage("success", t("privacyUpdatedSuccess"));
-      } else {
-        showMessage("error", data.message || "Failed to update privacy settings");
-      }
-    } catch {
-      showMessage("error", t("networkError"));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleToggle2FA = async () => {
-    setLoading(true);
-    
-    try {
-      const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:7000/api/settings/2fa", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -313,7 +269,7 @@ export default function SettingsPage() {
     setSaving(true);
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:7000/api/settings/notifications", {
+      const res = await fetch("http://localhost:8000/api/settings/notifications", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -339,37 +295,7 @@ export default function SettingsPage() {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-  const handleDisplayUpdate = async () => {
-    setLoading(true);
-    
-    try {
-      const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:7000/api/settings/display", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          theme: settings.theme,
-          language: settings.language,
-          timezone: settings.timezone
-        })
-      });
-
-      const data = await res.json();
-      
-      if (res.ok) {
-        showMessage("success", t("displaySettingsUpdatedSuccess"));
-        await settings.refreshSettings();
-      } else {
-        showMessage("error", data.message || "Failed to update display settings");
-      }
-    } catch {
-      showMessage("error", t("networkError"));
-    } finally {
-      setLoading(false);
-    }
+    router.push("/signup?mode=login");
   };
 
   const handleDeleteAccount = async () => {
@@ -381,7 +307,7 @@ export default function SettingsPage() {
     setSaving(true);
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:7000/api/settings/account", {
+      const res = await fetch("http://localhost:8000/api/settings/account", {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -419,44 +345,47 @@ export default function SettingsPage() {
       return;
     }
 
-    const reader = new FileReader();
-    reader.onloadend = async () => {
-      const base64 = reader.result as string;
-      setSaving(true);
+    setSaving(true);
+    
+    try {
+      const token = localStorage.getItem("token");
+      const formData = new FormData();
+      formData.append('profileImage', file); // Must match backend field name
       
-      try {
-        const token = localStorage.getItem("token");
-        const endpoint = userType === "handyman" 
-          ? "http://localhost:8000/api/handymen/update" 
-          : "http://localhost:8000/api/clients/update";
-        
-        const res = await fetch(endpoint, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-          },
-          body: JSON.stringify({ 
-            profileImage: base64,
-            profilePic: base64
-          })
-        });
+      // Use the proper upload endpoint
+      const endpoint = userType === "handyman" 
+        ? "http://localhost:8000/api/handymen/upload-profile-pic" 
+        : "http://localhost:8000/api/clients/upload-profile-image";
+      
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          // DO NOT set Content-Type - browser sets it automatically
+        },
+        body: formData // Send FormData, not JSON
+      });
 
-        if (res.ok) {
-          setAccountData({ ...accountData, profileImage: base64 });
-          showAlert('success', 'Profile picture updated successfully!');
-        } else {
-          const data = await res.json();
-          showAlert('error', data.message || 'Failed to upload image');
-        }
-      } catch (err) {
-        console.error("Image upload error:", err);
-        showAlert('error', t('networkError') || 'Network error');
-      } finally {
-        setSaving(false);
+      if (res.ok) {
+        const data = await res.json();
+        setAccountData({ 
+          ...accountData, 
+          profileImage: data.profilePic || data.imageUrl 
+        });
+        showAlert('success', 'Profile picture updated successfully!');
+        
+        // Refetch profile to update everywhere
+        await fetchProfileData();
+      } else {
+        const data = await res.json();
+        showAlert('error', data.message || 'Failed to upload image');
       }
-    };
-    reader.readAsDataURL(file);
+    } catch (err) {
+      console.error("Image upload error:", err);
+      showAlert('error', t('networkError') || 'Network error');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const menuItems = [

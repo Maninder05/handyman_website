@@ -1,21 +1,35 @@
-import multer from "multer";
-import path from "path";
-import fs from "fs";
+import multer from 'multer';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import fs from 'fs';
 
-// Create upload folders if they don’t exist
-const profileDir = "uploads/profiles";
-const certDir = "uploads/certifications";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-if (!fs.existsSync(profileDir)) fs.mkdirSync(profileDir, { recursive: true });
-if (!fs.existsSync(certDir)) fs.mkdirSync(certDir, { recursive: true });
+// Define upload directories
+const profileDir = path.join(__dirname, '../uploads/profiles');
+const certDir = path.join(__dirname, '../uploads/certifications');
 
-// STORAGE SETTINGS
+// Create directories if they don't exist
+if (!fs.existsSync(profileDir)) {
+  fs.mkdirSync(profileDir, { recursive: true });
+  console.log(' Created profiles directory:', profileDir);
+}
+
+if (!fs.existsSync(certDir)) {
+  fs.mkdirSync(certDir, { recursive: true });
+  console.log(' Created certifications directory:', certDir);
+}
+
+// Configure storage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     if (file.fieldname === "profileImage") {
       cb(null, profileDir);
-    } else {
+    } else if (file.fieldname === "certification") {
       cb(null, certDir);
+    } else {
+      cb(null, profileDir); // Default to profiles
     }
   },
   filename: (req, file, cb) => {
@@ -24,6 +38,32 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({ storage });
+// File filter to only allow images for profile pictures
+const fileFilter = (req, file, cb) => {
+  // For profile images, only allow image types
+  if (file.fieldname === "profileImage") {
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only image files are allowed for profile pictures!'), false);
+    }
+  } else {
+    // For certifications, allow images and PDFs
+    if (file.mimetype.startsWith('image/') || file.mimetype === 'application/pdf') {
+      cb(null, true);
+    } else {
+      cb(new Error('Only image and PDF files are allowed for certifications!'), false);
+    }
+  }
+};
+
+// Configure multer with limits
+const upload = multer({ 
+  storage,
+  fileFilter,
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB limit
+  }
+});
 
 export default upload;
