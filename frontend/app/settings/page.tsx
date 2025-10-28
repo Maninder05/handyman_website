@@ -75,6 +75,7 @@ export default function SettingsPage() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [alert, setAlert] = useState<{ type: 'success' | 'error', message: string } | null>(null);
 
+
   const fetchProfileData = useCallback(async () => {
     setLoading(true);
     try {
@@ -91,6 +92,9 @@ export default function SettingsPage() {
       
       if (!profileRes.ok) {
         profileRes = await fetch("http://localhost:8000/api/handymen/me", {
+
+        const res = await fetch("http://localhost:7000/api/clients/me", {
+
           headers: { Authorization: `Bearer ${token}` }
         });
       }
@@ -152,11 +156,15 @@ export default function SettingsPage() {
     setSaving(true);
     try {
       const token = localStorage.getItem("token");
+
       const endpoint = userType === "handyman" 
         ? "http://localhost:8000/api/handymen/update" 
         : "http://localhost:8000/api/clients/update";
       
       const res = await fetch(endpoint, {
+
+      const res = await fetch("http://localhost:7000/api/clients/update", {
+
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -206,7 +214,7 @@ export default function SettingsPage() {
     setSaving(true);
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:8000/api/settings/password", {
+      const res = await fetch("http://localhost:7000/api/settings/password", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -233,11 +241,47 @@ export default function SettingsPage() {
     }
   };
 
+
   const handleDisplayUpdate = async () => {
     setSaving(true);
     try {
       const token = localStorage.getItem("token");
       const res = await fetch("http://localhost:8000/api/settings/display", {
+
+  const handlePrivacyUpdate = async () => {
+    setLoading(true);
+    
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch("http://localhost:7000/api/settings/privacy", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(settings.privacySettings)
+      });
+
+      const data = await res.json();
+      
+      if (res.ok) {
+        showMessage("success", t("privacyUpdatedSuccess"));
+      } else {
+        showMessage("error", data.message || "Failed to update privacy settings");
+      }
+    } catch {
+      showMessage("error", t("networkError"));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleToggle2FA = async () => {
+    setLoading(true);
+    
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch("http://localhost:7000/api/settings/2fa", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -269,7 +313,7 @@ export default function SettingsPage() {
     setSaving(true);
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:8000/api/settings/notifications", {
+      const res = await fetch("http://localhost:7000/api/settings/notifications", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -295,7 +339,37 @@ export default function SettingsPage() {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    router.push("/signup?mode=login");
+  const handleDisplayUpdate = async () => {
+    setLoading(true);
+    
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch("http://localhost:7000/api/settings/display", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          theme: settings.theme,
+          language: settings.language,
+          timezone: settings.timezone
+        })
+      });
+
+      const data = await res.json();
+      
+      if (res.ok) {
+        showMessage("success", t("displaySettingsUpdatedSuccess"));
+        await settings.refreshSettings();
+      } else {
+        showMessage("error", data.message || "Failed to update display settings");
+      }
+    } catch {
+      showMessage("error", t("networkError"));
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDeleteAccount = async () => {
@@ -307,7 +381,7 @@ export default function SettingsPage() {
     setSaving(true);
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:8000/api/settings/account", {
+      const res = await fetch("http://localhost:7000/api/settings/account", {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` }
       });
