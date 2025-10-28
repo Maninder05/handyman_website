@@ -24,7 +24,7 @@ export default function Signup() {
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:7000";
+  const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
   // ---------- Validation ----------
   const validateSignup = () => {
@@ -53,7 +53,7 @@ export default function Signup() {
     if (token) {
       localStorage.setItem("token", token);
       
-      // ✅ FIXED: Redirect based on user type
+      //  FIXED: Redirect based on user type
       if (type === "customer") {
         router.push("/clientProfile");
       } else {
@@ -81,9 +81,9 @@ export default function Signup() {
       
       setShowSignup(false);
       
-      // ✅ FIXED: Redirect based on userType
+      //  FIXED: Redirect based on userType
       if (userType === "customer") {
-        router.push("/clientProfile");
+        router.push("/clientDashboard");
       } else {
         router.push("/handyDashboard");
       }
@@ -109,9 +109,9 @@ export default function Signup() {
       
       setShowLogin(false);
       
-      // ✅ FIXED: Redirect based on userType from backend response
+      //  FIXED: Redirect based on userType from backend response
       if (res.data.userType === "customer") {
-        router.push("/clientProfile");
+        router.push("/clientDashboard");
       } else {
         router.push("/handyDashboard");
       }

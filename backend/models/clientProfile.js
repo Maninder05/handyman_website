@@ -41,17 +41,11 @@ const ClientSchema = new mongoose.Schema(
       lowercase: true
     },
     
-    password: { 
-      type: String, 
-      required: true,
-      minlength: 8
-    },
-    
     // User type 
     userType: { 
       type: String, 
-      enum: ['handyman', 'client', 'admin'],
-      default: 'client',
+      enum: ['handyman', 'customer', 'admin'],  // FIXED: 'customer' not 'client'
+      default: 'customer',
       required: true
     },
     
@@ -75,13 +69,12 @@ const ClientSchema = new mongoose.Schema(
       maxlength: 500
     },
     
-    // Profile Picture (Boss: "profilePic" to match handyman)
+    // Profile Picture
     profilePic: { 
       type: String,
       default: ''
     },
     
-    // Keep your old one too for compatibility
     profileImage: { 
       type: String 
     },
@@ -106,7 +99,6 @@ const ClientSchema = new mongoose.Schema(
       default: 0 
     },
     
-    // Your existing fields 
     jobsPosted: { 
       type: Number, 
       default: 0 
@@ -118,7 +110,6 @@ const ClientSchema = new mongoose.Schema(
       default: 0 
     },
     
-    // Your existing fields 
     activeJobs: { 
       type: Number, 
       default: 0 
@@ -153,7 +144,7 @@ const ClientSchema = new mongoose.Schema(
     }
   },
   { 
-    timestamps: true //  - createdAt, updatedAt
+    timestamps: true
   }
 );
 
@@ -161,13 +152,5 @@ const ClientSchema = new mongoose.Schema(
 ClientSchema.index({ email: 1 });
 ClientSchema.index({ userId: 1 });
 ClientSchema.index({ clientId: 1 });
-
-// Don't return password in JSON responses
-ClientSchema.set('toJSON', {
-  transform: function(doc, ret) {
-    delete ret.password;
-    return ret;
-  }
-});
 
 export default mongoose.models.Client || mongoose.model("Client", ClientSchema);

@@ -10,10 +10,10 @@ import {
 
 const router = express.Router();
 
-// Get all settings
+// Get all settings (works for both client and handyman)
 router.get('/', jwtAuthWithNext, getSettings);
 
-// Update display settings (theme, language, timezone)
+// Update display settings
 router.put('/display', jwtAuthWithNext, updateDisplay);
 
 // Update notification settings

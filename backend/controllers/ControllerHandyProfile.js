@@ -1,117 +1,100 @@
 import HandyProfile from "../models/HandyAddProfile.js";
-import bcrypt from "bcryptjs";
+import User from "../models/ModelUser.js";
 
-
+// GET LOGGED-IN HANDYMAN'S PROFILE
 export const getMyProfile = async (req, res) => {
   try {
-    // Get email from the decoded JWT token that middleware attached to req.user
-    const email = req.user?.email;
+    const { id, email } = req.user;
     
-    // If there's no email in the token, user is not authorized
-    if (!email) {
-      return res.status(401).json({ message: "Unauthorized, no email found in token" });
+    if (!id || !email) {
+      return res.status(401).json({ message: "Unauthorized" });
     }
 
-    // Find the profile in database using the email
-    const profile = await HandyProfile.findOne({ email });
-    
-    // If no profile exists, send 404 error
+    // Try to find existing handyman
+    let profile = await HandyProfile.findOne({ userId: id });
+
+    // Auto-create if doesn't exist
     if (!profile) {
-      return res.status(404).json({ message: "Profile not found" });
+      profile = await HandyProfile.create({
+        userId: id,
+        email,
+        userType: 'handyman'
+      });
     }
 
-
-    // For now, return profile with dummy stats until you create Job/Review models
-    const profileWithStats = {
-      ...profile.toObject(),
-      activeOrdersCount: 0,
-      jobsInProgressCount: 0,
-      jobsDoneCount: 0,
-      reviewsCount: 0,
-      averageRating: 0
-    };
-
-    res.status(200).json(profileWithStats);
+    res.status(200).json(profile);
     
   } catch (err) {
-    // If something goes wrong, log it and send error response
-    console.error("Error fetching my profile:", err);
+    console.error("Error fetching handyman profile:", err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
 
-
-// CREATE NEW HANDYMAN PROFILE
-
+// CREATE HANDYMAN PROFILE
 export const createProfile = async (req, res) => {
   try {
-    // Get email from the decoded JWT token
-    const email = req.user?.email;
+    const { id, email } = req.user;
     
-    // If there's no email in the token, reject the request
-    if (!email) {
-      return res.status(401).json({ message: "Unauthorized, no email found in token" });
+    if (!id || !email) {
+      return res.status(401).json({ message: "Unauthorized" });
     }
 
-    // Check if this user already has a profile
-    const existingProfile = await HandyProfile.findOne({ email });
+    const existingProfile = await HandyProfile.findOne({ userId: id });
     if (existingProfile) {
       return res.status(400).json({ message: "You already have a profile" });
     }
 
-    // Create new profile using data from frontend plus email from token
-    const newProfile = new HandyProfile({
-      ...req.body,
-      email: email,
+    const newProfile = await HandyProfile.create({
+      userId: id,
+      email,
+      userType: 'handyman',
+      ...req.body
     });
-
-    // Save the profile to database
-    await newProfile.save();
     
-    // Send success response with the new profile
     res.status(201).json({
       message: "Profile created successfully",
       profile: newProfile
     });
   } catch (err) {
-    // If something goes wrong, log it and send error response
     console.error("Error creating profile:", err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
 
 // UPDATE HANDYMAN PROFILE
-
 export const updateProfile = async (req, res) => {
   try {
-    const email = req.user?.email;
+    const { id } = req.user;
     
-    if (!email) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
     const {
       name,
       contact,
+      phone,
       address,
       bio,
       additionalLinks,
       skills,
-      planType
+      services,
+      planType,
+      profilePic,
+      profileImage
     } = req.body;
 
-    // Find and update handyman
     const profile = await HandyProfile.findOneAndUpdate(
-      { email },
+      { userId: id },
       {
         $set: {
           ...(name && { name }),
           ...(contact && { contact }),
+          ...(phone && { phone }),
           ...(address && { address }),
           ...(bio && { bio }),
           ...(additionalLinks && { additionalLinks }),
           ...(skills && { skills }),
-          ...(planType && { planType })
+          ...(services && { services }),
+          ...(planType && { planType }),
+          ...(profilePic && { profilePic }),
+          ...(profileImage && { profileImage })
         }
       },
       { new: true, runValidators: true }
@@ -131,28 +114,25 @@ export const updateProfile = async (req, res) => {
   }
 };
 
-
-// UPLOAD PROFILE PICTURE 
+// UPLOAD PROFILE PICTURE
 export const uploadProfilePic = async (req, res) => {
   try {
-    const email = req.user?.email;
+    const { id } = req.user;
     
-    if (!email) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
-    // Check if file was uploaded
     if (!req.file) {
       return res.status(400).json({ message: "No file uploaded" });
     }
 
-    // File URL (assuming you're using multer and storing in /uploads)
     const profilePicUrl = `/uploads/profiles/${req.file.filename}`;
 
-    // Update handyman profile
     const profile = await HandyProfile.findOneAndUpdate(
-      { email },
-      { $set: { profilePic: profilePicUrl } },
+      { userId: id },
+      {
+        $set: {
+          profilePic: profilePicUrl,
+          profileImage: profilePicUrl
+        }
+      },
       { new: true }
     );
 
@@ -162,7 +142,8 @@ export const uploadProfilePic = async (req, res) => {
 
     res.status(200).json({
       message: "Profile picture uploaded successfully",
-      profilePic: profilePicUrl
+      profilePic: profilePicUrl,
+      imageUrl: profilePicUrl
     });
   } catch (err) {
     console.error("Error uploading profile picture:", err);
@@ -170,16 +151,11 @@ export const uploadProfilePic = async (req, res) => {
   }
 };
 
-// UPLOAD CERTIFICATION (Boss requirement)
-
+// UPLOAD CERTIFICATION
 export const uploadCertification = async (req, res) => {
   try {
-    const email = req.user?.email;
+    const { id } = req.user;
     
-    if (!email) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
     if (!req.file) {
       return res.status(400).json({ message: "No file uploaded" });
     }
@@ -190,9 +166,8 @@ export const uploadCertification = async (req, res) => {
       uploadedAt: new Date()
     };
 
-    // Add certification to handyman's certifications array
     const profile = await HandyProfile.findOneAndUpdate(
-      { email },
+      { userId: id },
       { $push: { certifications: certificationData } },
       { new: true }
     );
@@ -212,18 +187,13 @@ export const uploadCertification = async (req, res) => {
 };
 
 // DELETE CERTIFICATION
-
 export const deleteCertification = async (req, res) => {
   try {
-    const email = req.user?.email;
+    const { id } = req.user;
     const { certificationId } = req.params;
     
-    if (!email) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
     const profile = await HandyProfile.findOneAndUpdate(
-      { email },
+      { userId: id },
       { $pull: { certifications: { _id: certificationId } } },
       { new: true }
     );
@@ -240,72 +210,20 @@ export const deleteCertification = async (req, res) => {
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
-// CHANGE PASSWORD
-
-export const changePassword = async (req, res) => {
-  try {
-    const email = req.user?.email;
-    const { currentPassword, newPassword } = req.body;
-    
-    if (!email) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
-    if (!currentPassword || !newPassword) {
-      return res.status(400).json({ message: "Please provide current and new password" });
-    }
-
-    if (newPassword.length < 8) {
-      return res.status(400).json({ message: "New password must be at least 8 characters" });
-    }
-
-    // Find handyman with password field
-    const profile = await HandyProfile.findOne({ email }).select('+password');
-    
-    if (!profile) {
-      return res.status(404).json({ message: "Profile not found" });
-    }
-
-    // Verify current password
-    const isMatch = await bcrypt.compare(currentPassword, profile.password);
-    
-    if (!isMatch) {
-      return res.status(400).json({ message: "Current password is incorrect" });
-    }
-
-    // Hash new password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(newPassword, salt);
-
-    // Update password
-    profile.password = hashedPassword;
-    await profile.save();
-
-    res.status(200).json({ message: "Password changed successfully" });
-  } catch (err) {
-    console.error("Error changing password:", err);
-    res.status(500).json({ message: "Server error", error: err.message });
-  }
-};
-
 
 // DELETE ACCOUNT
-
 export const deleteAccount = async (req, res) => {
   try {
-    const email = req.user?.email;
+    const { id } = req.user;
     
-    if (!email) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
-    const profile = await HandyProfile.findOneAndDelete({ email });
+    const profile = await HandyProfile.findOneAndDelete({ userId: id });
     
     if (!profile) {
       return res.status(404).json({ message: "Profile not found" });
     }
 
-    // TODO: Also delete or archive related jobs, reviews, etc.
+    // Delete user account too
+    await User.findByIdAndDelete(id);
 
     res.status(200).json({ message: "Account deleted successfully" });
   } catch (err) {
@@ -314,14 +232,11 @@ export const deleteAccount = async (req, res) => {
   }
 };
 
-
 // GET ALL HANDYMEN (for browsing/admin)
-
 export const getAllHandymen = async (req, res) => {
   try {
     const { verified, planType, skills } = req.query;
     
-    // Build filter
     const filter = { isActive: true };
     
     if (verified !== undefined) {
@@ -336,9 +251,7 @@ export const getAllHandymen = async (req, res) => {
       filter.skills = { $in: skills.split(',') };
     }
 
-    const handymen = await HandyProfile.find(filter)
-      .select('-password')
-      .sort({ createdAt: -1 });
+    const handymen = await HandyProfile.find(filter).sort({ createdAt: -1 });
 
     res.status(200).json(handymen);
   } catch (err) {
@@ -347,8 +260,7 @@ export const getAllHandymen = async (req, res) => {
   }
 };
 
-// VERIFY HANDYMAN (Admin Only - Boss requirement)
-
+// VERIFY HANDYMAN (Admin Only)
 export const verifyHandyman = async (req, res) => {
   try {
     const { handymanId } = req.params;

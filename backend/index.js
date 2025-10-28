@@ -17,11 +17,13 @@ import RouterUser from './routes/RouteUser.js';
 import RouterHandyman from './routes/handyRoutesAddProfile.js';
 import RouterService from './routes/CreateServiceRoutes.js';
 import RouterNotification from './routes/RouteNotification.js'; 
+import clientRoutes from './routes/clientRoutes.js';
+import settingsRoutes from './routes/settingRoutes.js';
 
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 7000;
+const PORT = process.env.PORT || 8000;
 
 // Middleware
 app.use(cors({
@@ -43,6 +45,8 @@ app.use('/api/users', RouterUser);
 app.use('/api/handymen', RouterHandyman);
 app.use('/api/services', RouterService);
 app.use('/api/notifications', RouterNotification); 
+app.use('/api/clients', clientRoutes);
+app.use('/api/settings', settingsRoutes);
 
 // Default test route
 app.get('/', (req, res) => {
@@ -61,41 +65,36 @@ const io = new Server(server, {
   },
 });
 
-// Socket.io logic (real-time notifications)
+// Socket.io logic
 io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
 
-  // Join a specific room (like userId or handymanId)
   socket.on("joinRoom", (userId) => {
     socket.join(userId);
     console.log(`User ${userId} joined their room`);
   });
 
-  // Send notification to a user
   socket.on("sendNotification", ({ receiverId, notification }) => {
     io.to(receiverId).emit("receiveNotification", notification);
     console.log("Notification sent to", receiverId);
   });
 
   socket.on("disconnect", () => {
-    console.log(" User disconnected:", socket.id);
+    console.log("User disconnected:", socket.id);
   });
 });
 
 // Connect to MongoDB and start server
-mongoose.connect(process.env.MONGO_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}).then(() => {
-  console.log('Connected to MongoDB successfully!');
+mongoose.connect(process.env.MONGO_URL).then(() => {
+  console.log(' Connected to MongoDB successfully!');
   server.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(` Server is running on port ${PORT}`);
   });
 }).catch((err) => {
-  console.error('Database connection error:', err);
+  console.error(' Database connection error:', err);
 });
 
-// Optional: global error handler
+// Global error handler
 app.use((err, req, res, next) => {
   console.error('Unhandled error:', err);
   res.status(500).json({ error: 'Something went wrong!' });

@@ -1,142 +1,161 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-const HandyProfileSchema = new mongoose.Schema(
+const HandymanSchema = new mongoose.Schema(
   {
-    // Unique handyman identifier (Boss requirement)
-    handymanId: { 
-      type: String, 
-      unique: true, 
+    // User reference
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
+    },
+
+    // Unique handyman identifier
+    handymanId: {
+      type: String,
+      unique: true,
       required: true,
       default: () => `HM${Date.now()}${Math.floor(Math.random() * 1000)}`
     },
-    
+
     // Basic Information
-    name: { 
-      type: String, 
-      required: true, 
-      trim: true 
-    },
-    
-    email: { 
-      type: String, 
-      required: true, 
-      unique: true,
-      trim: true,
-      lowercase: true 
-    },
-    
-    password: { 
-      type: String, 
+    name: {
+      type: String,
       required: true,
-      minlength: 8
+      trim: true
     },
-    
-    // User type (handyman, client, admin) - Boss requirement
-    userType: { 
-      type: String, 
-      enum: ['handyman', 'client', 'admin'],
+
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true
+    },
+
+    // User type
+    userType: {
+      type: String,
+      enum: ['handyman', 'customer', 'admin'],
       default: 'handyman',
       required: true
     },
-    
-    // Contact Information (Boss: "contact" not "phone")
-    contact: { 
+
+    // Contact Information
+    contact: {
       type: String,
       trim: true
     },
-    
-    address: { 
-      type: String,
-      trim: true
-    },
-    
-    // Profile Details
-    bio: { 
-      type: String,
-      maxlength: 500
-    },
-    
-    // Profile Picture (Boss: "profilePic" not "profileImage")
-    profilePic: { 
+
+    phone: {
       type: String,
       default: ''
     },
-    
-    // Additional Links (Boss requirement - portfolio, social media, etc)
+
+    address: {
+      type: String
+    },
+
+    // Profile Details
+    bio: {
+      type: String,
+      default: '',
+      maxlength: 500
+    },
+
+    // Profile Picture
+    profilePic: {
+      type: String,
+      default: ''
+    },
+
+    profileImage: {
+      type: String,
+      default: ''
+    },
+
+    // Additional Links
     additionalLinks: {
-      portfolio: { type: String, default: '' },
+      website: { type: String, default: '' },
       linkedin: { type: String, default: '' },
       facebook: { type: String, default: '' },
-      instagram: { type: String, default: '' },
-      website: { type: String, default: '' }
+      instagram: { type: String, default: '' }
     },
-    
-    // Certifications (Boss requirement - array of uploaded files)
+
+    // Skills & Services
+    skills: {
+      type: [String],
+      default: []
+    },
+
+    services: [
+      {
+        title: String,
+        desc: String
+      }
+    ],
+
+    // Certifications (upload)
     certifications: [
       {
-        fileName: { type: String },
-        fileUrl: { type: String },
+        fileName: String,
+        fileUrl: String,
         uploadedAt: { type: Date, default: Date.now }
       }
     ],
-    
-    // Skills (keeping from your original, useful feature)
-    skills: { 
-      type: [String], 
-      default: [] 
+
+    // Counters (Boss requirements)
+    activeOrderCount: {
+      type: Number,
+      default: 0
     },
-    
-    // IMPORTANT: These counts are FETCHED from other models (Boss requirement)
-    // We DON'T store them here to keep data accurate
-    // activeOrdersCount - fetched from Jobs where status = 'pending'
-    // jobsInProgressCount - fetched from Jobs where status = 'in-progress'
-    // jobsDoneCount - fetched from Jobs where status = 'completed'
-    // reviewsCount - fetched from Reviews model
-    
-    // Notifications count (Boss requirement)
-    notificationsCount: { 
-      type: Number, 
-      default: 0 
+
+    jobsInProgressCount: {
+      type: Number,
+      default: 0
     },
-    
-    // Subscription Plan Type (Boss requirement)
-    planType: { 
-      type: String, 
+
+    jobsDoneCount: {
+      type: Number,
+      default: 0
+    },
+
+    reviewsCount: {
+      type: Number,
+      default: 0
+    },
+
+    notificationsCount: {
+      type: Number,
+      default: 0
+    },
+
+    // Plan Type (Boss requirement)
+    planType: {
+      type: String,
       enum: ['Basic', 'Standard', 'Premium'],
-      default: 'Basic',
-      required: true
+      default: 'Basic'
     },
-    
-    // Admin Approval Status (Boss requirement)
-    verified: { 
-      type: Boolean, 
-      default: false 
+
+    // Verified Badge (Boss requirement - Admin approval)
+    verified: {
+      type: Boolean,
+      default: false
     },
-    
+
     // Account status
-    isActive: { 
-      type: Boolean, 
-      default: true 
+    isActive: {
+      type: Boolean,
+      default: true
     }
   },
-  { 
-    timestamps: true // Boss requirement - automatically adds createdAt and updatedAt
+  {
+    timestamps: true
   }
 );
 
-// Index for faster queries
-HandyProfileSchema.index({ email: 1 });
-HandyProfileSchema.index({ handymanId: 1 });
-HandyProfileSchema.index({ verified: 1 });
+// Indexes
+HandymanSchema.index({ email: 1 });
+HandymanSchema.index({ userId: 1 });
+HandymanSchema.index({ handymanId: 1 });
 
-// Don't return password in JSON responses (security)
-HandyProfileSchema.set('toJSON', {
-  transform: function(doc, ret) {
-    delete ret.password;
-    return ret;
-  }
-});
-
-const HandyProfile = mongoose.models.HandyProfile || mongoose.model("HandyProfile", HandyProfileSchema);
-
-export default HandyProfile;
+export default mongoose.model('HandymanProfile', HandymanSchema);

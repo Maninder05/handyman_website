@@ -5,13 +5,13 @@ const userSchema = new mongoose.Schema(
     username: { type: String, required: true, trim: true },
     email: { type: String, required: true, unique: true, lowercase: true },
     password: { type: String }, // optional for OAuth users
-    userType: { type: String, enum: ["customer", "handyman"], required: true },
+    userType: { type: String, enum: ["customer", "handyman"], required: true }, // BACK TO "customer"
     authProvider: { type: String, default: "local" }, // local, google, facebook
 
-    // --- session / OAuth ---
-    sessionToken: { type: String },          // random token assigned at login/signup
-    sessionExpiresAt: { type: Date },        // session expiry (sliding)
-    oauthId: { type: String },               // provider ID (google/facebook)
+    // Session / OAuth
+    sessionToken: { type: String },
+    sessionExpiresAt: { type: Date },
+    oauthId: { type: String },
   },
   { timestamps: true }
 );
