@@ -83,26 +83,6 @@ export default function HandyDashboard() {
     );
   }
 
-  const membershipBadge = profile?.planType === 'Premium' ? (
-    <span className="ml-2 px-3 py-1 bg-gradient-to-r from-yellow-400 to-yellow-600 text-white text-xs font-bold rounded-full flex items-center gap-1">
-      👑 PREMIUM
-    </span>
-  ) : profile?.planType === 'Standard' ? (
-    <span className="ml-2 px-3 py-1 bg-blue-500 text-white text-xs font-bold rounded-full flex items-center gap-1">
-      🟦 STANDARD
-    </span>
-  ) : (
-    <span className="ml-2 px-3 py-1 bg-gray-400 text-white text-xs font-bold rounded-full flex items-center gap-1">
-      🆓 BASIC
-    </span>
-  );
-
-  const verifiedBadge = profile?.verified ? (
-    <span className="ml-2 px-3 py-1 bg-green-500 text-white text-xs font-bold rounded-full flex items-center gap-1">
-      ✅ VERIFIED
-    </span>
-  ) : null;
-
   return (
     <div className="min-h-screen bg-[#F5F5F0] text-gray-900 flex flex-col">
       {/* HEADER */}
@@ -193,7 +173,7 @@ export default function HandyDashboard() {
       </header>
 
       <main className="flex-1 overflow-y-auto pb-10">
-        {/* PROFILE CARD */}
+        {/* PROFILE CARD WITH INLINE BADGES */}
         <section className="bg-gradient-to-br from-[#CBB677] to-[#B8A565] py-8">
           <div className="max-w-6xl mx-auto px-6">
             <div className="flex flex-col items-center text-center mb-8">
@@ -205,23 +185,37 @@ export default function HandyDashboard() {
                 </div>
               )}
               <div>
-                <div className="flex items-center gap-2 justify-center">
-                  <h2 className="text-2xl font-bold text-white mb-1">
+                {/* Name with Inline Badges */}
+                <div className="flex items-center gap-2 justify-center mb-2">
+                  <h2 className="text-2xl font-bold text-white">
                     {profile?.name || "Your Name"}
                   </h2>
+                  
+                  {/* Membership Badge - Inline with Name */}
                   {profile?.planType === 'Premium' && (
-                    <span className="px-2 py-1 bg-yellow-500 text-white text-xs font-bold rounded">👑</span>
+                    <span className="px-3 py-1 bg-gradient-to-r from-yellow-400 to-yellow-600 text-white text-xs font-bold rounded-full flex items-center gap-1">
+                      👑 PREMIUM
+                    </span>
                   )}
                   {profile?.planType === 'Standard' && (
-                    <span className="px-2 py-1 bg-blue-500 text-white text-xs font-bold rounded">🟦</span>
+                    <span className="px-3 py-1 bg-blue-500 text-white text-xs font-bold rounded-full flex items-center gap-1">
+                      ⭐ STANDARD
+                    </span>
                   )}
                   {profile?.planType === 'Basic' && (
-                    <span className="px-2 py-1 bg-gray-400 text-white text-xs font-bold rounded">🆓</span>
+                    <span className="px-3 py-1 bg-gray-400 text-white text-xs font-bold rounded-full flex items-center gap-1">
+                      🆓 BASIC
+                    </span>
                   )}
+                  
+                  {/* Verified Badge */}
                   {profile?.verified && (
-                    <span className="px-2 py-1 bg-green-500 text-white text-xs font-bold rounded">✅</span>
+                    <span className="px-3 py-1 bg-green-500 text-white text-xs font-bold rounded-full flex items-center gap-1">
+                      ✅ VERIFIED
+                    </span>
                   )}
                 </div>
+                
                 <p className="text-white/90 text-sm">
                   {profile?.email || "your.email@example.com"}
                 </p>
@@ -248,7 +242,7 @@ export default function HandyDashboard() {
           </div>
         </section>
 
-        {/* EARNINGS & ACTIVE ORDERS - PROFESSIONAL & COMPACT */}
+        {/* EARNINGS & ACTIVE ORDERS */}
         <section className="max-w-6xl mx-auto px-6 py-6">
           <div className="grid md:grid-cols-2 gap-4">
             <div className="bg-white rounded-xl shadow-md p-5 border border-gray-100 hover:shadow-lg transition">

@@ -18,6 +18,8 @@ type Booking = {
 type ClientProfile = {
   _id: string;
   name: string;
+  firstName?: string;
+  lastName?: string;
   email: string;
   profileImage?: string;
   servicesBooked: number;
@@ -49,7 +51,10 @@ export default function ClientDashboard() {
 
         if (res.ok) {
           const data = await res.json();
+          console.log("Client profile data:", data);
           setProfile(data);
+        } else {
+          console.error("Failed to fetch profile:", res.status);
         }
       } catch (err) {
         console.error("Error fetching profile:", err);
@@ -228,8 +233,10 @@ export default function ClientDashboard() {
                 <FiUser size={40} className="text-white" />
               </div>
             )}
-            <h2 className="text-2xl font-bold mt-4">
-              {profile?.name || "Your Name"}
+            <h2 className="text-2xl font-bold text-white mt-4">
+              {profile?.firstName && profile?.lastName 
+                ? `${profile.firstName} ${profile.lastName}` 
+                : profile?.name || "Your Name"}
             </h2>
             <p className="text-sm text-white/90">
               {profile?.email || "your.email@example.com"}
@@ -331,7 +338,7 @@ export default function ClientDashboard() {
               <p className="text-gray-500 text-sm mb-4">Post your first job to get started</p>
               <Link 
                 href="/client/post-job"
-                className="inline-block px-6 py-3 bg-gradient-to-r from-[#FFCC66] to-[#FF7E5F] text-white rounded-lg hover:shadow-lg transition font-semibold"
+                className="inline-block px-6 py-3 bg-[#CBB677] text-white rounded-lg hover:bg-[#B8A565] transition font-semibold shadow-lg hover:shadow-xl"
               >
                 Post a Job
               </Link>
