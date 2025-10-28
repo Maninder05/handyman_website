@@ -29,6 +29,7 @@ interface SettingsContextType {
   updatePrivacySettings: (privacy: PrivacySettings) => void;
   setTwoFactorEnabled: (enabled: boolean) => void;
   refreshSettings: () => Promise<void>;
+  isLoading: boolean;
 }
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
@@ -37,6 +38,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<'light' | 'dark' | 'auto'>('light');
   const [language, setLanguageState] = useState<'en' | 'es' | 'fr' | 'de'>('en');
   const [timezone, setTimezoneState] = useState('UTC');
+  const [isLoading, setIsLoading] = useState(true);
   const [notifications, setNotifications] = useState<NotificationSettings>({
     emailNotifications: true,
     smsNotifications: false,
@@ -51,37 +53,55 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   });
   const [twoFactorEnabled, setTwoFactorEnabledState] = useState(false);
 
+  // Apply theme to DOM
+  const applyTheme = (themeValue: 'light' | 'dark' | 'auto') => {
+    if (typeof window === 'undefined') return;
+    
+    const root = document.documentElement;
+    
+    if (themeValue === 'dark') {
+      root.classList.add('dark');
+    } else if (themeValue === 'light') {
+      root.classList.remove('dark');
+    } else {
+      const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches; // dark mode
+      if (isDark) {
+        root.classList.add('dark');
+      } else {
+        root.classList.remove('dark');
+      }
+    }
+  };
+
+  // Load settings on mount
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | 'auto';
-      const savedLanguage = localStorage.getItem('language') as 'en' | 'es' | 'fr' | 'de';
+    const loadSettings = async () => {
+      if (typeof window === 'undefined') return;
+      
+      // First load from localStorage (instant)
+      const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | 'auto' | null;
+      const savedLanguage = localStorage.getItem('language') as 'en' | 'es' | 'fr' | 'de' | null;
       const savedTimezone = localStorage.getItem('timezone');
       
-      if (savedTheme) setThemeState(savedTheme);
+      if (savedTheme) {
+        setThemeState(savedTheme);
+        applyTheme(savedTheme);
+      }
       if (savedLanguage) setLanguageState(savedLanguage);
       if (savedTimezone) setTimezoneState(savedTimezone);
 
-      refreshSettings();
-    }
+      // Then fetch from backend
+      await refreshSettings();
+      setIsLoading(false);
+    };
+
+    loadSettings();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Apply theme whenever it changes
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const root = document.documentElement;
-      
-      if (theme === 'dark') {
-        root.classList.add('dark');
-      } else if (theme === 'light') {
-        root.classList.remove('dark');
-      } else {
-        const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        if (isDark) {
-          root.classList.add('dark');
-        } else {
-          root.classList.remove('dark');
-        }
-      }
-    }
+    applyTheme(theme);
   }, [theme]);
 
   const refreshSettings = async () => {
@@ -97,16 +117,23 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
 
       if (res.ok) {
         const data = await res.json();
-        if (data.theme) setThemeState(data.theme);
-        if (data.language) setLanguageState(data.language);
-        if (data.timezone) setTimezoneState(data.timezone);
+        
+        if (data.theme) {
+          setThemeState(data.theme);
+          localStorage.setItem('theme', data.theme);
+          applyTheme(data.theme);
+        }
+        if (data.language) {
+          setLanguageState(data.language);
+          localStorage.setItem('language', data.language);
+        }
+        if (data.timezone) {
+          setTimezoneState(data.timezone);
+          localStorage.setItem('timezone', data.timezone);
+        }
         if (data.notifications) setNotifications(data.notifications);
         if (data.privacySettings) setPrivacySettings(data.privacySettings);
         if (data.twoFactorEnabled !== undefined) setTwoFactorEnabledState(data.twoFactorEnabled);
-        
-        localStorage.setItem('theme', data.theme || 'light');
-        localStorage.setItem('language', data.language || 'en');
-        localStorage.setItem('timezone', data.timezone || 'UTC');
       }
     } catch (error) {
       console.error('Error fetching settings:', error);
@@ -115,6 +142,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
 
   const setTheme = (newTheme: 'light' | 'dark' | 'auto') => {
     setThemeState(newTheme);
+    applyTheme(newTheme);
     if (typeof window !== 'undefined') {
       localStorage.setItem('theme', newTheme);
     }
@@ -162,6 +190,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
         updatePrivacySettings,
         setTwoFactorEnabled,
         refreshSettings,
+        isLoading,
       }}
     >
       {children}
