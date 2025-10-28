@@ -41,7 +41,7 @@ export default function HandyDashboard() {
           return;
         }
 
-        const res = await fetch("http://localhost:8000/api/handymen/me", {
+        const res = await fetch("http://localhost:7000/api/handymen/me", {
           headers: { "Authorization": `Bearer ${token}` },
         });
 

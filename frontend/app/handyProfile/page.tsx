@@ -128,7 +128,7 @@ export default function AddProfilePage() {
         profileImage: profileImage || undefined,
       };
 
-      const res = await fetch("http://localhost:8000/api/handymen", {
+      const res = await fetch("http://localhost:7000/api/handymen", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
