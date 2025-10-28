@@ -7,7 +7,6 @@ const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 
 export default async function authSession(req, res, next) {
   try {
-    // Accept: Authorization: Bearer <token>  OR cookie named 'token'
     const authHeader = req.headers.authorization || "";
     const tokenFromHeader = authHeader.startsWith("Bearer ") ? authHeader.split(" ")[1] : null;
     const token = tokenFromHeader || req.cookies?.token || req.query?.token;
@@ -24,25 +23,27 @@ export default async function authSession(req, res, next) {
     const user = await User.findById(payload.id);
     if (!user) return res.status(401).json({ message: "User not found" });
 
-    // verify session token  if it matches
     if (!user.sessionToken || user.sessionToken !== payload.sessionToken) {
       return res.status(401).json({ message: "Session invalid" });
     }
 
-    // check session expiry
     if (!user.sessionExpiresAt || new Date(user.sessionExpiresAt) < new Date()) {
-      // clear session
       user.sessionToken = undefined;
       user.sessionExpiresAt = undefined;
       await user.save();
       return res.status(401).json({ message: "Session expired" });
     }
 
-    // slide the session expiry forward (activity)
     user.sessionExpiresAt = new Date(Date.now() + SESSION_TTL_MS);
     await user.save();
 
-    req.user = user;
+    // assign only id, email, userType
+    req.user = {
+      id: user._id,
+      email: user.email,
+      userType: user.userType 
+    };
+
     next();
   } catch (err) {
     console.error("authSession error:", err);

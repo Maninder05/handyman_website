@@ -1,34 +1,30 @@
 import mongoose from 'mongoose';
 
-const ClientSettingSchema = new mongoose.Schema(
+const UserSettingSchema = new mongoose.Schema(
   {
+    // User reference ( for both client and handyman)
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+      unique: true
+    },
+    
     // User identification
     email: {
       type: String,
       required: true,
-      unique: true,
-      trim: true,
-      lowercase: true
-    },
-    
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
+      lowercase: true,
+      trim: true
     },
     
     userType: {
       type: String,
-      enum: ['client', 'handyman', 'admin'],
-      default: 'client'
+      enum: ['customer', 'handyman', 'admin'],
+      required: true
     },
     
-    // Display settings
-    displayTheme: {
-      type: String,
-      default: 'light',
-      enum: ['light', 'dark']
-    },
-    
+    // Display Settings
     theme: {
       type: String,
       default: 'light',
@@ -47,7 +43,7 @@ const ClientSettingSchema = new mongoose.Schema(
       enum: ['UTC', 'EST', 'CST', 'MST', 'PST']
     },
     
-    // Notification settings
+    // Notification Settings
     notificationsEnabled: {
       type: Boolean,
       default: true
@@ -78,22 +74,20 @@ const ClientSettingSchema = new mongoose.Schema(
   },
   { 
     timestamps: true,
-    collection: 'clientsettings'
+    collection: 'usersettings'
   }
 );
 
-// Index for faster lookups
-ClientSettingSchema.index({ email: 1 });
-ClientSettingSchema.index({ userId: 1 });
+// Indexes for faster lookups
+UserSettingSchema.index({ userId: 1 });
+UserSettingSchema.index({ email: 1 });
 
 // Make email lowercase before saving
-ClientSettingSchema.pre('save', function(next) {
+UserSettingSchema.pre('save', function(next) {
   if (this.email) {
     this.email = this.email.toLowerCase();
   }
   next();
 });
 
-const ClientSetting = mongoose.models.ClientSetting || mongoose.model('ClientSetting', ClientSettingSchema);
-
-export default ClientSetting;
+export default mongoose.model('UserSetting', UserSettingSchema);

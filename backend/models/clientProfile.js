@@ -1,20 +1,132 @@
-
 import mongoose from "mongoose";
 
 const ClientSchema = new mongoose.Schema(
   {
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-    name: { type: String, trim: true },
-    firstName: { type: String, trim: true },
-    lastName: { type: String, trim: true },
-    email: { type: String, required: true, trim: true, unique: true },
-    phone: { type: String },
-    address: { type: String },
-    profileImage: { type: String },
-    jobsPosted: { type: Number, default: 0 },
-    activeJobs: { type: Number, default: 0 },
-    totalSpent: { type: Number, default: 0 },
-    savedHandymen: { type: [String], default: [] },
+    // User reference 
+    userId: { 
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: "User", 
+      required: true 
+    },
+    
+    // Unique client identifier 
+    clientId: { 
+      type: String, 
+      unique: true, 
+      required: true,
+      default: () => `CL${Date.now()}${Math.floor(Math.random() * 1000)}`
+    },
+    
+    // Basic Information
+    name: { 
+      type: String, 
+      trim: true 
+    },
+    
+    firstName: { 
+      type: String, 
+      trim: true 
+    },
+    
+    lastName: { 
+      type: String, 
+      trim: true 
+    },
+    
+    email: { 
+      type: String, 
+      required: true, 
+      trim: true, 
+      unique: true,
+      lowercase: true
+    },
+    
+    // User type 
+    userType: { 
+      type: String, 
+      enum: ['handyman', 'customer', 'admin'],  // FIXED: 'customer' not 'client'
+      default: 'customer',
+      required: true
+    },
+    
+    // Contact Information 
+    contact: { 
+      type: String,
+      trim: true
+    },
+    
+    phone: { 
+      type: String 
+    },
+    
+    address: { 
+      type: String 
+    },
+    
+    // Profile Details 
+    bio: { 
+      type: String,
+      maxlength: 500
+    },
+    
+    // Profile Picture
+    profilePic: { 
+      type: String,
+      default: ''
+    },
+    
+    profileImage: { 
+      type: String 
+    },
+    
+    // Additional Links 
+    additionalLinks: {
+      website: { type: String, default: '' },
+      linkedin: { type: String, default: '' },
+      facebook: { type: String, default: '' },
+      instagram: { type: String, default: '' }
+    },
+    
+    // Notifications count
+    notificationsCount: { 
+      type: Number, 
+      default: 0 
+    },
+    
+    // Jobs Posted Count 
+    jobsPostedCount: { 
+      type: Number, 
+      default: 0 
+    },
+    
+    jobsPosted: { 
+      type: Number, 
+      default: 0 
+    },
+    
+    // Active Booking Count 
+    activeBookingCount: { 
+      type: Number, 
+      default: 0 
+    },
+    
+    activeJobs: { 
+      type: Number, 
+      default: 0 
+    },
+    
+    totalSpent: { 
+      type: Number, 
+      default: 0 
+    },
+    
+    // Saved/Favorite Handymen
+    savedHandymen: { 
+      type: [String], 
+      default: [] 
+    },
+    
+    // Recent Jobs
     recentJobs: [
       {
         title: String,
@@ -24,8 +136,21 @@ const ClientSchema = new mongoose.Schema(
         createdAt: { type: Date, default: Date.now },
       },
     ],
+    
+    // Account status
+    isActive: { 
+      type: Boolean, 
+      default: true 
+    }
   },
-  { timestamps: true }
+  { 
+    timestamps: true
+  }
 );
+
+// Indexes for faster queries
+ClientSchema.index({ email: 1 });
+ClientSchema.index({ userId: 1 });
+ClientSchema.index({ clientId: 1 });
 
 export default mongoose.models.Client || mongoose.model("Client", ClientSchema);

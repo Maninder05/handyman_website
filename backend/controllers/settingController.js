@@ -1,42 +1,36 @@
-import ClientSetting from '../models/clientSetting.js';
-import Client from '../models/clientProfile.js';
+import UserSetting from '../models/UserSetting.js';
+import User from '../models/ModelUser.js';
 import bcrypt from 'bcryptjs';
 
-// Get all settings
+// Get all settings for logged-in user
 export const getSettings = async (req, res) => {
   try {
-    const email = req.user?.email;
-    
-    if (!email) {
+    const { id, email, userType } = req.user;
+
+    if (!id || !email) {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    // Use findOne And Update with upsert to avoid duplicate key errors
-    const settings = await ClientSetting.findOneAndUpdate(
-      { email },
-      { 
-        $setOnInsert: {
-          email,
-          theme: 'light',
-          language: 'en',
-          timezone: 'UTC',
-          privacySettings: {
-            profileVisibility: 'public',
-            showEmail: true,
-            showPhone: false
-          },
-          twoFactorEnabled: false,
-          notifications: {
-            emailNotifications: true,
-            smsNotifications: false,
-            pushNotifications: true,
-            jobAlerts: true,
-            messageAlerts: true
-          }
+    let settings = await UserSetting.findOne({ userId: id });
+
+    if (!settings) {
+      settings = await UserSetting.create({
+        userId: id,
+        email,
+        userType, // client, handyman, or admin
+        theme: 'light',
+        language: 'en',
+        timezone: 'UTC',
+        notificationsEnabled: true,
+        notifications: {
+          emailNotifications: true,
+          smsNotifications: false,
+          pushNotifications: true,
+          jobAlerts: true,
+          messageAlerts: true
         }
-      },
-      { new: true, upsert: true }
-    );
+      });
+    }
 
     res.status(200).json(settings);
   } catch (err) {
@@ -45,114 +39,70 @@ export const getSettings = async (req, res) => {
   }
 };
 
-// Update display settings (theme, language, timezone)
+// Update display settings
 export const updateDisplay = async (req, res) => {
   try {
-    const email = req.user?.email;
+    const { id, email, userType } = req.user;
     const { theme, language, timezone } = req.body;
-    
-    if (!email) {
-      return res.status(401).json({ message: "Unauthorized" });
+
+    if (!id) return res.status(401).json({ message: "Unauthorized" });
+
+    if (theme && !['light', 'dark', 'auto'].includes(theme)) {
+      return res.status(400).json({ message: "Invalid theme value" });
+    }
+    if (language && !['en', 'es', 'fr', 'de'].includes(language)) {
+      return res.status(400).json({ message: "Invalid language value" });
+    }
+    if (timezone && !['UTC', 'EST', 'CST', 'MST', 'PST'].includes(timezone)) {
+      return res.status(400).json({ message: "Invalid timezone value" });
     }
 
-    const updatedSettings = await ClientSetting.findOneAndUpdate(
-      { email },
-      { theme, language, timezone },
+    const updatedSettings = await UserSetting.findOneAndUpdate(
+      { userId: id },
+      {
+        theme,
+        language,
+        timezone,
+        $setOnInsert: { userId: id, email, userType }
+      },
       { new: true, upsert: true, runValidators: true }
     );
-
-    console.log(` Display settings updated for ${email}:`, { theme, language, timezone });
 
     res.status(200).json({
       message: "Display settings updated successfully",
       settings: updatedSettings
     });
   } catch (err) {
-    console.error(" Error updating display settings:", err);
+    console.error("Error updating display settings:", err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
 
-// Update privacy settings
-export const updatePrivacy = async (req, res) => {
-  try {
-    const email = req.user?.email;
-    const privacySettings = req.body;
-    
-    if (!email) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
-    const updatedSettings = await ClientSetting.findOneAndUpdate(
-      { email },
-      { privacySettings },
-      { new: true, upsert: true }
-    );
-
-    console.log(` Privacy settings updated for ${email}`);
-
-    res.status(200).json({
-      message: "Privacy settings updated successfully",
-      settings: updatedSettings
-    });
-  } catch (err) {
-    console.error(" Error updating privacy:", err);
-    res.status(500).json({ message: "Server error", error: err.message });
-  }
-};
-
-// Toggle 2FA
-export const toggle2FA = async (req, res) => {
-  try {
-    const email = req.user?.email;
-    const { enabled } = req.body;
-    
-    if (!email) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
-    const updatedSettings = await ClientSetting.findOneAndUpdate(
-      { email },
-      { twoFactorEnabled: enabled },
-      { new: true, upsert: true }
-    );
-
-    console.log(`2FA ${enabled ? 'enabled' : 'disabled'} for ${email}`);
-
-    res.status(200).json({
-      message: `2FA ${enabled ? "enabled" : "disabled"} successfully`,
-      settings: updatedSettings
-    });
-  } catch (err) {
-    console.error("Error toggling 2FA:", err);
-    res.status(500).json({ message: "Server error", error: err.message });
-  }
-};
-
-// Update notifications
+// Update notification settings
 export const updateNotifications = async (req, res) => {
   try {
-    const email = req.user?.email;
+    const { id, email, userType } = req.user;
     const notifications = req.body;
-    
-    if (!email) {
-      return res.status(401).json({ message: "Unauthorized" });
+
+    if (!id) return res.status(401).json({ message: "Unauthorized" });
+
+    const validKeys = ['emailNotifications', 'smsNotifications', 'pushNotifications', 'jobAlerts', 'messageAlerts'];
+    if (Object.keys(notifications).some(key => !validKeys.includes(key))) {
+      return res.status(400).json({ message: "Invalid notification settings" });
     }
 
-    const updatedSettings = await ClientSetting.findOneAndUpdate(
-      { email },
-      { notifications },
+    const updatedSettings = await UserSetting.findOneAndUpdate(
+      { userId: id },
+      { notifications, $setOnInsert: { userId: id, email, userType } },
       { new: true, upsert: true }
     );
-
-    console.log(` Notifications updated for ${email}`);
 
     res.status(200).json({
       message: "Notification settings updated successfully",
       settings: updatedSettings
     });
   } catch (err) {
-    console.error(" Error updating notifications:", err);
+    console.error("Error updating notifications:", err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
@@ -160,37 +110,26 @@ export const updateNotifications = async (req, res) => {
 // Change password
 export const changePassword = async (req, res) => {
   try {
-    const email = req.user?.email;
+    const { id, email } = req.user;
     const { currentPassword, newPassword } = req.body;
-    
-    if (!email) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
 
-    const client = await Client.findOne({ email });
-    
-    if (!client || !client.password) {
-      return res.status(404).json({ message: "Client not found or no password set" });
-    }
+    if (!id || !email) return res.status(401).json({ message: "Unauthorized" });
+    if (!currentPassword || !newPassword) return res.status(400).json({ message: "Please provide current and new password" });
+    if (newPassword.length < 8) return res.status(400).json({ message: "New password must be at least 8 characters" });
 
-    // Verify current password
-    const isMatch = await bcrypt.compare(currentPassword, client.password);
-    if (!isMatch) {
-      return res.status(400).json({ message: "Current password is incorrect" });
-    }
+    const user = await User.findById(id);
+    if (!user) return res.status(404).json({ message: "User not found" });
 
-    // Hash new password
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) return res.status(400).json({ message: "Current password is incorrect" });
+
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(newPassword, salt);
-
-    client.password = hashedPassword;
-    await client.save();
-
-    console.log(` Password changed for ${email}`);
+    user.password = await bcrypt.hash(newPassword, salt);
+    await user.save();
 
     res.status(200).json({ message: "Password changed successfully" });
   } catch (err) {
-    console.error(" Error changing password:", err);
+    console.error("Error changing password:", err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
@@ -198,23 +137,24 @@ export const changePassword = async (req, res) => {
 // Delete account
 export const deleteAccount = async (req, res) => {
   try {
-    const email = req.user?.email;
-    
-    if (!email) {
-      return res.status(401).json({ message: "Unauthorized" });
+    const { id, email, userType } = req.user;
+    if (!id || !email) return res.status(401).json({ message: "Unauthorized" });
+
+    await UserSetting.findOneAndDelete({ userId: id });
+
+    if (userType === 'client') {
+      const Client = (await import('../models/clientProfile.js')).default;
+      await Client.findOneAndDelete({ userId: id });
+    } else if (userType === 'handyman') {
+      const HandyProfile = (await import('../models/HandyAddProfile.js')).default;
+      await HandyProfile.findOneAndDelete({ userId: id });
     }
 
-    // Delete client profile
-    await Client.findOneAndDelete({ email });
-    
-    // Delete client settings
-    await ClientSetting.findOneAndDelete({ email });
-
-    console.log(` Account deleted for ${email}`);
+    await User.findByIdAndDelete(id);
 
     res.status(200).json({ message: "Account deleted successfully" });
   } catch (err) {
-    console.error(" Error deleting account:", err);
+    console.error("Error deleting account:", err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };

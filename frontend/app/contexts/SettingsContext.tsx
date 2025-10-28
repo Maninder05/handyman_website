@@ -9,25 +9,15 @@ interface NotificationSettings {
   messageAlerts: boolean;
 }
 
-interface PrivacySettings {
-  profileVisibility: 'public' | 'private' | 'contacts';
-  showEmail: boolean;
-  showPhone: boolean;
-}
-
 interface SettingsContextType {
   theme: 'light' | 'dark' | 'auto';
   language: 'en' | 'es' | 'fr' | 'de';
   timezone: string;
   notifications: NotificationSettings;
-  privacySettings: PrivacySettings;
-  twoFactorEnabled: boolean;
   setTheme: (theme: 'light' | 'dark' | 'auto') => void;
   setLanguage: (lang: 'en' | 'es' | 'fr' | 'de') => void;
   setTimezone: (tz: string) => void;
   updateNotifications: (notifications: NotificationSettings) => void;
-  updatePrivacySettings: (privacy: PrivacySettings) => void;
-  setTwoFactorEnabled: (enabled: boolean) => void;
   refreshSettings: () => Promise<void>;
   isLoading: boolean;
 }
@@ -46,12 +36,6 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     jobAlerts: true,
     messageAlerts: true,
   });
-  const [privacySettings, setPrivacySettings] = useState<PrivacySettings>({
-    profileVisibility: 'public',
-    showEmail: true,
-    showPhone: false,
-  });
-  const [twoFactorEnabled, setTwoFactorEnabledState] = useState(false);
 
   // Apply theme to DOM
   const applyTheme = (themeValue: 'light' | 'dark' | 'auto') => {
@@ -64,7 +48,8 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     } else if (themeValue === 'light') {
       root.classList.remove('dark');
     } else {
-      const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches; // dark mode
+      // Auto mode - detect system preference
+      const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       if (isDark) {
         root.classList.add('dark');
       } else {
@@ -78,7 +63,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     const loadSettings = async () => {
       if (typeof window === 'undefined') return;
       
-      // First load from localStorage (instant)
+      // First load from localStorage (INSTANT - no loading screen!)
       const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | 'auto' | null;
       const savedLanguage = localStorage.getItem('language') as 'en' | 'es' | 'fr' | 'de' | null;
       const savedTimezone = localStorage.getItem('timezone');
@@ -90,7 +75,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       if (savedLanguage) setLanguageState(savedLanguage);
       if (savedTimezone) setTimezoneState(savedTimezone);
 
-      // Then fetch from backend
+      // Then fetch from backend to sync
       await refreshSettings();
       setIsLoading(false);
     };
@@ -102,6 +87,17 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   // Apply theme whenever it changes
   useEffect(() => {
     applyTheme(theme);
+  }, [theme]);
+
+  // Listen for system theme changes when in auto mode
+  useEffect(() => {
+    if (theme !== 'auto') return;
+
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = () => applyTheme('auto');
+    
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
   }, [theme]);
 
   const refreshSettings = async () => {
@@ -118,6 +114,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       if (res.ok) {
         const data = await res.json();
         
+        // Sync Display Settings
         if (data.theme) {
           setThemeState(data.theme);
           localStorage.setItem('theme', data.theme);
@@ -131,9 +128,11 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
           setTimezoneState(data.timezone);
           localStorage.setItem('timezone', data.timezone);
         }
-        if (data.notifications) setNotifications(data.notifications);
-        if (data.privacySettings) setPrivacySettings(data.privacySettings);
-        if (data.twoFactorEnabled !== undefined) setTwoFactorEnabledState(data.twoFactorEnabled);
+        
+        // Sync Notification Settings
+        if (data.notifications) {
+          setNotifications(data.notifications);
+        }
       }
     } catch (error) {
       console.error('Error fetching settings:', error);
@@ -166,14 +165,6 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     setNotifications(newNotifications);
   };
 
-  const updatePrivacySettings = (newPrivacy: PrivacySettings) => {
-    setPrivacySettings(newPrivacy);
-  };
-
-  const setTwoFactorEnabled = (enabled: boolean) => {
-    setTwoFactorEnabledState(enabled);
-  };
-
   return (
     <SettingsContext.Provider
       value={{
@@ -181,14 +172,10 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
         language,
         timezone,
         notifications,
-        privacySettings,
-        twoFactorEnabled,
         setTheme,
         setLanguage,
         setTimezone,
         updateNotifications,
-        updatePrivacySettings,
-        setTwoFactorEnabled,
         refreshSettings,
         isLoading,
       }}
