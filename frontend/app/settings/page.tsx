@@ -3,13 +3,8 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Menu, X, User, Lock, Shield, Bell, Eye, Trash2, LogOut, Upload, Monitor } from "lucide-react";
-<<<<<<< Updated upstream
-import { useSettings } from "../contexts/SettingsContext";
-import { useTranslation } from "../lib/translations";
-=======
 import { useSettings } from "../../context/SettingsContext";
 import { useTranslation } from "../../lib/translations";
->>>>>>> Stashed changes
 
 interface AccountData {
   firstName: string;
