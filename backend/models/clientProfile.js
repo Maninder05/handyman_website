@@ -44,7 +44,7 @@ const ClientSchema = new mongoose.Schema(
     // User type 
     userType: { 
       type: String, 
-      enum: ['handyman', 'customer', 'admin'],  // FIXED: 'customer' not 'client'
+      enum: ['handyman', 'customer', 'admin'], 
       default: 'customer',
       required: true
     },
@@ -148,9 +148,5 @@ const ClientSchema = new mongoose.Schema(
   }
 );
 
-// Indexes for faster queries
-ClientSchema.index({ email: 1 });
-ClientSchema.index({ userId: 1 });
-ClientSchema.index({ clientId: 1 });
 
 export default mongoose.models.Client || mongoose.model("Client", ClientSchema);

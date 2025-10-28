@@ -174,26 +174,37 @@ export default function HandyDashboard() {
     try {
       const token = localStorage.getItem("token");
       const formData = new FormData();
-      formData.append('profileImage', selectedFile);
+      formData.append('profileImage', selectedFile); // Must match backend field name
 
-      const res = await fetch("http://localhost:8000/api/handymen/upload-profile-image", {
+      const res = await fetch("http://localhost:8000/api/handymen/upload-profile-pic", {
         method: 'POST',
         headers: {
           "Authorization": `Bearer ${token}`,
+          // DO NOT set Content-Type - browser sets it automatically with boundary
         },
-        body: formData,
+        body: formData, // Send FormData, not JSON
       });
 
       if (res.ok) {
         const data = await res.json();
-        setProfile(prev => prev ? { ...prev, profileImage: data.profileImage } : null);
+        // Update with the URL returned from backend
+        setProfile(prev => prev ? { 
+          ...prev, 
+          profileImage: data.profilePic || data.imageUrl,
+          profilePic: data.profilePic || data.imageUrl
+        } : null);
         setShowUploadModal(false);
         setSelectedFile(null);
         setPreviewUrl(null);
+        
+        // Refetch to get fresh data
+        fetchProfile();
       } else {
-        alert('Failed to upload image. Please try again.');
+        const error = await res.json();
+        alert(error.message || 'Failed to upload image. Please try again.');
       }
     } catch (err) {
+      console.error('Upload error:', err);
       alert('Error uploading image. Please try again.');
     } finally {
       setUploadingImage(false);
