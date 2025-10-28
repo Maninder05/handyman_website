@@ -2,24 +2,22 @@ import UserSetting from '../models/UserSetting.js';
 import User from '../models/ModelUser.js';
 import bcrypt from 'bcryptjs';
 
-// Get all settings for logged-in user (CLIENT or HANDYMAN)
+// Get all settings for logged-in user
 export const getSettings = async (req, res) => {
   try {
     const { id, email, userType } = req.user;
-    
+
     if (!id || !email) {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    // Find or create settings with default values
     let settings = await UserSetting.findOne({ userId: id });
 
     if (!settings) {
-      // Auto-create settings for new users
       settings = await UserSetting.create({
         userId: id,
         email,
-        userType,
+        userType, // client, handyman, or admin
         theme: 'light',
         language: 'en',
         timezone: 'UTC',
@@ -41,45 +39,33 @@ export const getSettings = async (req, res) => {
   }
 };
 
-// Update display settings (CLIENT or HANDYMAN)
+// Update display settings
 export const updateDisplay = async (req, res) => {
   try {
     const { id, email, userType } = req.user;
     const { theme, language, timezone } = req.body;
-    
-    if (!id) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
 
-    // Validate theme
+    if (!id) return res.status(401).json({ message: "Unauthorized" });
+
     if (theme && !['light', 'dark', 'auto'].includes(theme)) {
       return res.status(400).json({ message: "Invalid theme value" });
     }
-
-    // Validate language
     if (language && !['en', 'es', 'fr', 'de'].includes(language)) {
       return res.status(400).json({ message: "Invalid language value" });
     }
-
-    // Validate timezone
     if (timezone && !['UTC', 'EST', 'CST', 'MST', 'PST'].includes(timezone)) {
       return res.status(400).json({ message: "Invalid timezone value" });
     }
 
     const updatedSettings = await UserSetting.findOneAndUpdate(
       { userId: id },
-      { 
-        theme, 
-        language, 
+      {
+        theme,
+        language,
         timezone,
-        // Ensure userId and email are set (in case settings don't exist yet)
         $setOnInsert: { userId: id, email, userType }
       },
-      { 
-        new: true, 
-        upsert: true, 
-        runValidators: true 
-      }
+      { new: true, upsert: true, runValidators: true }
     );
 
     res.status(200).json({
@@ -92,34 +78,23 @@ export const updateDisplay = async (req, res) => {
   }
 };
 
-// Update notification settings (CLIENT or HANDYMAN)
+// Update notification settings
 export const updateNotifications = async (req, res) => {
   try {
     const { id, email, userType } = req.user;
     const notifications = req.body;
-    
-    if (!id) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
 
-    // Validate notification object
+    if (!id) return res.status(401).json({ message: "Unauthorized" });
+
     const validKeys = ['emailNotifications', 'smsNotifications', 'pushNotifications', 'jobAlerts', 'messageAlerts'];
-    const hasInvalidKeys = Object.keys(notifications).some(key => !validKeys.includes(key));
-    
-    if (hasInvalidKeys) {
+    if (Object.keys(notifications).some(key => !validKeys.includes(key))) {
       return res.status(400).json({ message: "Invalid notification settings" });
     }
 
     const updatedSettings = await UserSetting.findOneAndUpdate(
       { userId: id },
-      { 
-        notifications,
-        $setOnInsert: { userId: id, email, userType }
-      },
-      { 
-        new: true, 
-        upsert: true 
-      }
+      { notifications, $setOnInsert: { userId: id, email, userType } },
+      { new: true, upsert: true }
     );
 
     res.status(200).json({
@@ -132,49 +107,24 @@ export const updateNotifications = async (req, res) => {
   }
 };
 
-// Change password (CLIENT or HANDYMAN)
+// Change password
 export const changePassword = async (req, res) => {
   try {
     const { id, email } = req.user;
     const { currentPassword, newPassword } = req.body;
-    
-    if (!id || !email) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
 
-    if (!currentPassword || !newPassword) {
-      return res.status(400).json({ message: "Please provide current and new password" });
-    }
+    if (!id || !email) return res.status(401).json({ message: "Unauthorized" });
+    if (!currentPassword || !newPassword) return res.status(400).json({ message: "Please provide current and new password" });
+    if (newPassword.length < 8) return res.status(400).json({ message: "New password must be at least 8 characters" });
 
-    if (newPassword.length < 8) {
-      return res.status(400).json({ message: "New password must be at least 8 characters" });
-    }
-
-    // Find user in User model (where password is stored!)
     const user = await User.findById(id);
-    
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
+    if (!user) return res.status(404).json({ message: "User not found" });
 
-    if (!user.password) {
-      return res.status(400).json({ 
-        message: "Password not set. You may have signed up with Google/Facebook. Please use 'Forgot Password' to set a password." 
-      });
-    }
-
-    // Check if current password is correct
     const isMatch = await bcrypt.compare(currentPassword, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ message: "Current password is incorrect" });
-    }
+    if (!isMatch) return res.status(400).json({ message: "Current password is incorrect" });
 
-    // Hash the new password
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(newPassword, salt);
-
-    // Update password in User model
-    user.password = hashedPassword;
+    user.password = await bcrypt.hash(newPassword, salt);
     await user.save();
 
     res.status(200).json({ message: "Password changed successfully" });
@@ -184,28 +134,22 @@ export const changePassword = async (req, res) => {
   }
 };
 
-// Delete account (CLIENT or HANDYMAN)
+// Delete account
 export const deleteAccount = async (req, res) => {
   try {
     const { id, email, userType } = req.user;
-    
-    if (!id || !email) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
+    if (!id || !email) return res.status(401).json({ message: "Unauthorized" });
 
-    // Delete user settings
     await UserSetting.findOneAndDelete({ userId: id });
-    
-    // Delete profile based on userType
-    if (userType === 'customer') {
+
+    if (userType === 'client') {
       const Client = (await import('../models/clientProfile.js')).default;
       await Client.findOneAndDelete({ userId: id });
     } else if (userType === 'handyman') {
       const HandyProfile = (await import('../models/HandyAddProfile.js')).default;
       await HandyProfile.findOneAndDelete({ userId: id });
     }
-    
-    // Delete user account
+
     await User.findByIdAndDelete(id);
 
     res.status(200).json({ message: "Account deleted successfully" });

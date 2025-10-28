@@ -8,6 +8,7 @@ import cookieParser from 'cookie-parser';
 import passport from 'passport';
 import http from "http";
 import { Server } from "socket.io";
+import fs from "fs"; 
 
 // register passport strategies
 import './config/passport.js';
@@ -21,6 +22,19 @@ import clientRoutes from './routes/clientRoutes.js';
 import settingsRoutes from './routes/settingRoutes.js';
 
 dotenv.config();
+// Create upload directories if they don't exist
+const uploadDirs = [
+  "uploads",
+  "uploads/profiles",
+  "uploads/certifications"
+];
+
+uploadDirs.forEach(dir => {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+    console.log(`📁 Created folder: ${dir}`);
+  }
+});
 
 const app = express();
 const PORT = process.env.PORT || 8000;

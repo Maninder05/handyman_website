@@ -1,5 +1,6 @@
 import express from 'express';
 import jwtAuthWithNext from '../middleware/jwtAuthWithNext.js';
+import upload from '../middleware/upload.js'; // 
 import {
   getMyProfile,
   createProfile,
@@ -19,18 +20,18 @@ router.get('/me', jwtAuthWithNext, getMyProfile);
 router.post('/', jwtAuthWithNext, createProfile);
 router.put('/update', jwtAuthWithNext, updateProfile);
 
-// FILE UPLOAD ROUTES
-router.post('/upload-profile-pic', jwtAuthWithNext, uploadProfilePic);
-router.post('/upload-certification', jwtAuthWithNext, uploadCertification);
+// UPLOAD ROUTES
+router.post('/upload-profile-pic', jwtAuthWithNext, upload.single("profileImage"), uploadProfilePic);
+router.post('/upload-certification', jwtAuthWithNext, upload.single("certification"), uploadCertification);
 router.delete('/certifications/:certificationId', jwtAuthWithNext, deleteCertification);
 
-// DELETE ACCOUNT (password change is in settingsController!)
+// DELETE ACCOUNT
 router.delete('/delete', jwtAuthWithNext, deleteAccount);
 
-// PUBLIC/BROWSE ROUTES
+// PUBLIC BROWSE
 router.get('/', getAllHandymen);
 
-// ADMIN ROUTES
+// ADMIN VERIFY
 router.put('/verify/:handymanId', verifyHandyman);
 
 export default router;
