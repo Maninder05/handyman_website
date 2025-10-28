@@ -53,7 +53,7 @@ export default function Signup() {
     if (token) {
       localStorage.setItem("token", token);
       
-      // ✅ FIXED: Redirect based on user type
+      // Redirect based on user type
       if (type === "customer") {
         router.push("/clientProfile");
       } else {
@@ -81,7 +81,7 @@ export default function Signup() {
       
       setShowSignup(false);
       
-      // ✅ FIXED: Redirect based on userType
+      // Redirect based on userType
       if (userType === "customer") {
         router.push("/clientProfile");
       } else {
@@ -109,7 +109,7 @@ export default function Signup() {
       
       setShowLogin(false);
       
-      // ✅ FIXED: Redirect based on userType from backend response
+      // Redirect based on userType from backend response
       if (res.data.userType === "customer") {
         router.push("/clientProfile");
       } else {
@@ -129,11 +129,11 @@ export default function Signup() {
   };
 
   return (
-    <main className="min-h-screen bg-neutral-900 text-white flex items-center justify-center">
+    <main className="min-h-screen bg-black flex items-center justify-center">
       {/* Signup Modal */}
       {showSignup && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-          <div className="relative bg-neutral-900 border border-neutral-700 rounded-2xl shadow-2xl w-full max-w-md p-8 scale-95 hover:scale-100 transition-transform">
+        <div className="fixed inset-0 bg-gray-300 flex items-center justify-center z-50">
+          <div className="relative bg-black border border-neutral-700 rounded-2xl shadow-2xl w-full max-w-md p-8 scale-95 hover:scale-100 transition-transform">
             <button
               onClick={() => {
                 setShowSignup(false);
@@ -143,7 +143,7 @@ export default function Signup() {
             >
               ✕
             </button>
-            <h2 className="text-2xl font-bold text-[#FFCC66] mb-2 text-center">
+            <h2 className="text-2xl font-bold text-[#D4A574] mb-2 text-center">
               Create Your Account
             </h2>
             <p className="text-sm text-neutral-400 mb-6 text-center">
@@ -156,7 +156,7 @@ export default function Signup() {
                   placeholder="Username"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="w-full px-4 py-2 rounded-lg bg-neutral-800 border border-neutral-700 focus:border-[#FFCC66] outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-neutral-800 border border-neutral-700 focus:border-[#D4A574] outline-none"
                   required
                 />
                 {errors.username && <p className="text-red-500 text-sm mt-1">{errors.username}</p>}
@@ -167,7 +167,7 @@ export default function Signup() {
                   placeholder="Email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-2 rounded-lg bg-neutral-800 border border-neutral-700 focus:border-[#FFCC66] outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-neutral-800 border border-neutral-700 focus:border-[#D4A574] outline-none"
                   required
                 />
                 {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
@@ -178,7 +178,7 @@ export default function Signup() {
                   placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-2 rounded-lg bg-neutral-800 border border-neutral-700 focus:border-[#FFCC66] outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-neutral-800 border border-neutral-700 focus:border-[#D4A574] outline-none"
                   required
                 />
                 {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
@@ -191,8 +191,8 @@ export default function Signup() {
                   onClick={() => setUserType("customer")}
                   className={`w-1/2 flex items-center justify-center gap-2 px-3 py-2 rounded-lg border text-sm transition ${
                     userType === "customer"
-                      ? "bg-[#FFCC66] text-black border-[#FFCC66]"
-                      : "bg-neutral-800 text-neutral-300 border-neutral-700 hover:border-[#FFCC66]"
+                      ? "bg-[#D4A574] text-black border-[#D4A574]"
+                      : "bg-neutral-800 text-neutral-300 border-neutral-700 hover:border-[#D4A574]"
                   }`}
                 >
                   <Image src="/images/dummy-client.jpg" alt="Customer" width={30} height={30} />
@@ -203,8 +203,8 @@ export default function Signup() {
                   onClick={() => setUserType("handyman")}
                   className={`w-1/2 flex items-center justify-center gap-2 px-3 py-2 rounded-lg border text-sm transition ${
                     userType === "handyman"
-                      ? "bg-[#FFCC66] text-black border-[#FFCC66]"
-                      : "bg-neutral-800 text-neutral-300 border-neutral-700 hover:border-[#FFCC66]"
+                      ? "bg-[#D4A574] text-black border-[#D4A574]"
+                      : "bg-neutral-800 text-neutral-300 border-neutral-700 hover:border-[#D4A574]"
                   }`}
                 >
                   <Image
@@ -221,7 +221,7 @@ export default function Signup() {
 
               <button
                 type="submit"
-                className="w-full bg-[#FFCC66] hover:opacity-90 text-black py-2 rounded-lg transition"
+                className="w-full bg-[#D4A574] hover:opacity-90 text-black py-2 rounded-lg transition"
               >
                 Sign Up
               </button>
@@ -233,20 +233,31 @@ export default function Signup() {
               <span className="px-2 text-neutral-500 text-xs">OR</span>
               <div className="flex-1 h-px bg-neutral-700"></div>
             </div>
+            {/* Google Sign In */}
             <div className="flex flex-col gap-3">
               <button
                 onClick={oauthGoogle}
-                className="flex items-center gap-2 justify-center px-4 py-2 rounded-lg bg-neutral-800 border border-neutral-700 text-sm cursor-pointer hover:border-[#FFCC66] transition"
+                className="flex items-center gap-2 justify-center px-4 py-2 rounded-lg bg-neutral-800 border border-neutral-700 text-sm cursor-pointer hover:border-[#D4A574] transition"
               >
-                <Image src="/images/google-icon.png" alt="Google" width={30} height={30} />
-                <span>Sign up with Google</span>
+              <svg className="w-5 h-5" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+              </svg>
+              <span>Sign up with Google</span>
               </button>
               <button
                 onClick={oauthFacebook}
-                className="flex items-center gap-2 justify-center px-4 py-2 rounded-lg bg-neutral-800 border border-neutral-700 text-sm cursor-pointer hover:border-[#FFCC66] transition"
+                className="flex items-center gap-2 justify-center px-4 py-2 rounded-lg bg-neutral-800 border border-neutral-700 text-sm cursor-pointer hover:border-[#D4A574] transition"
               >
-                <Image src="/images/facebook-icon.png" alt="Facebook" width={30} height={30} />
-                <span>Sign up with Facebook</span>
+              <svg className="w-5 h-5" viewBox="0 0 24 24">
+                <path
+                  fill="#1877F2"
+                  d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073c0 5.988 4.388 10.954 10.125 11.854v-8.385H7.078V12.07h3.047V9.412c0-3.007 1.792-4.668 4.533-4.668 1.312 0 2.686.235 2.686.235v2.953h-1.513c-1.49 0-1.953.93-1.953 1.887v2.251h3.328l-.532 3.473h-2.796v8.385C19.612 23.027 24 18.061 24 12.073z"
+                />
+              </svg>
+              <span>Sign up with Facebook</span>
               </button>
             </div>
 
@@ -257,7 +268,7 @@ export default function Signup() {
                   setShowSignup(false);
                   setShowLogin(true);
                 }}
-                className="text-[#FFCC66] cursor-pointer hover:underline"
+                className="text-[#D4A574] cursor-pointer hover:underline"
               >
                 Login
               </a>
@@ -279,7 +290,7 @@ export default function Signup() {
             >
               ✕
             </button>
-            <h2 className="text-2xl font-bold text-[#FFCC66] mb-2 text-center">Welcome Back</h2>
+            <h2 className="text-2xl font-bold text-[#D4A574] mb-2 text-center">Welcome Back</h2>
             <p className="text-sm text-neutral-400 mb-6 text-center">
               Login to continue managing your home services.
             </p>
@@ -290,7 +301,7 @@ export default function Signup() {
                   placeholder="Email"
                   value={loginEmail}
                   onChange={(e) => setLoginEmail(e.target.value)}
-                  className="w-full px-4 py-2 rounded-lg bg-neutral-800 border border-neutral-700 focus:border-[#FFCC66] outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-neutral-800 border border-neutral-700 focus:border-[#D4A574] outline-none"
                   required
                 />
                 {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
@@ -301,14 +312,14 @@ export default function Signup() {
                   placeholder="Password"
                   value={loginPassword}
                   onChange={(e) => setLoginPassword(e.target.value)}
-                  className="w-full px-4 py-2 rounded-lg bg-neutral-800 border border-neutral-700 focus:border-[#FFCC66] outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-neutral-800 border border-neutral-700 focus:border-[#D4A574] outline-none"
                   required
                 />
                 {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
               </div>
               <button
                 type="submit"
-                className="w-full bg-[#FFCC66] hover:opacity-90 text-black py-2 rounded-lg transition font-semibold"
+                className="w-full bg-[#D4A574] hover:opacity-90 text-black py-2 rounded-lg transition font-semibold"
               >
                 Login
               </button>
@@ -323,14 +334,14 @@ export default function Signup() {
             <div className="flex flex-col gap-3">
               <button
                 onClick={oauthGoogle}
-                className="flex items-center gap-2 justify-center px-4 py-2 rounded-lg bg-neutral-800 border border-neutral-700 text-sm cursor-pointer hover:border-[#FFCC66] transition"
+                className="flex items-center gap-2 justify-center px-4 py-2 rounded-lg bg-neutral-800 border border-neutral-700 text-sm cursor-pointer hover:border-[#D4A574] transition"
               >
                 <Image src="/images/google-icon.png" alt="Google" width={30} height={30} />
                 <span>Login with Google</span>
               </button>
               <button
                 onClick={oauthFacebook}
-                className="flex items-center gap-2 justify-center px-4 py-2 rounded-lg bg-neutral-800 border border-neutral-700 text-sm cursor-pointer hover:border-[#FFCC66] transition"
+                className="flex items-center gap-2 justify-center px-4 py-2 rounded-lg bg-neutral-800 border border-neutral-700 text-sm cursor-pointer hover:border-[#D4A574] transition"
               >
                 <Image src="/images/facebook-icon.png" alt="Facebook" width={30} height={30} />
                 <span>Login with Facebook</span>
@@ -344,7 +355,7 @@ export default function Signup() {
                   setShowLogin(false);
                   setShowSignup(true);
                 }}
-                className="text-[#FFCC66] hover:underline cursor-pointer"
+                className="text-[#D4A574] hover:underline cursor-pointer"
               >
                 Sign Up
               </a>
