@@ -111,7 +111,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       const token = localStorage.getItem('token');
       if (!token) return;
 
-      const res = await fetch('http://localhost:8000/api/settings', {
+      const res = await fetch('http://localhost:7000/api/settings', {
         headers: { Authorization: `Bearer ${token}` }
       });
 

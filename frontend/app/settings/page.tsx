@@ -1,4 +1,3 @@
-// claudia ai how can i get my frontend and backend worked with all this data ...
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -56,7 +55,7 @@ export default function SettingsPage() {
           return;
         }
 
-        const res = await fetch("http://localhost:8000/api/clients/me", {
+        const res = await fetch("http://localhost:7000/api/clients/me", {
           headers: { Authorization: `Bearer ${token}` }
         });
         
@@ -96,7 +95,7 @@ export default function SettingsPage() {
     
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:8000/api/clients/update", {
+      const res = await fetch("http://localhost:7000/api/clients/update", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -136,7 +135,7 @@ export default function SettingsPage() {
     
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:8000/api/settings/password", {
+      const res = await fetch("http://localhost:7000/api/settings/password", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -168,7 +167,7 @@ export default function SettingsPage() {
     
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:8000/api/settings/privacy", {
+      const res = await fetch("http://localhost:7000/api/settings/privacy", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -196,7 +195,7 @@ export default function SettingsPage() {
     
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:8000/api/settings/2fa", {
+      const res = await fetch("http://localhost:7000/api/settings/2fa", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -225,7 +224,7 @@ export default function SettingsPage() {
     
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:8000/api/settings/notifications", {
+      const res = await fetch("http://localhost:7000/api/settings/notifications", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -253,7 +252,7 @@ export default function SettingsPage() {
     
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:8000/api/settings/display", {
+      const res = await fetch("http://localhost:7000/api/settings/display", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -290,7 +289,7 @@ export default function SettingsPage() {
     
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:8000/api/settings/account", {
+      const res = await fetch("http://localhost:7000/api/settings/account", {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` }
       });
