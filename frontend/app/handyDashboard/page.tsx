@@ -69,12 +69,38 @@ export default function HandyDashboard() {
   const router = useRouter();
 
   useEffect(() => {
+<<<<<<< HEAD
+    const fetchProfile = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          setLoading(false);
+          return;
+        }
+
+        const res = await fetch("http://localhost:7000/api/handymen/me", {
+          headers: { "Authorization": `Bearer ${token}` },
+        });
+
+        if (res.ok) {
+          const data: Profile = await res.json();
+          setProfile(data);
+        } else {
+          // Profile doesn't exist yet, that's fine - show empty dashboard
+          setProfile(null);
+        }
+      } catch (err) {
+        console.error("Error fetching profile:", err);
+      } finally {
+        setLoading(false);
+=======
     fetchProfile();
     
     // Refetch when page becomes visible (e.g., returning from settings)
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
         fetchProfile();
+>>>>>>> 774d9ebadcf7901f8d3b605d2e28ae8dda3f6563
       }
     };
     

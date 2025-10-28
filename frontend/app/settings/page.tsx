@@ -4,6 +4,11 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+<<<<<<< HEAD
+import { Menu, X, User, Lock, Shield, Bell, Eye, Trash2, LogOut, Upload, Monitor } from "lucide-react";
+import { useSettings } from "../../context/SettingsContext";
+import { useTranslation } from "../../lib/translations";
+=======
 import { 
   ArrowLeft, 
   User, 
@@ -25,6 +30,7 @@ import {
 } from "lucide-react";
 import { useSettings } from "../contexts/SettingsContext";
 import { useTranslation } from "../lib/translations";
+>>>>>>> 774d9ebadcf7901f8d3b605d2e28ae8dda3f6563
 
 type UserType = 'handyman' | 'client' | 'customer' | 'admin';
 
