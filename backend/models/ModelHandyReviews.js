@@ -48,3 +48,10 @@ reviewSchema.index({ jobId: 1 }, { unique: true }); // One review per job
 
 const Review = mongoose.model("Review", reviewSchema);
 export default Review;
+
+// References:
+// - Express.js routing: https://expressjs.com/en/guide/routing.html
+// - Mongoose models and schemas: https://mongoosejs.com/docs/guide.html
+// - Multer for file uploads: https://www.npmjs.com/package/multer
+// - React Hooks (useState, useEffect): https://react.dev/learn/state-a-components-memory
+// - JavaScript array methods (map, reduce): https://developer.mozilla.org/

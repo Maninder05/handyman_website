@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useRef } from "react";
 import axios from "axios";
 import { Star, Upload, X, Send } from "lucide-react";
