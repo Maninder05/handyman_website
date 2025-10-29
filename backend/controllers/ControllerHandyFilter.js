@@ -114,7 +114,7 @@ export const loginHandyman = async (req, res) => {
       token,
     });
   } catch (err) {
-    console.error("❌ loginHandyman error:", err);
+    console.error(" loginHandyman error:", err);
     res.status(500).json({ error: "Login failed. Please try again." });
   }
 };
