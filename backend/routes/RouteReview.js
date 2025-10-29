@@ -20,7 +20,10 @@ const router = express.Router();
 // (/\s+/g, "_") This is the regex pattern — it finds one or more spaces in the text (\s means “space,” and + means “one or more”).
 // g This means global, so it replaces all spaces in the file name, not just the first one.
 // + "-" + used to join text together — it’s called string concatenation.( readable and unquie)
-
+// useeffect = react hook is used to generate side effects to a component
+// usestate = react hook is used to update state component without refreshing the page
+// useroute = react hook is used to navigation and routing
+// ... spread operator is used for D structuring of an object ti get the key value pairs of an arry
 const storage = multer.diskStorage({
   destination: (_, __, cb) => cb(null, "uploads/reviews/"),
   filename: (_, file, cb) =>
@@ -47,7 +50,7 @@ router.post("/", auth, upload.array("images", 5), async (req, res) => {
       return res
         .status(400)
         .json({ message: "Review already exists for this job" });
-    //map() is used to transform each item in an array and return a new array with the transformed items.
+    //map() is used to read the index in a arrry and retruna all the elelments of an arry
     const review = await Review.create({
       handymanId,
       clientId: req.user.id,

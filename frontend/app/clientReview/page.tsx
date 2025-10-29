@@ -1,5 +1,11 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
-
+//main React library (needed to use JSX).
+//React Hook to store and update component state (like rating, comment, images).
+//React Hook to reference DOM elements directly (like the file input for images).
+//library to make HTTP requests (GET, POST, etc.) to your backend API.
+//In React, a dependency array is the second argument you pass to useEffect (or useCallback, useMemo) to control when the effect should run.
+//useEffect allows you to perform tasks after React has updated the DOM. These tasks are called side effects, like fetching data, updating the DOM, or setting timers.
 import React, { useState, useRef } from "react";
 import axios from "axios";
 import { Star, Upload, X, Send } from "lucide-react";
@@ -28,6 +34,7 @@ const ClientReviewForm: React.FC<ClientReviewFormProps> = ({
   const [loading, setLoading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
+  //... spreads an array/object into items or collects multiple values into an array
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
     const files = Array.from(e.target.files).slice(0, 5 - images.length);
