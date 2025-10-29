@@ -17,7 +17,7 @@ export const createService = async (req, res) => {
       priceType,
       price: Number(price),
       image: imagePath,
-      isDraft: isDraft === "true" || isDraft === true, // handle formData and JSON
+      isDraft: isDraft === "true" || isDraft === true, 
     });
 
     await newService.save();
@@ -28,7 +28,7 @@ export const createService = async (req, res) => {
   }
 };
 
-// Get all published services (isDraft: false)
+
 export const getServices = async (req, res) => {
   try {
     const services = await Service.find({ isDraft: false }).sort({ createdAt: -1 });
