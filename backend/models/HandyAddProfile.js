@@ -2,14 +2,12 @@ import mongoose from 'mongoose';
 
 const HandymanSchema = new mongoose.Schema(
   {
-    // User reference
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true
     },
 
-    // Unique handyman identifier
     handymanId: {
       type: String,
       unique: true,
@@ -17,7 +15,6 @@ const HandymanSchema = new mongoose.Schema(
       default: () => `HM${Date.now()}${Math.floor(Math.random() * 1000)}`
     },
 
-    // Basic Information
     name: {
       type: String,
       required: true,
@@ -32,7 +29,6 @@ const HandymanSchema = new mongoose.Schema(
       trim: true
     },
 
-    // User type
     userType: {
       type: String,
       enum: ['handyman', 'customer', 'admin'],
@@ -40,7 +36,6 @@ const HandymanSchema = new mongoose.Schema(
       required: true
     },
 
-    // Contact Information
     contact: {
       type: String,
       trim: true
@@ -55,14 +50,12 @@ const HandymanSchema = new mongoose.Schema(
       type: String
     },
 
-    // Profile Details
     bio: {
       type: String,
       default: '',
       maxlength: 500
     },
 
-    // Profile Picture
     profilePic: {
       type: String,
       default: ''
@@ -73,7 +66,6 @@ const HandymanSchema = new mongoose.Schema(
       default: ''
     },
 
-    // Additional Links
     additionalLinks: {
       website: { type: String, default: '' },
       linkedin: { type: String, default: '' },
@@ -81,7 +73,6 @@ const HandymanSchema = new mongoose.Schema(
       instagram: { type: String, default: '' }
     },
 
-    // Skills & Services
     skills: {
       type: [String],
       default: []
@@ -94,7 +85,6 @@ const HandymanSchema = new mongoose.Schema(
       }
     ],
 
-    // Certifications (upload)
     certifications: [
       {
         fileName: String,
@@ -103,7 +93,6 @@ const HandymanSchema = new mongoose.Schema(
       }
     ],
 
-    // Counters (Boss requirements)
     activeOrderCount: {
       type: Number,
       default: 0
@@ -129,20 +118,17 @@ const HandymanSchema = new mongoose.Schema(
       default: 0
     },
 
-    // Plan Type (Boss requirement)
     planType: {
       type: String,
       enum: ['Basic', 'Standard', 'Premium'],
       default: 'Basic'
     },
 
-    // Verified Badge (Boss requirement - Admin approval)
     verified: {
       type: Boolean,
       default: false
     },
 
-    // Account status
     isActive: {
       type: Boolean,
       default: true
@@ -152,10 +138,8 @@ const HandymanSchema = new mongoose.Schema(
     timestamps: true
   }
 );
-
-// Indexes
-HandymanSchema.index({ email: 1 });
-HandymanSchema.index({ userId: 1 });
-HandymanSchema.index({ handymanId: 1 });
+// HandymanSchema.index({ email: 1 });
+// HandymanSchema.index({ userId: 1 });
+// HandymanSchema.index({ handymanId: 1 });
 
 export default mongoose.model('HandymanProfile', HandymanSchema);
