@@ -114,7 +114,7 @@ export const loginHandyman = async (req, res) => {
       token,
     });
   } catch (err) {
-    console.error("❌ loginHandyman error:", err);
+    console.error(" loginHandyman error:", err);
     res.status(500).json({ error: "Login failed. Please try again." });
   }
 };
@@ -131,7 +131,7 @@ export const getHandymanProfile = async (req, res) => {
 
     res.status(200).json({ success: true, handyman });
   } catch (err) {
-    console.error("❌ getHandymanProfile error:", err);
+    console.error("getHandymanProfile error:", err);
     res.status(500).json({ error: "Failed to fetch profile." });
   }
 };
