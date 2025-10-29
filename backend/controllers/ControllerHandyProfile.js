@@ -128,7 +128,7 @@ export const uploadProfilePic = async (req, res) => {
     const profile = await HandyProfile.findOneAndUpdate(
       { userId: id },
       {
-        $set: {
+        $set: { 
           profilePic: profilePicUrl,
           profileImage: profilePicUrl
         }
