@@ -1,7 +1,6 @@
 // backend/controllers/CreateServiceController.js
 import Service from "../models/CreateService.js";
 
-// Create a service (or draft)
 export const createService = async (req, res) => {
   try {
     const { title, category, priceType, price, isDraft } = req.body;
