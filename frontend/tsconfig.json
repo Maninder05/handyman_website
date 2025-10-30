@@ -21,6 +21,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "app/**/*.tsx", ".next/types/**/*.ts", "app/handyPostService"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "app/**/*.tsx", ".next/types/**/*.ts", "app/handyman/handyPostService"],
   "exclude": ["node_modules"]
 }
