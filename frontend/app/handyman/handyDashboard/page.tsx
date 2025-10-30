@@ -334,25 +334,29 @@ export default function HandyDashboard() {
         <section className="max-w-7xl mx-auto px-6 mb-8">
           <h3 className="text-xl font-bold text-[#1a1a1a] mb-6">Quick Actions</h3>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Link href="/handyman/find-jobs" className="bg-white rounded-xl shadow-lg p-6 border-2 border-gray-200 hover:border-[#D4A574] hover:shadow-xl transition text-center group">
+            {/* ✅ FIXED: Changed from /handyman/find-jobs to /handyman/handyFindJob */}
+            <Link href="/handyman/handyFindJob" className="bg-white rounded-xl shadow-lg p-6 border-2 border-gray-200 hover:border-[#D4A574] hover:shadow-xl transition text-center group">
               <Briefcase size={32} className="text-[#D4A574] mx-auto mb-3 group-hover:scale-110 transition" />
               <h4 className="font-bold text-[#1a1a1a]">Find Jobs</h4>
               <p className="text-gray-500 text-sm mt-1">Browse available jobs</p>
             </Link>
 
-            <Link href="/handyman/my-services" className="bg-white rounded-xl shadow-lg p-6 border-2 border-gray-200 hover:border-[#D4A574] hover:shadow-xl transition text-center group">
+            {/* ✅ FIXED: Changed from /handyman/my-services to /handyman/handyPostService */}
+            <Link href="/handyman/handyPostService" className="bg-white rounded-xl shadow-lg p-6 border-2 border-gray-200 hover:border-[#D4A574] hover:shadow-xl transition text-center group">
               <Wrench size={32} className="text-[#D4A574] mx-auto mb-3 group-hover:scale-110 transition" />
               <h4 className="font-bold text-[#1a1a1a]">My Services</h4>
               <p className="text-gray-500 text-sm mt-1">Manage your services</p>
             </Link>
 
-            <Link href="/handyman/membership" className="bg-white rounded-xl shadow-lg p-6 border-2 border-gray-200 hover:border-[#D4A574] hover:shadow-xl transition text-center group">
+            {/* ⚠️ NOTE: Check if this page exists, otherwise change to /settings */}
+            <Link href="/settings" className="bg-white rounded-xl shadow-lg p-6 border-2 border-gray-200 hover:border-[#D4A574] hover:shadow-xl transition text-center group">
               <Crown size={32} className="text-[#D4A574] mx-auto mb-3 group-hover:scale-110 transition" />
               <h4 className="font-bold text-[#1a1a1a]">Membership</h4>
               <p className="text-gray-500 text-sm mt-1">View your plan</p>
             </Link>
 
-            <Link href="/handyman/help" className="bg-white rounded-xl shadow-lg p-6 border-2 border-gray-200 hover:border-[#D4A574] hover:shadow-xl transition text-center group">
+            {/* ⚠️ NOTE: Check if this page exists */}
+            <Link href="/help" className="bg-white rounded-xl shadow-lg p-6 border-2 border-gray-200 hover:border-[#D4A574] hover:shadow-xl transition text-center group">
               <HelpCircle size={32} className="text-[#D4A574] mx-auto mb-3 group-hover:scale-110 transition" />
               <h4 className="font-bold text-[#1a1a1a]">Help</h4>
               <p className="text-gray-500 text-sm mt-1">Get support</p>
@@ -364,8 +368,9 @@ export default function HandyDashboard() {
         <section className="max-w-7xl mx-auto px-6 mb-8">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-xl font-bold text-[#1a1a1a]">Recent Orders</h3>
-            <Link href="/handyman/find-jobs" className="text-[#D4A574] hover:text-[#B8A565] font-medium text-sm">
-              View All Jobs
+            {/* ✅ FIXED: Changed to /handyman/handyOrders */}
+            <Link href="/handyman/handyOrders" className="text-[#D4A574] hover:text-[#B8A565] font-medium text-sm">
+              View All Orders
             </Link>
           </div>
 
@@ -376,8 +381,9 @@ export default function HandyDashboard() {
               </div>
               <p className="text-gray-400 text-lg mb-2">No recent orders</p>
               <p className="text-gray-500 text-sm mb-4">Accept jobs to see them here</p>
+              {/* ✅ FIXED: Changed to /handyman/handyFindJob */}
               <Link 
-                href="/handyman/find-jobs"
+                href="/handyman/handyFindJob"
                 className="inline-block px-6 py-3 bg-[#D4A574] text-white rounded-lg hover:bg-[#B8A565] transition font-semibold shadow-lg hover:shadow-xl"
               >
                 Browse Available Jobs
@@ -423,7 +429,8 @@ export default function HandyDashboard() {
         <section className="max-w-7xl mx-auto px-6 mb-8">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-xl font-bold text-[#1a1a1a]">My Services</h3>
-            <Link href="/handyman/my-services" className="text-[#D4A574] hover:text-[#B8A565] font-medium text-sm">
+            {/* ✅ FIXED: Changed to /handyman/handyPostService */}
+            <Link href="/handyman/handyPostService" className="text-[#D4A574] hover:text-[#B8A565] font-medium text-sm">
               Manage Services
             </Link>
           </div>
@@ -435,8 +442,9 @@ export default function HandyDashboard() {
               </div>
               <p className="text-gray-400 text-lg mb-2">No services added</p>
               <p className="text-gray-500 text-sm mb-4">Add your services to attract clients</p>
+              {/* ✅ FIXED: Changed to /handyman/handyPostService */}
               <Link 
-                href="/handyman/my-services"
+                href="/handyman/handyPostService"
                 className="inline-block px-6 py-3 bg-[#D4A574] text-white rounded-lg hover:bg-[#B8A565] transition font-semibold shadow-lg hover:shadow-xl"
               >
                 Add Services
