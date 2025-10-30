@@ -26,7 +26,7 @@ export default function LandingPage() {
             <a href="#services" className="hover:text-[#ec830a] transition">
               Services
             </a>
-            <a href="/about" className="hover:text-[#ec830a] transition">
+            <a href="/mutual/about" className="hover:text-[#ec830a] transition">
               About
             </a>
             <a href="#facts" className="hover:text-[#ec830a] transition">
@@ -165,12 +165,12 @@ export default function LandingPage() {
                 </a>
               </li>
               <li>
-                <a href="/about" className="hover:text-[#D4A574]">
+                <a href="/mutual/about" className="hover:text-[#D4A574]">
                   About Us
                 </a>
               </li>
               <li>
-                <a href="/help" className="hover:text-[#D4A574]">
+                <a href="/mutual/support" className="hover:text-[#D4A574]">
                   Help
                 </a>
               </li>

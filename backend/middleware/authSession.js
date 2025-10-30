@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import User from "../models/ModelUser.js";
+import User from "../models/auth/User.js";
 
 const JWT_SECRET = process.env.JWT_SECRET || "mysecret";
 //const SESSION_TTL_MS = 15 * 60 * 1000; // 15 minutes
