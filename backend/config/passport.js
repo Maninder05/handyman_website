@@ -1,13 +1,13 @@
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { Strategy as FacebookStrategy } from 'passport-facebook';
-import User from '../models/ModelUser.js';
+import User from '../models/auth/User.js';
 import dotenv from 'dotenv';
 import crypto from 'crypto';
 
 dotenv.config();
 
-const API_URL = process.env.API_URL || "https://localhost:8000";
+const API_URL = process.env.API_URL || "https://localhost:7000";
 
 // Function to generate a random session token
 const generateSessionToken = () => crypto.randomBytes(32).toString('hex');
